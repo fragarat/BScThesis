@@ -9,15 +9,19 @@ Networks are fundamental in any field of current science as they provide a power
 
 \section{Mathematical notation}
 \label{sec:graph}
-A network or graph in mathematical literature is, in its simplest form, a collection of interconnected nodes or vertices that represent entities, and the connections or edges between these nodes that represent relationships or interactions between the entities. Graphs are usually described using a combination of mathematical notation and visual diagrams to provide a complete representation of the network structure and properties. The \emph{adjacency matrix} of a network with $N$ nodes is defined as $\mathbf{A}\in\mathbb{R}^{N\times N}$ with elements such as:
-
-\begin{equation}
+A network or graph in mathematical literature is, in its simplest form, a collection of interconnected nodes or vertices that represent entities, and the connections or edges between these nodes that represent relationships or interactions between the entities. Graphs are usually described using a combination of mathematical notation and visual diagrams to provide a complete representation of the network structure and properties. 
+\begin{definition}
+	Let G =(V, E) be an unweighted graph with $N$ nodes. Its adjacency matrix $\mathbf{A}\in\mathbb{R}^{N\times N}$ is entry-wise defined as:
+ 
+ \begin{equation}
   A_{ij} =
     \begin{cases}
       1 & \text{if there is an edge between nodes $i$ and $j$}\\
       0 & \text{otherwise}
     \end{cases}       
 \end{equation}
+for all $i, j = 1,2,\dots, N$.
+\end{definition}
 
 Additionally, graphs can be represented visually using a diagram, where nodes are represented as points and edges are represented as lines connecting the points. The direction of the edges (\textit{directed} or \textit{undirected}) and the presence of loops (edges connecting a node to itself) can also be indicated in the visual representation.
 
@@ -33,7 +37,7 @@ Linear algebra will also play a significant role in network analysis as graphs c
 
 \section{Centrality measures}
 \label{sec:centra}
- Centrality measures are metrics that are used to quantify the relative importance/influence/position of a node in a network. Indicators of centrality assign numbers or rankings, usually the higher the more important, to nodes within a graph corresponding to their network position based on different criteria. This gives rise to several types of centrality measures:
+ Centrality measures are metrics that are used to quantify the relative importance/influence/position of a node in a network. Indicators of centrality assign numbers or rankings, usually the higher the more important, to nodes within a graph corresponding to their network position based on different criteria. This gives rise to several types of centrality measures \cite{newman2018networks}:
 
 \subsection*{Degree Centrality} Measures the number of connections a node $i$ has to other nodes in the network or what is called degree of a vertex in a graph ($k$), if we define $\mathbf{x}=(x_1,x_2,\dots,x_N)$ as the centrality vector of the graph then: 
 
@@ -90,15 +94,16 @@ In mathematical terms, this centrality is defined by:
 \label{eqn:pr1}
     x_i= \alpha\sum_{j=1}^{N}A_{ij}\frac{x_j}{k_j^{\text{out}}} + \beta
 \end{equation}
-where $\mathbf{A}$ is the adjacency matrix and $\alpha$, $\beta$ are positive free parameters as in Katz Centrality --ref--.
+where $\mathbf{A}$ is the adjacency matrix and $\alpha$, $\beta$ are positive free parameters as in Katz Centrality (\ref{eqn:katz1}).
 
-Setting $k_j^{\text{out}}=1$ to avoid zero-division for nodes with no outgoing edges we can express eq. (\ref{eqn:pr1}) in matrix form:
+Setting $k_j^{\text{out}}=1$ to avoid zero-division for nodes with no outgoing edges we can express Eq. (\ref{eqn:pr1}) in matrix form:
 
 \begin{equation}
 \label{eqn:pr2}
     \mathbf{x} = \alpha\mathbf{AD^{-1}x} + \beta \mathbf{1}
 \end{equation}
 with $\mathbf{1}$ being the vector of ones $(1,\dots,1)$ and $\mathbf{D}$ being the diagonal matrix with elements $D_{ii} = max(k_i^{\text{out}},1)$. Rearranging for $\mathbf{x}$ and setting the conventional value of $\beta=1$, the PageRank centrality yields:
+
 \begin{equation}
 \label{eqn:pr3}
     \mathbf{x} = (\mathbf{I} - \alpha\mathbf{AD^{-1}})^{-1} \mathbf{1}
@@ -161,7 +166,7 @@ giving a practical expansion to compute by approximation (truncation) the resolv
 \end{equation}
 which converges for $\alpha<1/\rho(A)$ where $\rho(\cdot)$ denotes the spectral radius. 
 
-This series is in fact the original form of centrality conceived by Katz (1953) and it considers for each node $i$ the infuence of all the nodes connected by a $k$-length walk to $i$ with no restriction in reuse of nodes and edges. Thus, $\alpha$ can be considered an attenuation parameter as the probability that an edge is successfully traversed penalizing those nodes furthest away from $i$. 
+This series is in fact the original form of centrality conceived by Katz (1953) and it considers for each node $i$ the influence of all the nodes connected by a $k$-length walk to $i$ with no restriction in reuse of nodes and edges. Thus, $\alpha$ can be considered an attenuation parameter as the probability that an edge is successfully traversed penalizing those nodes furthest away from $i$. 
 
 Considering messages being passed along the directed edges, one important consequence of the above expansion is that elements of the resolvent matrix can be considered as a measure of the ability for a node $i$ to pass information to $j$ taking into account all possible routes, with longer ones given less importance. In thas sense, if we consider row sums in the resolvent matrix as a linear combination of powers of $\mathbf{A}$ we can talk about \textit{broadcast centrality vector} ($\mathbf{b}$) as the ability to send information for each node in the network:  
 
