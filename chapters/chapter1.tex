@@ -142,7 +142,7 @@ Eq. (\ref{eqn:katz1}) can be rewritten in matrix form as:
     \mathbf{x}= \alpha\mathbf{Ax} + \beta\mathbf{1}
 \end{equation}
 where $\mathbf{1}$ is the uniform vector $(1,1,\dots,1)$. Rearranging for $\mathbf{x}$, it follows that $\mathbf{x} = \beta (\mathbf{I}-\alpha\mathbf{A})^{-1}\mathbf{1}$.
-We are primarily concerned with the comparison of centrality scores between nodes, rather than the exact numerical value of the scores. Therefore, the overall multiplier is not important. For ease of calculation, typically $\beta$ is set to 1, which gives an expression for Katz Centrality measure \cite{katz1953new}:
+We are primarily concerned with the comparison of centrality scores between nodes, rather than the exact numerical value of the scores. Therefore, the overall multiplier is not important. For ease of calculation, typically $\beta$ is set to 1, which gives an expression for Katz Centrality measure:
 
 \begin{equation}
 \label{eqn:katz3}
@@ -166,7 +166,7 @@ giving a practical expansion to compute by approximation (truncation) the resolv
 \end{equation}
 which converges for $\alpha<1/\rho(A)$ where $\rho(\cdot)$ denotes the spectral radius. 
 
-This series is in fact the original form of centrality conceived by Katz (1953) and it considers for each node $i$ the influence of all the nodes connected by a $k$-length walk to $i$ with no restriction in reuse of nodes and edges. Thus, $\alpha$ can be considered an attenuation parameter as the probability that an edge is successfully traversed penalizing those nodes furthest away from $i$. 
+This series is in fact the original form of centrality conceived in 1953 by Leo Katz  \cite{katz1953new}, who considered for each node $i$ the influence of all the nodes connected by a $k$-length walk to $i$ with no restriction in reuse of nodes and edges. Thus, $\alpha$ can be considered an attenuation parameter as the probability that an edge is successfully traversed penalizing those nodes furthest away from $i$. 
 
 Considering messages being passed along the directed edges, one important consequence of the above expansion is that elements of the resolvent matrix can be considered as a measure of the ability for a node $i$ to pass information to $j$ taking into account all possible routes, with longer ones given less importance. In thas sense, if we consider row sums in the resolvent matrix as a linear combination of powers of $\mathbf{A}$ we can talk about \textit{broadcast centrality vector} ($\mathbf{b}$) as the ability to send information for each node in the network:  
 
@@ -186,7 +186,7 @@ As we saw before, Katz centrality offers a way to overcome the challenges faced 
 
 \section{Motivation of the study}
 \label{sec:motiv}
-Dynamic networks (systems involving transient interactions) are commonly found in real problems across various fields. Currently, the most popular approach is to examine network activity over discrete time frames or snapshots and analyze network status at these time slices. This method presents a number of challenges when it comes to modeling and computing, as it fails to account for the time-sensitive nature of network connections. If the time frame is too large, the ability to reproduce high-frequency transient behaviour, where an
+Dynamic networks, or what is the same, systems involving transient interactions are commonly found in real problems across various fields. Currently, the most popular approach is to examine network activity over discrete time frames or snapshots and analyze network status at these time slices. This method presents a number of challenges when it comes to modeling and computing, as it fails to account for the time-sensitive nature of network connections. If the time frame is too large, the ability to reproduce high-frequency transient behaviour, where an
 edge switches on and off multiple times in the space of a single window, is lost but if it's too narrow, it could result in a large number of empty time frames or lead to inaccuracies in representation that waste computational
 effort. Additionally, the model may not accurately reflect the time at which instantaneous information is sent, received or processed in time with the subsequent loss of information in the network.
 

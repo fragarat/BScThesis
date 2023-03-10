@@ -44,7 +44,7 @@ So in search of a time-varying "running summary" of communicability between pair
     \mathbf{S}(t_{k+1}) = (\mathbf{I} -  \alpha \mathbf{A}(t_{k+1})^{-\Delta t_{k+1}}\left[\mathbf{I} + e^{-\beta\Delta t_k} (\mathbf{S}(t_k) - \mathbf{I})\right]
 \end{equation} 
 
- with $\mathbf{S}(t_0) = (\mathbf{I} - \alpha \mathbf{A}(t_0))^{-\Delta t_0}$, $\mathbf{I}\in \mathbb{R}^{N\times N}$ denoting the identity matrix and $\alpha \in (0,1)$, $\beta > 0$ are two parameters where $\alpha$ is used to downweight walks of length $w$ by the factor $\alpha^w$ and $\beta$ is employed to reduce the weight of the activity, which is age-dependent by the factor $e^{-bt}$ if we consider the current age, $t$, of a dynamic walk as the time that has elapsed since the walk began, penalizing past activity that is considered old with respect to $t$. This factor $e^{-b\Delta t_k}$ in Eq. (\ref{eqn:rundyncommatdis}) may be interpreted as the probability that a message does not become "irrelevant" over a time length $\Delta t_k$. It's worth mentioning that the iteration in that same equation takes into account the scenario of nonuniform time intervals. By taking $\Delta t_k = 1$ for all $k$ and $\beta = 0$ (no down-scaling in time i.e. infinitely-long memory) the communicability matrix in Eq. (\ref{eqn:rundyncommatdis}) recovers the original iteration product form in Eq. (\ref{eqn:dyncommat}). On the other hand, for $\Delta t_k = 1$ and $\beta \to \infty$, that is, $e^{-b\Delta t_k}\to 0$ (complete down-scaling in time or zero memory), the communicability matrix yields $\mathbf{S}(t)=(\mathbf{I} - \alpha \mathbf{A}(t))^{-1}$ degrading to static Katz centrality.
+ with $\mathbf{S}(t_0) = (\mathbf{I} - \alpha \mathbf{A}(t_0))^{-\Delta t_0}$, $\mathbf{I}\in \mathbb{R}^{N\times N}$ denoting the identity matrix and $\alpha \in (0,1)$, $\beta > 0$ are two parameters where $\alpha$ is used to downweight walks of length $w$ by the factor $\alpha^w$ and $\beta$ is employed to reduce the weight of the activity, which is age-dependent by the factor $e^{-bt}$ if we consider the current age, $t$, of a dynamic walk as the time that has elapsed since the walk began, penalizing past activity that is considered old with respect to $t$. This factor $e^{-b\Delta t_k}$ in Eq. (\ref{eqn:rundyncommatdis}) may be interpreted as the probability that a message does not become "irrelevant" over a time length $\Delta t_k$. It's worth mentioning that the iteration in that same equation takes into account the scenario of nonuniform time intervals. By taking $\Delta t_k = 1$ for all $k$ and $\beta = 0$ (no down-scaling in time i.e. infinitely-long memory) the communicability matrix in Eq. (\ref{eqn:rundyncommatdis}) recovers the original iteration product form in Eq. (\ref{eqn:dyncommat}). On the other hand, for $\Delta t_k = 1$ and $\beta \to \infty$, that is, $e^{-b\Delta t_k}\to 0$ (complete downscaling in time or zero memory), the communicability matrix yields $\mathbf{S}(t)=(\mathbf{I} - \alpha \mathbf{A}(t))^{-1}$ degrading to static Katz centrality.
 
  So far, we have considered an environment where a fixed grid of time points are chosen but our aim, as previously stated, is to develop a new continuous-time framework. On that basis, $\mathbf{S}(t)$ is proposed to be updated over a small time interval $\delta t$, rewriting Eq. (\ref{eqn:rundyncommatdis}) as
  
@@ -55,29 +55,38 @@ So in search of a time-varying "running summary" of communicability between pair
 
 with $\mathbf{S}(0)=0$.
 
-Conceiving a $\delta t$-dependent power in the matrix products in equation (\ref{eqn:rundyncommat} and \ref{eqn:rundyncommatdis}) is a fundamental step for the derivation of this new framework. This is explained in the idea of considering a scenario where $\delta t \to 0$. So for b=0 (downscaling is meaningless) over very short periods of time $[t,t+\delta t]$ we can always refine to the pair of intervals $[t, t + \delta t/2]$ and $[t + \delta t/2, t + \delta t]$ and assuming $\mathbf{A}(t)$ does not change over this period the following identity 
+Conceiving a $\delta t$-dependent power in the matrix products in equation (\ref{eqn:rundyncommat} and \ref{eqn:rundyncommatdis}) is a fundamental step for the derivation of this new framework. This is explained in the idea of considering a scenario where $\delta t \to 0$. So, over very short periods of time $[t,t+\delta t]$, where downscaling in time is meaningless, i.e. $\beta = 0$, we can always refine to the pair of intervals $[t, t + \delta t/2]$ and $[t + \delta t/2, t + \delta t]$ and assuming $\mathbf{A}(t)$ does not change over this period the following identity 
 
 $$(\mathbf{I} - \alpha\mathbf{A}(t))^{-(1/2)\delta t} (\mathbf{I} - \alpha\mathbf{A}(t))^{-(1/2)\delta t} = (\mathbf{I} - \alpha\mathbf{A}(t))^{-\delta t}$$ show us that this scaling under the limit $\delta t \to 0$ is consistent and meaningful.
 
-For convenience, we define $U(t)=I + S(t)$ as $\delta t$ approaches $0$. Then, applying the matrix exponential and logarithm with the identities $H =e^{\log H}$ and $\log H^\alpha =\alpha\log H$ for $-1 \le \alpha \le 1$ to Eq. (\ref{eqn:rundyncommat}) we obtain 
+From Eq. (\ref{eqn:rundyncommat}), taking the identity matrix to the left hand side, we define for convenience $U(t)=I + S(t)$. Then, if we apply the matrix exponential and logarithm with the identities $H =e^{\log H}$ and $\log H^\alpha =\alpha\log H$ for $-1 \le \alpha \le 1$ \cite{higham2008functions} to that matrix equation, we obtain 
 
 \begin{equation}
 \label{eqn:u3.1}
     \mathbf{U}(t + \delta t) = (\mathbf{I} + e^{-\beta\delta t}(\mathbf{U}(t) - \mathbf{I})) \exp\left(-\delta t \log (\mathbf{I} - \alpha \mathbf{A}(t + \delta t)) \right)
 \end{equation} 
 
-Deriving with respect to $\delta t$ and taking the limit $\delta t \to 0$ we arrive at the matrix ODE proposed by \textsl{Grindrod and Higham} \cite{grindrod2014dynamical}:
+By taking the limit $\delta t \to 0$, expanding in Taylor series to the first order the right-hand
+side of Eq. (\ref{eqn:u3.1}) and rearranging the terms, this equation can be rewritten as
+
+\begin{equation*}
+\label{eqn:u3.1b}
+    \frac{\mathbf{U}(t + \delta t) - \mathbf{U}(t)}{\delta t} = -\beta (\mathbf{U}(t) - \mathbf{I}) - \mathbf{U}(t)\log (\mathbf{I} - \alpha \mathbf{A}(t)) + \mathcal{O}(\delta t)
+\end{equation*}
+
+Thus, we finally arrive at the matrix ODE proposed by \textsl{Grindrod and Higham} \cite{grindrod2014dynamical}, the following non-autonomous Cauchy problem:
 
 \begin{equation}
 \label{eqn:u3.3}
-    \mathbf{U^{\prime}}(t) = -\beta (\mathbf{U}(t) - \mathbf{I}) - \mathbf{U}(t)\log (\mathbf{I} - \alpha \mathbf{A}(t))
+    \begin{cases}
+      \mathbf{U^{\prime}}(t) = -\beta (\mathbf{U}(t) - \mathbf{I}) - \mathbf{U}(t)\log (\mathbf{I} - \alpha \mathbf{A}(t)), ~~~t>0\\
+      \mathbf{U}(0)=\mathbf{I}
+    \end{cases}
 \end{equation}
 
-with $\mathbf{U}(0)=\mathbf{I}$. 
+This matrix ODE (\ref{eqn:u3.3}) provides us with a continuous-time framework for a dynamic system driven by its adjacency matrix, $\mathbf{A}(t)$ with $\mathbf{U}(t)_{ij}$ for $i\ne j$ quantifying the current ability of node $i$ to pass information to node $j$, so that longer and older walks are less important.
 
-This matrix ODE (\ref{eqn:u3.3}) provides us with a continuous-time framework for a dynamic system driven by its adjacency matrix, $\mathbf{A}(t)$ and its communicability matrix, $\mathbf{U}(t)$ where $\mathbf{U}(t)_{ij}$ for $i\ne j$ quantifies the current ability of node $i$ to pass information to node $j$, giving less importance to longer and older dynamic walks.
-
-In the same way as we did with Katz centrality for static networks in (\ref{eqn:broad}, \ref{eqn:receiv}), in order to focus our attention to the individual nodes by summing the rows and columns of the matrix $\mathbf{U}(t)$, we define two dynamic vectors, namely the broadcast vector $\mathbf{b}(t)$ and the receive vector $\mathbf{r}(t)$, as shown in equation (\ref{eqn:u3.4}). These vectors enable us to measure the current inclination of each node $b_i(t)$ to broadcast or $r_i(t)$ to receive information across the dynamic network under assumptions of less significance to longer and older walks:
+In the same way as we did with Katz centrality for static networks in (\ref{eqn:broad}, \ref{eqn:receiv}), in order to focus our attention to the individual nodes by summing the rows and columns of the matrix $\mathbf{U}(t)$, we define two dynamic vectors, namely the broadcast vector $\mathbf{b}(t)$ and the receive vector $\mathbf{r}(t)$, as shown in equation (\ref{eqn:u3.4}). These vectors enable us to measure the current inclination of each node to broadcast, $b_i(t)$, or to receive information, $r_i(t)$, across a dynamic network under assumptions of less significance to longer and older walks:
 
 \begin{equation}
 \label{eqn:u3.4}
@@ -87,6 +96,88 @@ In the same way as we did with Katz centrality for static networks in (\ref{eqn:
 
 \section{Remarks on the new framework}
 \label{sec:remarks}
+
+\begin{highlightedParagraphC}
+ 
+Real-time updating of the receive centrality is a factor of $N$ simpler than real-time updating of broadcast centrality.
+
+\end{highlightedParagraphC}
+
+Simulating the dynamic broadcast centrality vector, $\mathbf{b}(t)$, is computationally much more expensive than the dynamic receive vector. $\mathbf{b}(t)$ requires to work with the full matrix $\mathbf{U}(t)$ in Eq. (\ref{eqn:u3.3}) which implies to deal with orders of $\mathcal{O}(N^2)$ for storage and an $\mathcal{O}(N^2)$ cost per unit time. One possible approach to address this problem is to develop approximation techniques, such as sparsifying $\mathbf{U}(t)$ or reducing its dimension.
+
+On the other hand, we note that the receive centrality vector, $\mathbf{r}(t)$, satisfies its own vector-valued ODE, 
+
+\begin{equation}
+\label{eqn:u4.1}
+    \mathbf{r^{\prime}}(t) = -\beta (\mathbf{r}(t) - \mathbf{1}) - (\log (\mathbf{I} - \alpha \mathbf{A}(t)))^T\mathbf{r}(t)
+\end{equation} with $\mathbf{r}(0)=\mathbf{1}$, which implies a considerable reduction of order $\mathcal{O}(N)$ with respect to equation (\ref{eqn:u3.3}).
+
+Unfortunately, it is not possible to derive a vector-valued ODE for the dynamic broadcast vector using the same method. This dissimilarity comes from the fact that the receive vector $\mathbf{r}(t)$ monitors the total amount of information that flows into each node, so this information can be carried forward in time as new links emerge. In contrast, the broadcast vector $\mathbf{b}(t)$ tracks the information that has left each node but it does not indicate the current location of the information because this has not been recorded, and therefore, we cannot update it based solely on $\mathbf{b}(t)$.
+
+\begin{highlightedParagraphC}
+ 
+The overall dynamic broadcast centrality can be computed via the dynamic receive vector $\mathbf{r}(t)$.
+
+\end{highlightedParagraphC}
+
+The total broadcast centrality of the network, which is represented by $\sum_{i=1}^{N} \mathbf{b}_i(t)$, can be calculated using equation (\ref{eqn:u4.1}). This is because in any matrix, the sum of row sums is equal to the sum of column sums, in our case $\sum_{i=1}^{N} \mathbf{b}_i(t) = \sum_{i=1}^{N} \mathbf{r}_i(t)=\sum_{i=1}^{N}\sum_{j=1}^{N} \mathbf{U}_{ij}(t)$. Therefore, by running a simulation of an ODE system that is $N$ times smaller than the one needed for nodal broadcast information and computing $\mathbf{r}(t)^T\mathbf{1}$, we can keep track of the current broadcast capability of the entire network.
+
+\begin{highlightedParagraphC}
+ 
+ Dynamic vector of receive centralities and aggregate network centrality, may be computed for very large, sparsely connected networks at a reasonable computational cost. 
+
+\end{highlightedParagraphC}
+
+As we saw above, the aggregate network centrality can be computed via the dynamic receive vector, $\mathbf{r}(t)$, by $$\sum_{i=1}^{N}\sum_{j=1}^{N} \mathbf{U}_{ij}(t) = \sum_{i=1}^{N} \mathbf{r}_i(t)$$
+
+where the storage requirement for $\mathbf{r}(t)$ scales like the number of nodes in the system, $\mathcal{O}(N)$, and the primary computation involved in evaluating the right-hand side of Eq. (\ref{eqn:u4.1}) can be accomplished by performing only a few products of a sparse matrix with a full vector. This results in a cost of $\mathcal{O}(N)$ per unit time for a network with $\mathcal{O}(1)$ edges per node.
+
+\begin{highlightedParagraphC}
+ 
+The choice of downweighting parameters, $\alpha$ and $\beta$, plays an important role in Eq. \ref{eqn:u3.3} and it is strongly connected to the nature of the interactions represented by $\mathbf{A}(t)$.
+
+\end{highlightedParagraphC}
+
+On one side, the value of the parameter $\beta$, which downweights temporal information, can be interpreted as the rate at which news or information becomes less relevant as time passes. This means that if a piece of information is $t$ units of time old, its relevance will be decreased by $e^{−\beta t}$. Therefore, by studying the typical half-life of a link, we can determine an appropriate value for this parameter and use it to quantify the rate at which information becomes outdated. According to Mason \cite{lifespan}, the lifespan of a link varies greatly depending on its nature. Links belonging to social networks such as YouTube, Facebook or Twitter can remain active between 2-8 hours and, on the contrary, news have a much shorter life with only a few minutes after which they are no longer relevant. To estimate the value of $\beta$, researchers often use statistical methods such as maximum likelihood estimation or least squares regression to fit the decay model to empirical data. This involves finding the value of $\beta$ that best fits the observed decay pattern, based on a set of observed edge weights over time.
+
+On the other hand, the value of the edge-attenuation parameter $\alpha$, which penalizes longer walks in the network, is determined in the discrete case as we saw in (\ref{eqn:dyncommat}) by the reciprocal of the largest spectral radius among the spectral radii of the matrices $\{A(t_k)\}$. In continuous-time ODE as (\ref{eqn:u3.3}), the logarithm $\log(\mathbf{I} - \alpha \mathbf{A}(t))$ is well-defined if $1 - \alpha \lambda_i > 0$ for all real eigenvalues $\lambda_i$ of $\mathbf{A}(t)$ \cite{higham2008functions}.
+
+As a particular example, $\alpha$ is constrained by $\alpha < 1$ in the case of one-to-one undirected communication, like voice calls, since the adjacency matrix $A(t)$ can always be permuted into a block diagonal structure, with non-trivial blocks of the form 
+
+$$\begin{bmatrix}
+0 & 1\\
+1 & 0 
+\end{bmatrix}$$ where $\lambda_1=1$.
+
+\begin{highlightedParagraphC}
+ 
+The choice of a distinct starting point in Eq. (\ref{eqn:rundyncommat}), considering other types of dynamic walks, arises a slightly different system of equations.
+
+\end{highlightedParagraphC}
+
+The initial assumption in Eq. (\ref{eqn:rundyncommat}) relies on the concept of counting dynamic walks in a broad sense, encompassing any path that utilizes zero, one, or multiple edges per time step. Alternatively, we could adopt a different approach in which we count other types of dynamic walks by reducing their importance. One possible way to begin this alternative approach is by using the following iteration technique
+
+\begin{equation}
+\label{eqn:remarks1}
+    \mathbf{S}(t + \delta t) = (\mathbf{I} + e^{-\beta\delta t}\mathbf{S}(t)) (H(\mathbf{A}(t))^{-\delta t} - \mathbf{I}
+\end{equation}
+where $H(\mathbf{A}(t))$ is some matrix function. One suitable option for this matrix function is to use truncated power series such as $\mathbf{I} + \alpha \mathbf{A}(t) + \alpha^2 \mathbf{A}(t)^2 + \cdots + \alpha^p \mathbf{A}(t)^p$, which only consider dynamic walks that involve a maximum of $p$ edges per time step. When employing this approach, the ODE (\ref{eqn:u3.3}) takes on a more general form 
+
+\begin{equation}
+\label{eqn:remarks2}
+    \mathbf{U^{\prime}}(t) = -\beta (\mathbf{U}(t) - \mathbf{I}) + \mathbf{U}(t)\log (H(\mathbf{A}(t)))
+\end{equation}
+
+\begin{highlightedParagraphC}
+ 
+Future research: further generalization of the framework on dynamical systems at lower dimensions.
+
+\end{highlightedParagraphC}
+
+A natural continuation of this study could be applied to different types of dynamical systems where only a few nodes compared to the total number of nodes are really significant in the behavior and evolution of such systems. For instance, consider an evolving network $\mathbf{A}(t)$ with $N \times N$ dimensions, where $N$ is very large. If a smaller subset of $M\ll N$ nodes is identified as significant, it might be worthwhile to explore an ordinary differential equation involving $V(t)\in \mathbb{R}^{M\times M}$ with $M\times M$ dimensions. The equation could be in the form of 
+
+$$V(t)=P(V(t)) + Q(V(t))F(A(t)),$$ where $P$ and $Q$ are polynomial or matrix-valued functions, and $F: [0, 1]^{N×N} \to \mathbb{R}^{M\times M}$ is an appropriate matrix-valued mapping. This kind of system would allow us to reduce the interactions among all $N$ nodes to the subset of interest, and then measure the resulting changes in behavior in this lower dimension.
+
 
 
 

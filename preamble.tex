@@ -165,6 +165,22 @@
 	  		%\fcolorbox{black}{mygrey}{\usebox{\mybox}}%
 		\end{flushright}
 		}
+
+  \newenvironment{highlightedParagraphC} % Highlighted paragraph
+		{%
+		\fboxsep = 2ex
+		\fboxrule = .4pt
+	  	\begin{lrbox}{\mybox}%
+	  	\begin{minipage}{\textwidth-2\fboxsep}\itshape\parskip=2ex
+		}
+		{%
+		\end{minipage}
+	  	\end{lrbox}%
+		\begin{center}
+			\colorbox{mygrey}{\usebox{\mybox}}%
+	  		%\fcolorbox{black}{mygrey}{\usebox{\mybox}}%
+		\end{center}
+		}
 		
 %	\newenvironment{highlightedParagraph} % If you don't like grey shading
 %		{
