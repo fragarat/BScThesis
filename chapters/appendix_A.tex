@@ -1,30 +1,456 @@
-\chapter{$\vert$ First Appendix Title}
+\chapter{$\vert$ Python code}
 \label{chap:appa}
 
-Python code example:
+\section*{First synthetic experiment}
 
-\begin{lstlisting}[language=Python, caption=Example code]
-	# Program to display the Fibonacci sequence up to n-th term
-	
-	nterms = int(input("How many terms? "))
-	
-	# first two terms
-	n1, n2 = 0, 1
-	count = 0
-	
-	# check if the number of terms is valid
-	if nterms <= 0:
-		print("Please enter a positive integer")
-	elif nterms == 1:
-		print("Fibonacci sequence upto",nterms,":")
-		print(n1)
-	else:
-		print("Fibonacci sequence:")
-		while count < nterms:
-			print(n1)
-		nth = n1 + n2
-		# update values
-		n1 = n2
-		n2 = nth
-		count += 1
+\begin{lstlisting}[language=Python, caption=First synthetic experiment]
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+#############################################################
+################### SYNTHETIC EXPERIMENT 1 ##################
+#############################################################
+
+########################## MODULES ##########################
+
+import numpy as np
+from scipy.integrate import solve_ivp
+from scipy.linalg import logm
+import matplotlib.pyplot as plt
+
+######################### VARIABLES #########################
+# number of nodes
+N = 31 
+# alpha and beta parameters
+a = 0.7
+b = 0.1
+# depth of binary tree (2 even and 2 odd)
+levels = 2
+# identity matrix
+I = np.eye(N) 
+
+######################### FUNCTIONS #########################
+
+def unirandom(matrix):
+    '''
+    Introduces a 1 in a uniform randomized number of entries, specified by the 
+    parameter 'num_entries' in a given matrix.
+
+            Parameters:
+                    matrix (arr): matrix of size MxN
+
+            Returns:
+                    -
+    '''
+    # number of entries to randomize, uniform dist. with avg.= 5
+    num_entries = int(np.random.uniform(low=0, high=10))
+    
+    if matrix.size < num_entries:
+        raise ValueError("Invalid number of entries to randomize")
+        
+    # randomly select num_entries unique positions in the matrix
+    positions = np.random.choice(matrix.size, size=num_entries, replace=False)
+    # set the selected positions to 1
+    matrix.flat[positions] = 1.
+
+def A_even():
+    '''
+    Returns the constant value that takes A(t) at even time intervals with 
+    some noise added by 'unirandom' function.
+
+            Parameters:
+                    -
+
+            Returns:
+                    ematrix (arr): NxN matrix for even time intervals
+    '''
+    ematrix = np.zeros((N, N))
+    for i in (2**k for k in range(0, levels*2 , 2)):
+        for j in range(1, i+1):
+            ematrix[i-1][i*2-1] = 1
+            ematrix[i-1][i*2] = 1
+            i = i + 1
+    unirandom(ematrix)
+    return ematrix
+
+def A_odd():
+    '''
+    Returns the constant value that takes A(t) at odd time intervals with 
+    some noise added by 'unirandom' function.
+
+            Parameters:
+                    -
+
+            Returns:
+                    omatrix (arr): NxN matrix for odd time intervals
+    '''
+    omatrix = np.zeros((N, N))
+    for i in (2**k for k in range(1, levels*2 , 2)):
+        for j in range(1, i+1):
+            omatrix[i-1][i*2-1] = 1
+            omatrix[i-1][i*2] = 1
+            i = i + 1
+    unirandom(omatrix)
+    return omatrix
+   
+def aggregate_out_degree(matrix):
+    '''
+    Returns the row sums that represent the aggregate out degree for each
+    node (row) given an adjacency matrix.
+
+            Parameters:
+                    matrix (arr): adjacency matrix of size NxN
+
+            Returns:
+                    row_sums (list): list of agg. out degree for each node
+    '''
+    row_sums = [sum(row) for row in matrix]
+    
+    return row_sums
+
+
+######################### A(t) #########################
+
+# time interval t=[0, 20], with A(t) constant over each subinterval [i, i + 1)
+# where A(t) = A_even and A(t) = A_odd when 'i' is even and odd respectively
+
+A0 = A_even()
+A1 = A_odd()
+A2 = A_even()
+A3 = A_odd()
+A4 = A_even()
+A5 = A_odd()
+A6 = A_even()
+A7 = A_odd()
+A8 = A_even()
+A9 = A_odd()
+A10 = A_even()
+A11 = A_odd()
+A12 = A_even()
+A13 = A_odd()
+A14 = A_even()
+A15 = A_odd()
+A16 = A_even()
+A17 = A_odd()
+A18 = A_even()
+A19 = A_odd()
+A20 = np.zeros((N, N))
+
+# aggregate matrix to compute the agg. out degree
+agg_matrix = A0 + A1 + A2 + A3 + A4 + A5 + A6 + A7 + A8 + A9 + A10 +\
+             A11 + A12 + A13 + A14 +A15 + A16 + A17 + A18 + A19
+      
+
+# Adjacency matrix for t=[0,20]
+def Adj(t):
+    if 0.0 <= t < 1.0:
+        return A0
+    if 1.0 <= t < 2.0:
+        return A1
+    if 2.0 <= t < 3.0:
+        return A2
+    if 3.0 <= t < 4.0:
+        return A3
+    if 4.0 <= t < 5.0:
+        return A4
+    if 5.0 <= t < 6.0:
+        return A5
+    if 6.0 <= t < 7.0:
+        return A6
+    if 7.0 <= t < 8.0:
+        return A7
+    if 8.0 <= t < 9.0:
+        return A8
+    if 9.0 <= t < 10.0:
+        return A9
+    if 10.0 <= t < 11.0:
+        return A10
+    if 11.0 <= t < 12.0:
+        return A11
+    if 12.0 <= t < 13.0:
+        return A12
+    if 13.0 <= t < 14.0:
+        return A13
+    if 14.0 <= t < 15.0:
+        return A14
+    if 15.0 <= t < 16.0:
+        return A15
+    if 16.0 <= t < 17.0:
+        return A16
+    if 17.0 <= t < 18.0:
+        return A17
+    if 18.0 <= t < 19.0:
+        return A18
+    if 19.0 <= t <= 20.0:
+        return A19
+    return A20
+    
+######################### ODE #########################
+
+# Matrix ODE function in vector form
+def f(t, U):
+    
+    # Reshape U from vector to matrix
+    U = U.reshape((N, N))
+    
+    # Compute the matrix ODE
+    dUdt = -b * (U - I) - U @ logm(I - a * Adj(t))
+    
+    # Reshape dUdt from matrix to vector
+    dUdt = dUdt.flatten()
+    return dUdt
+
+
+# Initial condition 
+U0 = np.eye(N)
+U0 = U0.flatten()
+#time span
+t_span = (0, 20)
+
+# Solve the matrix ODE numerically using Runge-Kutta 45 method
+sol = solve_ivp(f, t_span, U0, method='RK45')
+
+# Print the solution at discrete time points
+print("\nsol_t :\n", sol.t)
+print("\nsol_y :\n", sol.y)
+
+# broadcast centrality at t = 20
+b_t_20 = sol.y[:,-1].reshape(N,N)@np.ones(N)
+# aggregate out degree 
+out_degree_list = aggregate_out_degree(agg_matrix)
+
+print("\nb(t=20) :\n", b_t_20)
+print("\nAgg. out degree =", out_degree_list)
+
+######################### PLOTS #########################
+
+fig, ax = plt.subplots()
+ax.plot(list(range(1,N+1)), b_t_20, '*')
+ax.set_title(r"First synthetic experiment: $\alpha=0.7$ $\beta=0.1$")
+ax.set_xlabel("node")
+ax.set_ylabel("dynamic broadcast  b(t=20)")
+
+fig.savefig('exp1_bt20.eps', format='eps')
+
+fig2, ax2 = plt.subplots()
+ax2.plot(list(range(1,N+1)), out_degree_list, '*', color='r')
+ax2.set_title("First synthetic experiment")
+ax2.set_xlabel("node")
+ax2.set_ylabel("aggregate out degree")
+
+fig2.savefig('exp1_agg_out_degree.eps', format='eps')
+\end{lstlisting}
+
+\section*{Second synthetic experiment}
+
+\begin{lstlisting}[language=Python, caption=Second synthetic experiment]
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+#############################################################
+################### SYNTHETIC EXPERIMENT 2 ##################
+#############################################################
+
+########################## MODULES ##########################
+
+import numpy as np
+from scipy.integrate import solve_ivp
+from scipy.linalg import logm
+import matplotlib.pyplot as plt
+
+######################## VARIABLES #####################
+# number of nodes
+N = 17 
+# alpha and beta parameters
+a = 0.9
+b = 0.1
+
+######################### A(t) #########################
+
+# identity matrix of size NxN
+I = np.eye(N) 
+
+# A(ti) for each interval where
+# ti := [(i − 1)τ , (i − 1 + 0.9)τ ), for i = 0, 1, . . . , 7, and τ = 0.1
+# over the full interval t = [0, 3.5]
+
+A0 = np.zeros((N, N)) # intercycle value, no connections
+
+A1 = np.zeros((N, N))
+A1[0][2] = 1
+A1[2][0] = 1
+A1[1][16] = 1
+A1[16][1] = 1
+
+A2 = np.zeros((N, N))
+A2[2][3] = 1
+A2[3][2] = 1
+
+A3 = np.zeros((N, N))
+A3[2][4] = 1
+A3[4][2] = 1
+A3[3][5] = 1
+A3[5][3] = 1
+
+A4 = np.zeros((N, N))
+A4[0][16] = 1
+A4[16][0] = 1
+A4[1][2] = 1
+A4[2][1] = 1
+A4[6][3] = 1
+A4[3][6] = 1
+A4[4][7] = 1
+A4[7][4] = 1
+A4[5][9] = 1
+A4[9][5] = 1
+
+A5 = np.zeros((N, N))
+A5[4][8] = 1
+A5[8][4] = 1
+A5[5][10] = 1
+A5[10][5] = 1
+A5[6][11] = 1
+A5[11][6] = 1
+A5[7][13] = 1
+A5[13][7] = 1
+
+A6 = np.zeros((N, N))
+A6[6][12] = 1
+A6[12][6] = 1
+A6[7][14] = 1
+A6[14][7] = 1
+A6[8][15] = 1
+A6[15][8] = 1
+
+A7 = np.zeros((N, N))
+A7[8][16] = 1
+A7[16][8] = 1    
+
+# Adjacency matrix during five cycles
+def Adj(t):
+    if 0.0 <= t < 0.09:
+        return A1
+    if 0.1 <= t < 0.19:
+        return A2
+    if 0.2 <= t < 0.29:
+        return A3
+    if 0.3 <= t < 0.39:
+        return A4
+    if 0.4 <= t < 0.49:
+        return A5
+    if 0.5 <= t < 0.59:
+        return A6
+    if 0.6 <= t < 0.69:
+        return A7
+    
+    if 0.8 <= t < 0.89:
+        return A1
+    if 0.9 <= t < 0.99:
+        return A2
+    if 1.0 <= t < 1.09:
+        return A3
+    if 1.1 <= t < 1.19:
+        return A4
+    if 1.2 <= t < 1.29:
+        return A5
+    if 1.3 <= t < 1.39:
+        return A6
+    if 1.4 <= t < 1.49:
+        return A7
+    
+    if 1.6 <= t < 1.69:
+        return A1
+    if 1.7 <= t < 1.79:
+        return A2
+    if 1.8 <= t < 1.89:
+        return A3
+    if 1.9 <= t < 1.99:
+        return A4
+    if 2.0 <= t < 2.09:
+        return A5
+    if 2.1 <= t < 2.19:
+        return A6
+    if 2.2 <= t < 2.29:
+        return A7
+    
+    if 2.4 <= t < 2.49:
+        return A1
+    if 2.5 <= t < 2.59:
+        return A2
+    if 2.6 <= t < 2.69:
+        return A3
+    if 2.7 <= t < 2.79:
+        return A4
+    if 2.8 <= t < 2.89:
+        return A5
+    if 2.9 <= t < 2.99:
+        return A6
+    if 3.0 <= t < 3.09:
+        return A7
+    
+    if 3.2 <= t < 3.29:
+        return A1
+    if 3.3 <= t < 3.39:
+        return A2
+    if 3.4 <= t < 3.49:
+        return A3
+    if 3.5 <= t < 3.59:
+        return A4
+    if 3.6 <= t < 3.69:
+        return A5
+    if 3.7 <= t < 3.79:
+        return A6
+    if 3.8 <= t < 3.89:
+        return A7
+    
+    return A0
+    
+######################### ODE #########################
+    
+# Matrix ODE function in vector form
+def f(t, U):
+    
+    # Reshape U from vector to matrix
+    U = U.reshape((N, N))
+    
+    # Compute the matrix ODE
+    dUdt = -b * (U - I) - U @ logm(I - a * Adj(t))
+    # Reshape dUdt from matrix to vector
+    dUdt = dUdt.flatten()
+    return dUdt
+
+
+# Initial condition 
+U0 = np.eye(N)
+U0 = U0.flatten()
+# time span
+t_span = (0, 3.5) # time span
+
+# Solve the matrix ODE numerically using solve_ivp
+sol = solve_ivp(f, t_span, U0)
+
+# Print the solution at discrete time points
+print("\nsol_t :\n", sol.t)
+print("\nsol_y :\n", sol.y)
+
+# broadcast centrality of nodes A (node 0) and B (node 1)
+b_t_A = [(sol.y[:,i].reshape(N,N)@np.ones(N))[0] for i in range(0,sol.y.shape[1])]
+b_t_B = [(sol.y[:,i].reshape(N,N)@np.ones(N))[1] for i in range(0,sol.y.shape[1])]
+
+print("\nb(t)_A :\n", b_t_A)
+print("\nb(t)_B :\n", b_t_B)
+
+######################### PLOT #########################
+    
+fig, ax = plt.subplots()
+ax.plot(sol.t, b_t_A, 'r', sol.t, b_t_B, 'b--')
+ax.set_title(r"Second synthetic experiment: $\alpha=0.9$, $\beta=0.1$")
+ax.set_xlabel("time (s)")
+ax.set_ylabel("broadcast centrality  b(t)")
+ax.legend(["b(t) of node A", "b(t) of node B"])
+#ax.grid()
+ax.set_xlim(0, 3.5)
+ax.set_ylim(1, None)
+
+fig.savefig('exp2_btA_vs_btB.eps', format='eps')
 \end{lstlisting}

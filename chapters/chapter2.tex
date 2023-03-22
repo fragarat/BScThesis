@@ -86,7 +86,7 @@ Thus, we finally arrive at the matrix ODE proposed by \textsl{Grindrod and Higha
 
 This matrix ODE (\ref{eqn:u3.3}) provides us with a continuous-time framework for a dynamic system driven by its adjacency matrix, $\mathbf{A}(t)$ with $\mathbf{U}(t)_{ij}$ for $i\ne j$ quantifying the current ability of node $i$ to pass information to node $j$, so that longer and older walks are less important.
 
-In the same way as we did with Katz centrality for static networks in (\ref{eqn:broad}, \ref{eqn:receiv}), in order to focus our attention to the individual nodes by summing the rows and columns of the matrix $\mathbf{U}(t)$, we define two dynamic vectors, namely the broadcast vector $\mathbf{b}(t)$ and the receive vector $\mathbf{r}(t)$, as shown in equation (\ref{eqn:u3.4}). These vectors enable us to measure the current inclination of each node to broadcast, $b_i(t)$, or to receive information, $r_i(t)$, across a dynamic network under assumptions of less significance to longer and older walks:
+In the same way as we did with Katz centrality for static networks in Eqs. (\ref{eqn:broad}, \ref{eqn:receiv}), we define two dynamic vectors, namely the broadcast vector $\mathbf{b}(t)$ and the receive vector $\mathbf{r}(t)$, as shown in equation (\ref{eqn:u3.4}), in order to focus our attention to the individual nodes by summing the rows and columns of the matrix $\mathbf{U}(t)$ respectively. These vectors enable us to measure the current inclination of each node to broadcast, $b_i(t)$, or to receive information, $r_i(t)$, across a dynamic network under assumptions of less significance to longer and older walks:
 
 \begin{equation}
 \label{eqn:u3.4}
