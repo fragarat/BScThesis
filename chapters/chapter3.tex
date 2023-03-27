@@ -84,7 +84,7 @@ Figure \ref{fig:bt4} illustrates the aggregate degree of each node, that is, the
 \newpage
 We now consider the second synthetic experiment from \cite{grindrod2014dynamical}. The experiment simulates multiple rounds of voice calls that occur along an undirected binary tree structure. Each node in the tree has at most one edge at any given time, meaning that there are no "conference" calls.  Figure \ref{fig:exp2} shows the network with labels assigned to the edges indicating when they are active. 
 
-In this experiment, $\mathbf{A}(t)$ is constructed based on the ordered and non-overlapping time intervals defined by $t_i\coloneqq[(i − 1)\tau , (i − 1 + 0.9)\tau )$, for $i=0, 1, \dots , 7$, and $\tau =0.1$ resulting in all the adjacency matrices have unitary spectral radius.
+The adjacency matrix, $\mathbf{A}(t)$, for this experiment is defined based on the ordered and non-overlapping time intervals such that $t_i\coloneqq[(i − 1)\tau , (i − 1 + 0.9)\tau )$, for $i=0, 1, \dots , 7$, and $\tau =0.1$.
 
 \begin{figure}[h]\centering
     \includegraphics[width=.65\textwidth]{experiment2}
@@ -93,9 +93,9 @@ In this experiment, $\mathbf{A}(t)$ is constructed based on the ordered and non-
     \bigskip
 \end{figure}
 
-The dynamic network is constructed in a way that node A is designed to be a more effective influencer compared to node B. This can be attributed to several factors such as a higher social or business status or access to more current and relevant information. Connections are built in such a way that node A talks to node C in $t_1$, initiating the cascade of phone calls in the network. On the other hand, node B waits until $t_4$ to contact node C, which does not trigger any new cascades.
+The dynamic network is constructed in a way that node A is designed to be a more effective influencer compared to node B. This can be attributed to several factors such as a higher social or business status or access to more current and relevant information. Connections are built in such a way that node A talks to node C in $t_1$, initiating the cascade of phone calls in the network. On the other hand, node B waits until $t_4$ to contact node C, which does not trigger any new cascades. In this scenario, all the adjacency matrices for each time interval turn out to have unitary spectral radius.
 
-The experiment is repeated over five cycles, during which nodes A and B send out a total of 10 messages. Even if nodes A and B have an identical behaviour from an overall perspective, both contacting nodes C and D for the same length of time, the results in Figure \ref{fig:twobt} (for $\alpha = 0.7, \beta = 0.1$ and $\alpha = 0.9 , \beta = 0.1$ respectively) show that the dynamic broadcast centrality measure is able to capture the knock-on effect enjoyed by node A (solid line) regardless of the value of alpha used, more strongly marked in the latter (Figure \ref{fig:bt6}).
+The experiment is repeated over five cycles, during which nodes A and B send out a total of 10 messages. Even if nodes A and B have an apparent identical behaviour from an overall perspective, both contacting nodes C and D for the same length of time, the results in Figure \ref{fig:twobt} (for $\alpha = 0.7, \beta = 0.1$ and $\alpha = 0.9 , \beta = 0.1$ respectively) show that the dynamic broadcast centrality measure is able to capture the knock-on effect enjoyed by node A (solid line) with respect to node B (dashed line). This difference in broadcast centrality is much more pronounced for values of $\alpha$ close to one (Figure \ref{fig:bt6}), where longer walks are more strongly penalized.
 
 \begin{figure}
      \centering
