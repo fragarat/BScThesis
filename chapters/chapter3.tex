@@ -48,7 +48,7 @@ In Figure \ref{fig:bt3}, we return to the original $\beta=0.1$ value and set $\a
 
 Figure \ref{fig:bt4} illustrates the aggregate degree of each node, that is, the sum of out degrees over time for each node. For nodes 1 to 15 in the binary tree structure, this value is 20, which fluctuates due to the introduced noise. This graph highlights that the overall bandwidth can be a misleading network metric for determining node influence.
 
-\begin{figure}
+\begin{figure}[h]
      \centering
      \begin{subfigure}[b]{0.4\textwidth}
          \centering
@@ -118,4 +118,52 @@ The experiment is repeated over five cycles, during which nodes A and B send out
 
 \section{Voice call experiment}
 \label{sec:voicecall}
+The next experiment applies the new modelling framework (Eq. \ref{eqn:u3.3}) to a set of voice call interactions, in order to analyze the dynamic behavior of a fictitious, controversial socio-political movement. The data used for the experiment, supplied as part of the IEEE VAST 2008 Challenge \cite{grinstein2008vast}, consists of a complete set of 9834 time-stamped calls across 400 cell phone users over a 10 day period, with information on IDs for the send and receive nodes, start time in hours/minutes, and duration in seconds.
 
+The aim of the experiment is to show the usefulness of the new matrix ODE in dealing with this type of dynamic network. To that end, the bandwidth of a node is defined as the aggregate number of seconds for which the node ID is active as a sender or receiver. This will allow us to compare the effective activation time of a certain node with its relevance in terms of dynamic broadcast centrality.
+
+The designers of the above mentioned competition provided additional information indicating that node 200 was the leader of an important community who controlled a closely connected subnetwork or inner circle consisting of nodes 1, 2, 3, and 5. However, starting from day 7, these individuals seem to have switched their phone IDs: node 200 became 300, and the others became 306, 309, 360, and 392.
+
+For this experiment, $\mathbf{A}(t)$ was assumed to be symmetric, meaning that $\mathbf{A}_{ij}(t) = \mathbf{A}_{ji}(t) = 1$ if nodes $i$ and $j$ were communicating at time $t$, which was measured in seconds. Parameters $\beta$ was chosen to be approximately $\beta = 1/(60\times 60 \times 24) \approx 1.2 x 10^{-5}$, which corresponded to a time downweighting of $e^{-1}$ per day, and set the edge attenuation parameter $\alpha$ to a similar value of $10^{-4}$. The SciPy's \texttt{solve\_ivp} method was used to numerically solve the ODE (\ref{eqn:u3.3}), which discretizes the time interval in a transparent way under the hood. Additionally, absolute and relative error tolerances were both set to $10^{-4}$. To improve efficiency, the matrix logarithm was approximated in this occasion with its expansion to the fifth power:
+
+$$log(\mathbf{I} - \alpha \mathbf{A}(t)) \approx \alpha \mathbf{A}(t) - \alpha^2 \mathbf{A}(t)^2/2 + \alpha^3 \mathbf{A}(t)^3/3 - \alpha^4 \mathbf{A}(t)^4/4 + \alpha^5 \mathbf{A}(t)^5/5$$ 
+
+Visually speaking, the effects of increasing the number of terms in the expansion to 6 and 7 remained identical.
+
+The experiment yields two key findings:
+\begin{enumerate}[label=(\roman*)]
+  \item The dynamic broadcast/receive measures (Eqs. \ref{eqn:u3.4}) identified key nodes as highly influential, even if they were not actively using much bandwidth, without any prior knowledge of an inner circle's existence.
+  \item The transformation occurred in the network on day 7 was shown by the running centrality measures once we knew the IDs of the inner circle.
+\end{enumerate}
+
+Figure \ref{fig:ve1a} was used to demonstrate point (i) by plotting bandwidth against dynamic broadcast, $\mathbf{b}(t)$, using data up until the end of day 6. Dynamic receive centrality, $\mathbf{r}(t)$, was also computed using its own vector-valued ODE (Eq. \ref{eqn:u4.1}) obtaining similar results and a computation time reduction of approximately $30\%$. The scatter plot also includes symbols to mark certain nodes, such as a downward pointing triangle for the ring leader, 200, and squares for the related inner-circle nodes, 1, 2, 3, and 5. The follow-on ID for the ringleader, 300, is marked with an upward pointing triangle, and those for other members, 306, 309, 360, and 392, are marked with diamonds.
+
+The results showed that the key nodes for days 1-6 were much more dominant in terms of dynamic broadcast than overall bandwidth. Specifically, the ringleader node had a low bandwidth but ranked sixth out of 400 in terms of broadcast communicability.
+
+\begin{figure}[h]
+     \centering
+     \begin{subfigure}[b]{0.49\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{voicecall_exp_1_7}
+         \caption{broadcast centrality at the end of day 6 vs. bandwidth (secs.)}
+         \label{fig:ve1a}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.49\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{voicecall_exp_7_10}
+         \caption{broadcast centrality at the end of day 10 vs. bandwidth (secs.)}
+         \label{fig:ve1b}
+     \end{subfigure}
+     \caption{Dynamic broadcast measure for each node vs. node's bandwidth from voice call data.}
+     \label{fig:ve1}
+\end{figure}
+
+The data from days 7 to 10 is displayed in Figure \ref{fig:ve1b}, and it confirms that the dynamic broadcast score is a more effective indicator of centrality than overall bandwidth in uncovering the inner circle. The plot shows how the new ID of the ringleader, that is indicated with an upward pointing triangle, has a low overall bandwidth, but ranks seventh highest for broadcast centrality. Although the former IDs from the inner circle, marked with squares, still possess high bandwidth, their low dynamic broadcast scores suggest that they are no longer central players.
+
+\begin{figure}[h]\centering
+    \includegraphics[width=.79\textwidth]{voicecall_exp_dyncomm}
+    \caption{Voice call data: dynamic communicability between the five key nodes as a function of time.}
+    \label{fig:ve2}
+    \bigskip
+\end{figure}

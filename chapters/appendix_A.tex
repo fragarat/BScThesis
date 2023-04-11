@@ -214,8 +214,12 @@ sol = solve_ivp(f, t_span, U0, method='RK45')
 print("\nsol_t :\n", sol.t)
 print("\nsol_y :\n", sol.y)
 
+# Communicability matrix U at t = 20 (entries >= 0)
+U_t_20 = np.abs(sol.y[:,-1].reshape(N,N))
+
 # broadcast centrality at t = 20
-b_t_20 = sol.y[:,-1].reshape(N,N)@np.ones(N)
+b_t_20 = U_t_20 @ np.ones(N)
+
 # aggregate out degree 
 out_degree_list = aggregate_out_degree(agg_matrix)
 
@@ -434,8 +438,8 @@ print("\nsol_t :\n", sol.t)
 print("\nsol_y :\n", sol.y)
 
 # broadcast centrality of nodes A (node 0) and B (node 1)
-b_t_A = [(sol.y[:,i].reshape(N,N)@np.ones(N))[0] for i in range(0,sol.y.shape[1])]
-b_t_B = [(sol.y[:,i].reshape(N,N)@np.ones(N))[1] for i in range(0,sol.y.shape[1])]
+b_t_A = [(np.abs(sol.y[:,i].reshape(N,N)) @ np.ones(N))[0] for i in range(0,sol.y.shape[1])]
+b_t_B = [(np.abs(sol.y[:,i].reshape(N,N)) @ np.ones(N))[1] for i in range(0,sol.y.shape[1])]
 
 print("\nb(t)_A :\n", b_t_A)
 print("\nb(t)_B :\n", b_t_B)
@@ -453,4 +457,445 @@ ax.set_xlim(0, 3.5)
 ax.set_ylim(1, None)
 
 fig.savefig('exp2_btA_vs_btB.eps', format='eps')
+\end{lstlisting}
+
+\section*{Voice call experiment}
+
+\begin{lstlisting}[language=Python, caption=Second synthetic experiment]
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+#############################################################
+################### VOICE CALL EXPERIMENT  ##################
+#############################################################
+
+########################## MODULES ##########################
+
+import numpy as np
+from scipy.integrate import solve_ivp
+#from scipy.linalg import logm
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+import pandas as pd
+from itertools import combinations
+import time
+
+######################## VARIABLES #####################
+# number of nodes
+N = 400 
+# alpha and beta parameters
+a = 1E-4
+b = 1.2E-5
+# identity matrix of size NxN
+I = np.eye(N)
+
+# Path to the csv file
+csv_file_path = "CellPhoneCallRecords.csv"
+
+# Max. call time duration in seconds
+t_max = 3000
+
+################### FUNCTIONS #################
+
+def sort_indexes(arr):
+    '''
+    Returns array indexes sorted in descending order from max value to min
+    value.
+
+            Parameters:
+                    arr (arr): array to be sorted
+
+            Returns:
+                    sorted_indexes (arr): sorted array of indexes
+    '''
+    sorted_indexes = sorted(range(len(arr)), key=lambda i: arr[i], reverse=True)
+    return sorted_indexes
+
+def symmetric_sum(matrix):
+    '''
+    Returns resulting matrix from the sum of symmetric elements of a matrix.
+
+            Parameters:
+                    matrix (arr): NxN array 
+
+            Returns:
+                    res (arr): NxN array with sum of symmetric entries 
+    '''
+    n = len(matrix)
+    res = np.zeros((n,n))
+    for i in range(n):
+        for j in range(i, n):
+            if i == j:
+                res[i][j] = matrix[i][j]
+            else:
+                res[i][j] = matrix[i][j] + matrix[j][i]
+                res[j][i] = res[i][j]
+    return res
+
+#################### logm approx. #####################
+
+def logm_approx(A, a=a):
+    '''
+    Returns the approximation of the function logm by truncation to the 
+    fifth power of its series expansion.
+
+            Parameters:
+                    A (arr): NxN array 
+                    a (float): parameter
+
+            Returns:
+                    principal matrix logarithm approximation 
+    '''
+    A2 = A @ A
+    A3 = A2 @ A
+    A4 = A3 @ A
+    A5 = A4 @ A
+    
+    return a * A - (a**2/2) * A2 + (a**3/3) * A3 - (a**4/4) * A4 + (a**5/5) * A5
+    
+        
+#### Dynamic communicability of key nodes ####
+
+def dyncomm_key_nodes(U):
+    
+    # Calculate the sum and average of all entries except the main diagonal
+    total_sum = np.sum(U) - np.sum(np.diag(U))
+    total_avg = total_sum / (N*N - N)
+    
+    # key nodes indexes
+    nodes = [1, 2, 3, 5, 200]
+    
+    # All pairwise combinations
+    pairs = list(combinations(nodes, 2))
+    
+    # key nodes sum
+    key_sum = 0
+    for item in pairs:
+        key_sum += U[item[0]][item[1]]
+        key_sum += U[item[1]][item[0]] 
+        
+    # key nodes average
+    key_sum_avg = key_sum / (len(pairs) * 2)
+    
+    if total_avg == 0:
+        return 0
+    
+    return key_sum_avg / total_avg
+
+
+################### AGGREGATE BANDWIDTH #################
+# bandwidth of a node is defined as the aggregate time call duration in which 
+# this node is active over a certain period 
+
+# Read the csv file into a Pandas DataFrame
+df = pd.read_csv(csv_file_path)
+
+# Convert the Datetime field to a datetime object
+df["Datetime"] = pd.to_datetime(df["Datetime"], format="%Y%m%d %H%M")
+
+# Filter the data for days 1 to 10
+start_date = pd.Timestamp(2006, 6, 1)
+end_date = pd.Timestamp(2006, 6, 10, 23, 59, 59)
+
+df = df[(df["Datetime"] >= start_date) & (df["Datetime"] <= end_date)]
+
+# Group the data by 'From' and 'To' fields and sum the call durations
+grouped = df.groupby(["From", "To"])["Duration(seconds)"].sum()
+
+# Initialize the matrix for call time duration for each node with zeros
+agg_matrix = np.zeros((N, N))
+
+# Update the matrix entries with the sum of call durations
+for (from_cell, to_cell), duration in grouped.items():
+    agg_matrix[from_cell][to_cell] = duration
+
+# sum symmetric elements (node as sender or receiver)  
+agg_matrix = symmetric_sum(agg_matrix)
+
+# aggregate vector with the bandwidth of each node from day 1 to 10
+agg_day1_to_10 = [np.sum(row) for row in agg_matrix]
+
+print("agg_day1_to_10: (first ten elem.): \n", agg_day1_to_10[0:10])
+
+######################### A(t) #########################
+
+# Read the csv file into a Pandas DataFrame
+df = pd.read_csv(csv_file_path)
+
+# Convert the Datetime field to a datetime object
+df["Datetime"] = pd.to_datetime(df["Datetime"], format="%Y%m%d %H%M")
+
+def Adj(t):
+    '''
+    Returns the adjacency matrix of the network at a given time 't'. 
+    Sets elements to 1 if 't' belongs to the datetime conversation which nodes
+    are given in the .csv file by the fields 'From' and 'To'.
+
+            Parameters:
+                    t (float): time
+
+            Returns:
+                    A (arr): NxN adjacency matrix
+    '''
+    
+    # Filter all datetimes in the interval actual time - max calltime duration
+    actual_time = t0_datetime + pd.Timedelta(seconds=t)
+    start_time = actual_time - pd.Timedelta(seconds=t_max)
+    
+    filtered = df[(df["Datetime"] >= start_time) & (df["Datetime"] <= actual_time)]
+
+    # Initialize the adjacency matrix with zeros
+    A = np.zeros((N, N))
+
+    # Set matrix entries to 1 if the time is inside a conversation
+    for index, row in filtered.iterrows():
+        from_cell = row["From"]
+        to_cell = row["To"]
+        start_call_time = row["Datetime"]
+        end_call_time = start_call_time + pd.Timedelta(seconds=row["Duration(seconds)"])
+        if end_call_time >= actual_time:
+            A[from_cell][to_cell] = 1
+            A[to_cell][from_cell] = 1
+
+    return A
+
+######################## Alternative Adj(t)#####################
+
+# Read the csv file into a Pandas DataFrame
+#df = pd.read_csv(csv_file_path)
+
+# Convert the Datetime field to a datetime object
+#df["Datetime"] = pd.to_datetime(df["Datetime"], format="%Y%m%d %H%M")
+
+# Extract the start and end time of each call
+#df['start_call'] = df['Datetime']
+#df['end_call'] = df['Datetime'] + pd.to_timedelta(df['Duration(seconds)'], unit='s')
+
+def Adj2(t): 
+
+    # Filter the dataframe to keep only the active calls at time 't'
+    actual_time = t0_datetime + timedelta(seconds=t)
+    active_calls = df[(actual_time >= df['start_call']) & (actual_time <= df['end_call'])]
+
+    # Create the adjacency matrix
+    A = np.zeros((N, N))
+    for _, row in active_calls.iterrows():
+        A[row['From'], row['To']] = 1
+        A[row['To'], row['From']] = 1
+
+    return A
+
+######################### ODE #########################
+    
+# Matrix ODE function in vector form
+def f(t, U):
+    
+    # Reshape U from vector to matrix
+    U = U.reshape((N, N))
+    
+    # Compute the matrix ODE
+    dUdt = -b * (U - I) - U @ logm_approx(Adj(t))
+    # Reshape dUdt from matrix to vector
+    dUdt = dUdt.flatten()
+    return dUdt
+
+######################### day 1 to 7 broadcast #########################
+
+start_time = time.time()
+
+# Initial condition 
+U0 = np.eye(N)
+U0 = U0.flatten()
+
+# Time interval 
+t0_datetime = pd.Timestamp(2006, 6, 1)
+tf_datetime = pd.Timestamp(2006, 6, 6, 23, 59 ,59)
+delta = tf_datetime - t0_datetime
+
+# Time span
+t0 = 0
+tf = delta.total_seconds() 
+t_span = (t0, tf) 
+
+# Solve the matrix ODE numerically using solve_ivp
+sol = solve_ivp(f, t_span, U0, method='RK23', rtol=1e-4, atol=1e-4)
+
+# Print the solution at discrete time points
+#print("\nsol_t :\n", sol.t)
+#print("\nsol_y :\n", sol.y)
+
+# Communicability matrix U at t=tf (day 7)
+U_t_7 = np.abs(sol.y[:,-1].reshape(N,N))
+
+# broadcast centrality at t = tf (day 7)
+b_t_7 = U_t_7 @ np.ones(N)
+
+print("\nb(t='day 7') :\n", b_t_7)
+
+print("\nb_t_day7[1] =", b_t_7[1])
+print("b_t_day7[2] =", b_t_7[2])
+print("b_t_day7[3] =", b_t_7[3])
+print("b_t_day7[5] =", b_t_7[5])
+print("b_t_day7[200] =", b_t_7[200])
+
+#print("\nsorted_b_indexes(t='day 7') : ",sort_indexes(b_t_7)[0:5])
+
+# receive centrality at t = tf (day 7)
+r_t_7 = U_t_7.T @ np.ones(N)
+
+print("\nBroadcast from day 1 - 7 done!")
+
+end_time = time.time()
+total_time = end_time - start_time
+
+print("Time taken:", round(total_time, 2), "seconds")
+
+######################## day 7 to 10 broadcast #########################
+
+start_time = time.time()
+
+# Initial condition 
+U0 = np.eye(N)
+U0 = U0.flatten()
+
+# Time interval
+t0_datetime = pd.Timestamp(2006, 6, 7)
+tf_datetime = pd.Timestamp(2006, 6, 10, 23, 59, 59)
+delta = tf_datetime - t0_datetime 
+
+# Time span
+t0 = 0
+tf = delta.total_seconds()
+t_span = (t0, tf) 
+
+# Solve the matrix ODE numerically using solve_ivp
+sol = solve_ivp(f, t_span, U0, method='RK23', rtol=1e-4, atol=1e-4)
+
+# Print the solution at discrete time points
+#print("\nsol_t :\n", sol.t)
+#print("\nsol_y :\n", sol.y)
+
+# Communicability matrix U at t=tf (day 10)
+U_t_10 = np.abs(sol.y[:,-1].reshape(N,N))
+
+# broadcast centrality at t = tf (day 10)
+b_t_10 = U_t_10 @ np.ones(N)
+
+print("\nb(t='day 10') :\n", b_t_10)
+
+print("\nb_t_day10[309] =", b_t_10[309])
+print("b_t_day10[392] =", b_t_10[392])
+print("b_t_day10[360] =", b_t_10[360])
+print("b_t_day10[306] =", b_t_10[306])
+print("b_t_day10[300] =", b_t_10[300])
+
+#print("\nsorted_b_indexes(t='day 10') : ",sort_indexes(b_t_10)[0:5])
+
+# Receive centrality at t = tf (day 10)
+r_t_10 = U_t_10.T @ np.ones(N)
+
+print("\nBroadcast from day 7 - 10 done!")
+
+end_time = time.time()
+total_time = end_time - start_time
+
+print("Time taken:", round(total_time, 2), "seconds")
+
+######################### PLOTS #########################
+
+fig, ax = plt.subplots(figsize=(10,8))
+ax.plot(agg_day1_to_10, b_t_7, '+', color='blue', label="rest of nodes")
+ax.plot(agg_day1_to_10[200], b_t_7[200], 'v', color='red', label="ring leader ID before day 7")
+ax.plot(agg_day1_to_10[1], b_t_7[1], 's', color='red', label="key nodes IDs before day 7")
+ax.plot(agg_day1_to_10[2], b_t_7[2], 's', color='red') 
+ax.plot(agg_day1_to_10[3], b_t_7[3], 's', color='red') 
+ax.plot(agg_day1_to_10[5], b_t_7[5], 's', color='red')
+ax.plot(agg_day1_to_10[300], b_t_7[300], '^', color='green', label="ring leader ID after day 7")
+ax.plot(agg_day1_to_10[309], b_t_7[309], 'd', color='green', label="key nodes IDs after day 7")
+ax.plot(agg_day1_to_10[392], b_t_7[392], 'd', color='green') 
+ax.plot(agg_day1_to_10[360], b_t_7[360], 'd', color='green') 
+ax.plot(agg_day1_to_10[306], b_t_7[306], 'd', color='green')
+ax.set_title("Voice call experiment")
+ax.set_xlabel("bandwidth")
+ax.set_ylabel("broadcast centrality at day 7")
+ax.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
+ax.set_xlim(0, 3.5e5)
+ax.legend()
+
+fig.savefig('voicecall_exp_1_7.eps', format='eps')
+
+fig2, ax2 = plt.subplots(figsize=(10,8))
+ax2.plot(agg_day1_to_10, b_t_10, '+', color='blue', label="rest of nodes")
+ax2.plot(agg_day1_to_10[200], b_t_10[200], 'v', color='red', label="ring leader ID before day 7")
+ax2.plot(agg_day1_to_10[1], b_t_10[1], 's', color='red', label="key nodes IDs before day 7")
+ax2.plot(agg_day1_to_10[2], b_t_10[2], 's', color='red') 
+ax2.plot(agg_day1_to_10[3], b_t_10[3], 's', color='red') 
+ax2.plot(agg_day1_to_10[5], b_t_10[5], 's', color='red')
+ax2.plot(agg_day1_to_10[300], b_t_10[300], '^', color='green', label="ring leader ID after day 7") 
+ax2.plot(agg_day1_to_10[309], b_t_10[309], 'd', color='green', label="key nodes IDs after day 7")
+ax2.plot(agg_day1_to_10[392], b_t_10[392], 'd', color='green') 
+ax2.plot(agg_day1_to_10[360], b_t_10[360], 'd', color='green') 
+ax2.plot(agg_day1_to_10[306], b_t_10[306], 'd', color='green')
+ax2.set_title("Voice call experiment")
+ax2.set_xlabel("bandwidth")
+ax2.set_ylabel("broadcast centrality at day 10 (from day 7)")
+ax2.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
+ax2.set_xlim(0, 3.5e5)
+ax2.legend()
+
+fig2.savefig('voicecall_exp_7_10.eps', format='eps')
+
+######################### day 1 to 10 broadcast #########################
+
+# Initial condition 
+U0 = np.eye(N)
+U0 = U0.flatten()
+
+# Time interval 
+t0_datetime = pd.Timestamp(2006, 6, 1)
+tf_datetime = pd.Timestamp(2006, 6, 11)
+delta = tf_datetime - t0_datetime
+
+# Time span
+t0 = 0
+tf = delta.total_seconds() 
+t_span = (t0, tf) 
+
+# Solve the matrix ODE numerically using solve_ivp
+sol = solve_ivp(f, t_span, U0, method='RK45', atol=1e-4, rtol=1e-4)
+
+# dynamic communicability vector
+comm_1_10 = np.zeros(sol.y.shape[1])
+
+for i in range(sol.y.shape[1]):
+    comm_1_10[i] = dyncomm_key_nodes(sol.y[:,i].reshape(N,N))
+    
+    
+# No communication in the first 8 min, removing zero communicability
+# Boolean mask indicating which elements are close to zero
+mask = np.isclose(comm_1_10, 0, atol=1e-5)
+
+# Filtered communicability array using the mask
+filtered_comm = comm_1_10[~mask]
+
+# Array without the close-to-zero elements
+comm_1_10 = filtered_comm[np.nonzero(filtered_comm)]
+sol.t = sol.t[np.nonzero(filtered_comm)]
+
+print("communicability vector: \n", comm_1_10)
+
+###### PLOT ######
+
+fig3, ax3 = plt.subplots(figsize=(10,8))
+x_label = np.arange(1, 11)
+ax3.plot(np.linspace(1, 11, num = len(comm_1_10)), comm_1_10, color='red')
+ax3.set_xlim(1, 11)
+ax3.set_ylim(0, None)
+ax3.set_xlabel("time")
+ax3.set_ylabel("communicability between key nodes")
+ax3.set_xticks(x_label)
+ax3.set_xticklabels(['Day {}'.format(i) for i in x_label])
+ax3.axvline(x=8, linestyle='--', color='gray', linewidth=0.8)
+
+fig3.savefig('voicecall_exp_dyncomm.eps', format='eps')
 \end{lstlisting}

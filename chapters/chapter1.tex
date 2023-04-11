@@ -114,11 +114,11 @@ with $0<\alpha<1$, it should be less than the inverse of the largest eigenvalue 
 PageRank was developed by Google co-founders Larry Page and Sergey Brin as a way to rank websites in their search engine results. The basic idea behind PageRank is that a node is considered important if it is linked to by many other important nodes. The PageRank score of a node is determined by the sum of the PageRank scores of the nodes that link to it, with a damping factor applied to reduce the influence of nodes with many outbound links. PageRank centrality is widely used in the field of network analysis and has been applied to a wide range of networks, including the World Wide Web, social networks, and biological networks.
 
 
-Each centrality measure provides a different perspective on the importance of a node in a network and can be useful in various applications, such as network analysis, recommendation systems, or identifying key players in complex systems. The most appropriate centrality measure will require the analysis of the specific characteristics of our network.
+Each centrality measure provides a different perspective on the importance of a node in a network (see Figure \ref{centrality}) and can be useful in various applications, such as network analysis, recommendation systems, or identifying key players in complex systems. The most appropriate centrality measure will require the analysis of the specific characteristics of our network.
 
-\begin{figure}[htbp]\centering
-	\includegraphics[width=.93\textwidth]{centrality}
-	\caption{Examples of A) Betweenness centrality, B) Closeness centrality, C) Eigenvector centrality, D) Degree centrality, E) Harmonic centrality and F) Katz centrality of the same random graph.}
+\begin{figure}[h]\centering
+	\includegraphics[width=1.0\textwidth]{centrality_plots}
+	\caption{Examples of A) Degree centrality, B) Betweenness centrality, C) Closeness centrality, D) Eigenvector centrality, E) Katz centrality and F) PageRank from the well-known Zachary’s Karate Club graph dataset.}
 	\label{centrality}
 	\bigskip
 \end{figure}
