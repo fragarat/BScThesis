@@ -4,7 +4,16 @@
 \chapter{Conclusions}
 \label{chap:concl}
 
-Conclusions.
+This research introduces a novel approach, using a continuous-time framework, to analyze dynamic network centrality. This new model is an improvement over the existing method that relies on analyzing individual snapshots of the network, as it allows for better data-driven simulations and theoretical analysis:
+
+\begin{enumerate}[label=(\roman*)]
+  \item The continuous-time framework fits better and in a more natural way with human communication patterns, allowing for a more accurate and realistic representation of communication dynamics. This is because it eliminates the need to divide the network data into predetermined time intervals, which can result in inaccuracies if they are too large or if, on the contrary, they are too finely spaced, in redundant computational processes or a false impression of accuracy.
+  \item By using ready-made, advanced numerical ODE solvers, network simulations can be carried out in a manner that time discretization is performed automatically "under the hood", ensuring an optimal performance of accuracy and efficiency. This approach enables us to effectively handle sudden and significant changes in network behavior in an adaptive manner.
+  \item Real-time summaries of centrality rankings can be monitored through this new ODE-based framework due to its property of downweighting information over time without the need to store or take account of all previous node interaction history.
+  \item Computing the dynamic receive centrality, $\mathbf{r}(t)$, is cheaper than dynamic broadcast centrality, $\mathbf{b}(t)$, in terms of storage and computational cost.
+\end{enumerate}
+
+
 
 
 

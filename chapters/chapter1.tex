@@ -5,11 +5,24 @@
 \chapter[Introduction]{Introduction}
 \label{chap:intro}
 
-Networks are fundamental in any field of current science as they provide a powerful way to model complex systems and relationships between entities. By representing entities as nodes and connections between them as edges, networks can help researchers understand how information, energy, materials, and other resources flow through a system, identify patterns and structures within the data, and make predictions about system behavior. Many real life problems can be modeled as graphs or discretized as networks and that is why they are widely used in many fields, including biology, physics, statistics, sociology, or computer science. Network analysis in all these areas have led to significant advances in our understanding of the world around us.
+Networks are fundamental in any field of current science as they provide a powerful way to model complex systems and relationships between entities. By representing entities as nodes and connections between them as edges, networks can help researchers understand how information, energy, materials, and other resources flow through a system, identify patterns and structures within the data, and make predictions about system behavior. Many real life problems can be modeled as graphs or discretized as networks and that is why they are widely used in many fields such as physics, biology, sociology, statistics, or computer science amomg others. Network analysis in all these areas have led to significant advances in our understanding of the world around us.
 
 \section{Mathematical notation}
 \label{sec:graph}
-A network or graph in mathematical literature is, in its simplest form, a collection of interconnected nodes or vertices that represent entities, and the connections or edges between these nodes that represent relationships or interactions between the entities. Graphs are usually described using a combination of mathematical notation and visual diagrams to provide a complete representation of the network structure and properties. 
+This section introduces a brief review of the definitions and notation pertaining to graphs, as well as some of their matrix representations, that will be used later in this study.
+
+A network in mathematical literature is, in its simplest form, a collection of interconnected nodes or vertices that represent entities, and the connections or edges between these nodes that represent relationships or interactions between the entities \cite{arrigo2022dynamic}.
+
+\begin{definition}
+    A network, or graph, is an ordered pair of sets $G = (V, E)$, where $V$ is the set of nodes and $E\subset V\times V$ is the set of edges among the nodes. A weighted graph is a graph in which each edge is given a numerical weight or cost. When no weight is associated with the edges, then the graph is called unweighted.
+\end{definition}
+
+The following two definitions that are central for this work are the concept of walk and the adjacency matrix of a graph.  
+
+\begin{definition}
+    A walk of length $w$ is a sequence of $w$ edges $(e_1, e_2, \dots, e_w)$ such that the target of $e_\ell$ coincides with the source of $e_{\ell+1}$ for all $\ell=1, 2, ..., w−1$.
+\end{definition}
+  
 \begin{definition}
 	Let G =(V, E) be an unweighted graph with $N$ nodes. Its adjacency matrix $\mathbf{A}\in\mathbb{R}^{N\times N}$ is entry-wise defined as:
  
@@ -23,17 +36,16 @@ A network or graph in mathematical literature is, in its simplest form, a collec
 for all $i, j = 1,2,\dots, N$.
 \end{definition}
 
-Additionally, graphs can be represented visually using a diagram, where nodes are represented as points and edges are represented as lines connecting the points. The direction of the edges (\textit{directed} or \textit{undirected}) and the presence of loops (edges connecting a node to itself) can also be indicated in the visual representation.
+Additionally, graphs are usually represented visually using a diagram, where nodes are represented as points and edges are represented as lines connecting the points. The direction of the edges allows us to divide graphs into \textit{directed} and \textit{undirected}. As a consequence of this, indirect graphs are represented by symmetric adjacency matrices, where $A_{ij}=A_{ji}$ and, on the contrary, direct graphs by asymmetric matrices, $A_{ij}\ne A_{ji}$. The presence of loops, i.e., edges connecting a node to itself can also be indicated in this visual representation, $A_{ii} = 1$, in terms of the adjacency matrix.
 
 It is also worth mentioning other relevant network properties of graph theory as:
 
 \begin{itemize}
-  \item \textit{Weighted networks}: A weighted network is a graph in which each edge has a weight or strength assigned to it. These weights represent the strength or importance of the connections between nodes. On the contrary, \textit{unweighted networks} are those when no weight is assigned.
   \item \textit{Static networks}: A static network is a network that does not change over time. The relationships and connections between nodes are fixed and remain constant. 
   \item \textit{Dynamic networks}: A dynamic network is a network that changes over time. The relationships and connections between nodes can evolve and alter, resulting in a continually changing network structure.
 \end{itemize}
 
-Linear algebra will also play a significant role in network analysis as graphs can be represented as matrices. The analysis of networks often involves solving linear systems, determining eigenvalues and eigenvectors, and evaluating matrix functions. Additionally, the examination of dynamic processes on graphs will create systems of differential equations based on their structure. The behavior of the solution over time is expected to be highly impacted by graph's structure (topology), which is reflected in the spectral properties of the matrices related to the graph. This turns out to be one of the most basic questions about network's structure; the identification of most relevant nodes within a network which leads us to the concept of centrality.
+Linear algebra will also play a significant role in network analysis as graphs are represented by matrices. The analysis of networks often involves solving linear systems, determining eigenvalues and eigenvectors, and evaluating matrix functions. Additionally, the examination of dynamic processes on graphs will create systems of differential equations based on their structure. The behavior of the solution over time is expected to be highly impacted by graph's structure (topology), which is reflected in the spectral properties of the matrices related to the graph. This turns out to be one of the most basic questions about network's structure; the identification of most relevant nodes within a network which leads us to the concept of centrality.
 
 \section{Centrality measures}
 \label{sec:centra}
@@ -150,7 +162,7 @@ We are primarily concerned with the comparison of centrality scores between node
 \end{equation}
 We seek $\alpha$ such that $(\mathbf{I}-\alpha\mathbf{A})^{-1}$ does not diverges, i.e. $\text{det}(\mathbf{I}-\alpha\mathbf{A})\neq 0$, or what is the same $\text{det}(\mathbf{A}-\alpha^{-1}\mathbf{I})\neq 0$, that it is simply the characteristic equation whose roots $\alpha^{-1}$ are equal to the eigenvalues of the adjacency matrix. The first value of $\alpha$ that makes this determinant $0$ is $\alpha^{-1}=\lambda_1$ so this suggests a good value for $\alpha$ bounded by $0 < \alpha < 1/\lambda_1 $, being $\lambda_1$ the largest eigenvalue of $\mathbf{A}$. 
 
-In the choice of $\alpha$ we must take into account that the closer we are to the largest eigenvalue the maximum amount of weight on the eigenvector term will be place and the smallest amount on the constant term. If we let instead $\alpha\to 0$, then only the constant term will survive in Eq. (\ref{eqn:katz1}) and all nodes have the same centrality.
+In the choice of $\alpha$ we must take into account that the closer we are to the largest eigenvalue the maximum amount of weight on the eigenvector term will be place and the smallest amount on the constant term. If we let instead $\alpha\to 0$, then only the constant term will survive in Eq. (\ref{eqn:katz1}) resulting in all nodes with equal centrality.
 
 Eq. (\ref{eqn:katz3}) can be expressed using Neumann series, as a generalization of geometric series, by: 
 
@@ -186,9 +198,7 @@ As we saw before, Katz centrality offers a way to overcome the challenges faced 
 
 \section{Motivation of the study}
 \label{sec:motiv}
-Dynamic networks, or what is the same, systems involving transient interactions are commonly found in real problems across various fields. Currently, the most popular approach is to examine network activity over discrete time frames or snapshots and analyze network status at these time slices. This method presents a number of challenges when it comes to modeling and computing, as it fails to account for the time-sensitive nature of network connections. If the time frame is too large, the ability to reproduce high-frequency transient behaviour, where an
-edge switches on and off multiple times in the space of a single window, is lost but if it's too narrow, it could result in a large number of empty time frames or lead to inaccuracies in representation that waste computational
-effort. Additionally, the model may not accurately reflect the time at which instantaneous information is sent, received or processed in time with the subsequent loss of information in the network.
+Dynamic networks, or what is the same, systems involving transient interactions are commonly found in real problems across various fields. Currently, the most popular approach is to examine network activity over discrete time frames or snapshots and analyze network status at these time slices. This method presents a number of challenges when it comes to modeling and computing, as it fails to account for the time-sensitive nature of network connections. If the time frame is too large, the ability to reproduce high-frequency transient behaviour, where an edge switches on and off multiple times in the space of a single window, is lost but if it is too narrow, it could result in a large number of empty time frames that can lead to redundant processes wasting computational effort. Additionally, in this last case when time windows are too finely spaced, a static model may give a false impression of accuracy since it is not able to reflect the time at which instantaneous information is sent, then received and later processed in time with the subsequent loss of information in the network.
 
 Therefore, our goal is to address these limitations by developing a new framework that can directly extract centrality information from a continuous-time adjacency matrix. This new centrality system will expand on the well-known Katz measure and allow us to identify and monitor the most influential nodes in dynamic networks over time at any level of detail. This will provide a more sophisticated representation of dynamic networks, with a focus on node centrality, which will offer both theoretical and computational benefits.
 
