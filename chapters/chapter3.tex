@@ -9,7 +9,17 @@ This function computes the natural logarithm of a matrix, which is defined as fo
     A logarithm of $A \in \mathbb{C}^{N\times N}$ is any matrix $X$ such that $e^X = A$ where $e^X = I + X + \frac{X^2}{2!} + \frac{X^3}{3!} + \cdots$. If $A$ is assumed to have no eigenvalues on $\mathbb{R}^{-}$, then we call this logarithm to be the principal logarithm of $A$, which is the unique logarithm whose spectrum lies in the strip $\{ z : −\pi < Im(z) < \pi \}$.
 \end{definition}
 
-In Python, the \texttt{scipy.linalg.logm} module from the SciPy library computes the logarithm of a matrix using the Schur decomposition with a computational cost of $\mathcal{O}(N^3)$ for an $N \times N$ matrix. However, the Schur decomposition is not always the most efficient way to compute the matrix logarithm, especially for large matrices with special properties such as sparsity or symmetry. In these cases, specialized algorithms may be used to approximate the matrix logarithm reducing its computational cost.
+The matrix logarithm can be approximated by its Taylor series expansion. The Taylor series expansion of the matrix logarithm of a matrix $I - \alpha A$ can be expressed as:
+
+$$log(I - \alpha A) = \sum_{k=1}^{\infty} (-1)^{k+1}\frac{\alpha^k}{k}A^k$$
+
+where $I$ is the identity matrix of size $N$.
+
+The accuracy of the approximation depends on the value of $k$, which determines how many terms in the series are included. The higher the value of $k$, the more accurate the approximation, but also the more computationally expensive it is to compute.
+
+It's worth noting that for certain matrices, the Taylor series expansion may not converge or may converge too slowly to be practical for approximating the matrix logarithm. In such cases, other approximation methods like the Padé approximation or Schur decomposition may be more effective \cite{higham2008functions}.
+
+In Python, the \texttt{scipy.linalg.logm} module from the SciPy library computes the logarithm of a matrix using the Schur decomposition with a computational cost of $\mathcal{O}(N^3)$ for an $N \times N$ matrix. However, the Schur decomposition is not always the most efficient way to compute the matrix logarithm, especially for large matrices with special properties such as sparsity or symmetry. In these cases, specialized algorithms (Krylov methods, rational approximations or iterative methods plus preconditioning) may be used to approximate the matrix logarithm to reduce its computational cost.
 
 Next, we consider the two synthetic experiments from \cite{grindrod2014dynamical} in order to demonstrate how our new matrix ODE approach works and provide a better understanding of the $\alpha,\beta$ parameters. With this two artificial networks that evolve continuously over time, we intend to show a hierarchy of influence for the nodes that would not be evident if we only considered a static picture or a summarized view of the network. The relatively small size of these examples, 31 and 17 nodes respectively, will facilitate the process of visualizing, and it will also allow us to employ a highly precise Runge-Kutta iteration to solve the corresponding ODE systems (\ref{eqn:u3.3}) with accuracy.
 
@@ -136,6 +146,8 @@ The experiment yields two key findings:
   \item The transformation occurred in the network on day 7 was shown by the running centrality measures once we knew the IDs of the inner circle.
 \end{enumerate}
 
+\newpage
+
 Figure \ref{fig:ve1a} was used to demonstrate point (i) by plotting bandwidth against dynamic broadcast, $\mathbf{b}(t)$, using data up until the end of day 6. Dynamic receive centrality, $\mathbf{r}(t)$, was also computed using its own vector-valued ODE (Eq. \ref{eqn:u4.1}) obtaining similar results and a computation time reduction of approximately $30\%$. The scatter plot also includes symbols to mark certain nodes, such as a downward pointing triangle for the ring leader, 200, and squares for the related inner-circle nodes, 1, 2, 3, and 5. The follow-on ID for the ringleader, 300, is marked with an upward pointing triangle, and those for other members, 306, 309, 360, and 392, are marked with diamonds.
 
 The results showed that the key nodes for days 1-6 were much more dominant in terms of dynamic broadcast than overall bandwidth. Specifically, the ringleader node had a low bandwidth but ranked sixth out of 400 in terms of broadcast communicability.
@@ -160,6 +172,8 @@ The results showed that the key nodes for days 1-6 were much more dominant in te
 \end{figure}
 
 The data from days 7 to 10 is displayed in Figure \ref{fig:ve1b}, and it confirms that the dynamic broadcast score is a more effective indicator of centrality than overall bandwidth in uncovering the inner circle. The plot shows how the new ID of the ringleader, that is indicated with an upward pointing triangle, has a low overall bandwidth, but ranks seventh highest for broadcast centrality. Although the former IDs from the inner circle, marked with squares, still possess high bandwidth, their low dynamic broadcast scores suggest that they are no longer central players.
+
+\newpage
 
 The communicability between the original IDs of the five most important players (ID nodes: 200, 1, 2, 3, and 5) is presented in Figure \ref{fig:ve2} to support point (ii). The graph shows how communication between these key nodes changes over a ten days period of time. At each discretized time point, the average amount of messages broadcast ($U_{ij}$) and received ($U_{ji}$) between each pair of key nodes is measured and then scaled by the average amount of communication between all pairs of nodes in the network. By analyzing this measure, we can observe how the network changes over time, especially when the players start using different IDs after day 7.
 
