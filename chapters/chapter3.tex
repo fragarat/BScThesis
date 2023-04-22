@@ -19,7 +19,7 @@ The accuracy of the approximation depends on the value of $k$, which determines 
 
 It's worth noting that for certain matrices, the Taylor series expansion may not converge or may converge too slowly to be practical for approximating the matrix logarithm. In such cases, other approximation methods like the Padé approximation or Schur decomposition may be more effective \cite{higham2008functions}.
 
-In Python, the \texttt{scipy.linalg.logm} module from the SciPy library computes the logarithm of a matrix using the Schur decomposition with a computational cost of $\mathcal{O}(N^3)$ for an $N \times N$ matrix. However, the Schur decomposition is not always the most efficient way to compute the matrix logarithm, especially for large matrices with special properties such as sparsity or symmetry. In these cases, specialized algorithms (Krylov methods, rational approximations or iterative methods plus preconditioning) may be used to approximate the matrix logarithm to reduce its computational cost.
+In Python, the \texttt{scipy.linalg.logm} module from the SciPy library computes the logarithm of a matrix using the Schur decomposition with a computational cost of $\mathcal{O}(N^3)$ for an $N \times N$ matrix. However, the Schur decomposition is not always the most efficient way to compute the matrix logarithm, especially for large matrices with special properties such as sparsity or symmetry. In these cases, specialized algorithms, based on Krylov methods, rational approximations or iterative methods plus preconditioning, may be used to approximate the matrix logarithm to reduce its computational cost.
 
 Next, we consider the two synthetic experiments from \cite{grindrod2014dynamical} in order to demonstrate how our new matrix ODE approach works and provide a better understanding of the $\alpha,\beta$ parameters. With this two artificial networks that evolve continuously over time, we intend to show a hierarchy of influence for the nodes that would not be evident if we only considered a static picture or a summarized view of the network. The relatively small size of these examples, 31 and 17 nodes respectively, will facilitate the process of visualizing, and it will also allow us to employ a highly precise Runge-Kutta iteration to solve the corresponding ODE systems (\ref{eqn:u3.3}) with accuracy.
 
@@ -27,7 +27,7 @@ Next, we consider the two synthetic experiments from \cite{grindrod2014dynamical
 \label{sec:synexp}
 The first synthetic experiment models a cascade of information through the directed binary
 tree structure illustrated in Figure \ref{fig:exp1}. On a time interval $t = [0, 20]$, the adjacency
-matrix $\mathbf{A}(t)$ of such network switches between two constant values $\mathbf{A}_{even}$ and $\mathbf{A}_{odd}$ on each sub-interval $[i, i + 1)$, specifically
+matrix $\mathbf{A}(t)$ of such network switches between two constant values $\mathbf{A}_{even}$ and $\mathbf{A}_{odd}$ on each sub-interval $[i, i + 1)$ for $i=0,1,2,\dots$, specifically
 
 \begin{equation*}
 \mathbf{A}(t)=
@@ -39,7 +39,7 @@ matrix $\mathbf{A}(t)$ of such network switches between two constant values $\ma
 
 where $\mathbf{A}_{even}$ is the adjacency matrix relative to the subgraph with solid edges in Figure \ref{fig:exp1}, and $\mathbf{A}_{odd}$ the one relative to the subgraph with dashed edges. Some noise to this structure is added by including extra directed edges that are chosen uniformly at random for each subinterval, with an average of five edges added each time. 
 
-This type of structure allows us to clearly visualize the follow-on effect arising from the time-ordering of the interactions.
+This type of structure allows us to clearly visualize the follow-on effect arising from the time-ordering of the node interactions.
 
 \begin{figure}[h]\centering
     \includegraphics[width=.75\textwidth]{experiment1}
@@ -92,7 +92,7 @@ Figure \ref{fig:bt4} illustrates the aggregate degree of each node, that is, the
 \end{figure}
 
 \newpage
-We now consider the second synthetic experiment from \cite{grindrod2014dynamical}. The experiment simulates multiple rounds of voice calls that occur along an undirected binary tree structure. Each node in the tree has at most one edge at any given time, meaning that there are no "conference" calls.  Figure \ref{fig:exp2} shows the network with labels assigned to the edges indicating when they are active. 
+We now consider the second synthetic experiment from \cite{grindrod2014dynamical}. The experiment simulates multiple rounds of voice calls that occur along an undirected binary tree structure. Each node in the tree has at most one active edge at any given time, meaning that there are no "conference" calls.  Figure \ref{fig:exp2} shows the network with labels assigned to the edges indicating when they are active. 
 
 The adjacency matrix, $\mathbf{A}(t)$, for this experiment is defined based on the ordered and non-overlapping time intervals such that $t_i\coloneqq[(i − 1)\tau , (i − 1 + 0.9)\tau )$, for $i=0, 1, \dots , 7$, and $\tau =0.1$.
 
@@ -103,7 +103,7 @@ The adjacency matrix, $\mathbf{A}(t)$, for this experiment is defined based on t
     \bigskip
 \end{figure}
 
-The dynamic network is constructed in a way that node A is designed to be a more effective influencer compared to node B. This can be attributed to several factors such as a higher social or business status or access to more current and relevant information. Connections are built in such a way that node A talks to node C in $t_1$, initiating the cascade of phone calls in the network. On the other hand, node B waits until $t_4$ to contact node C, which does not trigger any new cascades. In this scenario, all the adjacency matrices for each time interval turn out to have unitary spectral radius.
+The dynamic network is constructed in a way that node A is designed to be a more effective influencer compared to node B. This can be attributed to several factors such as a higher social/business status or access to more current and relevant information. Connections are built in such a way that node A talks to node C in $t_1$, initiating the cascade of phone calls in the network. On the other hand, node B waits until $t_4$ to contact node C, which does not trigger any new cascades. In this scenario, all the adjacency matrices for each time interval turn out to have unitary spectral radius.
 
 The experiment is repeated over five cycles, during which nodes A and B send out a total of 10 messages. Even if nodes A and B have an apparent identical behaviour from an overall perspective, both contacting nodes C and D for the same length of time, the results in Figure \ref{fig:twobt} (for $\alpha = 0.7, \beta = 0.1$ and $\alpha = 0.9 , \beta = 0.1$ respectively) show that the dynamic broadcast centrality measure is able to capture the knock-on effect enjoyed by node A (solid line) with respect to node B (dashed line). This difference in broadcast centrality is much more pronounced for values of $\alpha$ close to one (Figure \ref{fig:bt6}), where longer walks are more strongly penalized.
 
@@ -130,11 +130,11 @@ The experiment is repeated over five cycles, during which nodes A and B send out
 \label{sec:voicecall}
 The next experiment applies the new modelling framework (Eq. \ref{eqn:u3.3}) to a set of voice call interactions, in order to analyze the dynamic behavior of a fictitious, controversial socio-political movement. The data used for the experiment, supplied as part of the IEEE VAST 2008 Challenge \cite{grinstein2008vast}, consists of a complete set of 9834 time-stamped calls across 400 cell phone users over a 10 day period, with information on IDs for the send and receive nodes, start time in hours/minutes, and duration in seconds.
 
-The aim of the experiment is to show the usefulness of the new matrix ODE in dealing with this type of dynamic network. To that end, the bandwidth of a node is defined as the aggregate number of seconds for which the node ID is active as a sender or receiver. This will allow us to compare the effective activation time of a certain node with its relevance in terms of dynamic broadcast centrality.
+The aim of the experiment is to show the usefulness of the new matrix ODE in dealing with this type of dynamic network, comparing dynamical measures against aggregated. To that end, the bandwidth of a node is defined as the aggregate number of seconds for which the node ID is active as a sender or receiver. This will allow us to compare the effective activation time of a certain node with its relevance in terms of dynamic broadcast centrality.
 
 The designers of the above mentioned competition provided additional information indicating that node 200 was the leader of an important community who controlled a closely connected subnetwork or inner circle consisting of nodes 1, 2, 3, and 5. However, starting from day 7, these individuals seem to have switched their phone IDs: node 200 became 300, and the others became 306, 309, 360, and 392.
 
-For this experiment, $\mathbf{A}(t)$ was assumed to be symmetric, meaning that $\mathbf{A}_{ij}(t) = \mathbf{A}_{ji}(t) = 1$ if nodes $i$ and $j$ were communicating at time $t$, which was measured in seconds. Parameters $\beta$ was chosen to be approximately $\beta = 1/(60\times 60 \times 24) \approx 1.2 x 10^{-5}$, which corresponded to a time downweighting of $e^{-1}$ per day, and set the edge attenuation parameter $\alpha$ to a similar value of $10^{-4}$. The SciPy's \texttt{solve\_ivp} method was used to numerically solve the ODE (\ref{eqn:u3.3}), which discretizes the time interval in a transparent way under the hood. Additionally, absolute and relative error tolerances were both set to $10^{-4}$. To improve efficiency, the matrix logarithm was approximated in this occasion with its expansion to the fifth power:
+For this experiment, $\mathbf{A}(t)$ was assumed to be symmetric, meaning that $\mathbf{A}_{ij}(t) = \mathbf{A}_{ji}(t) = 1$ if nodes $i$ and $j$ were communicating at time $t$, which was measured in seconds. Parameters $\beta$ was chosen to be approximately $\beta = 1/(60\times 60 \times 24) \approx 1.2 \times 10^{-5}$, which corresponded to a time downweighting of $e^{-1}$ per day, and set the edge attenuation parameter $\alpha$ to a similar value of $10^{-4}$. The SciPy's \texttt{solve\_ivp} method was used to numerically solve the ODE (\ref{eqn:u3.3}), which discretizes the time interval in an efficient and transparent way under the hood. Additionally, absolute and relative error tolerances were both set to $10^{-4}$. To improve efficiency, the matrix logarithm was approximated in this occasion with its expansion to the fifth power:
 
 $$\log(\mathbf{I} - \alpha \mathbf{A}(t)) \approx \alpha \mathbf{A}(t) - \alpha^2 \mathbf{A}(t)^2/2 + \alpha^3 \mathbf{A}(t)^3/3 - \alpha^4 \mathbf{A}(t)^4/4 + \alpha^5 \mathbf{A}(t)^5/5$$ 
 
@@ -175,7 +175,7 @@ The data from days 7 to 10 is displayed in Figure \ref{fig:ve1b}, and it confirm
 
 \newpage
 
-The communicability between the original IDs of the five most important players (ID nodes: 200, 1, 2, 3, and 5) is presented in Figure \ref{fig:ve2} to support point (ii). The graph shows how communication between these key nodes changes over a ten days period of time. At each discretized time point, the average amount of messages broadcast ($U_{ij}$) and received ($U_{ji}$) between each pair of key nodes is measured and then scaled by the average amount of communication between all pairs of nodes in the network. By analyzing this measure, we can observe how the network changes over time, especially when the players start using different IDs after day 7.
+The communicability between the original IDs of the five most important players (ID nodes: 200, 1, 2, 3, and 5) is presented in Figure \ref{fig:ve2} to support point (ii). The graph shows how communication between these key nodes changes over a ten days period of time. At each discretized time point, the average amount of messages, broadcast ($U_{ij}$) and received ($U_{ji}$), between each pair of key nodes is measured and then scaled by the average amount of communication between all pairs of nodes in the network. By analyzing this measure, we can observe how the network changes over time, especially when the players start using different IDs after day 7.
 
 \begin{figure}[h]\centering
     \includegraphics[width=.79\textwidth]{voicecall_exp_dyncomm}
