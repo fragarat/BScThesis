@@ -93,6 +93,7 @@ In the same way as we did with Katz centrality for static networks in Eqs. (\ref
     \mathbf{b}(t) = \mathbf{U}(t)\mathbf{1} \text{~~~and~~~} \mathbf{r}(t) = \mathbf{U}(t)^T\mathbf{1}
 \end{equation}
 
+\newpage
 
 \section{Remarks on the new framework}
 \label{sec:remarks}
@@ -121,6 +122,8 @@ The overall dynamic broadcast centrality can be computed via the dynamic receive
 \end{highlightedParagraphC}
 
 The total broadcast centrality of the network, which is represented by $\sum_{i=1}^{N} \mathbf{b}_i(t)$, can be calculated using equation (\ref{eqn:u4.1}). This is because in any matrix, the sum of row sums is equal to the sum of column sums, in our case $\sum_{i=1}^{N} \mathbf{b}_i(t) = \sum_{i=1}^{N} \mathbf{r}_i(t)=\sum_{i=1}^{N}\sum_{j=1}^{N} \mathbf{U}_{ij}(t)$. Therefore, by running a simulation of an ODE system that is $N$ times smaller than the one needed for nodal broadcast information and computing $\mathbf{r}(t)^T\mathbf{1}$, we can keep track of the current broadcast capability of the entire network.
+
+\newpage
 
 \begin{highlightedParagraphC}
  

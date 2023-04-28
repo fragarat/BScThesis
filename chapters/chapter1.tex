@@ -5,78 +5,88 @@
 \chapter[Introduction]{Introduction}
 \label{chap:intro}
 
-Networks are fundamental in any field of current science as they provide a powerful way to model complex systems and relationships between entities. By representing entities as nodes and connections between them as edges, networks can help researchers understand how information, energy, materials, and other resources flow through a system, identify patterns and structures within the data, and make predictions about system behavior. Many real life problems can be modeled as graphs or discretized as networks and that is why they are widely used in many fields such as physics, biology, sociology, statistics, or computer science amomg others. Network analysis in all these areas have led to significant advances in our understanding of the world around us.
+Networks are fundamental in many fields of science as they provide a powerful way to model complex systems and relationships between entities at different scales. By representing entities as nodes and connections between them as edges, networks can help researchers understand how information, energy, materials, and other resources flow through a system, identify patterns and structures within the data, and make predictions about system behavior. Many real life problems can be modeled as graphs or discretized as networks and that is why they are widely used in many fields such as physics, biology, sociology, statistics, or computer science amomg others. Network analysis in all these areas have led to significant advances in our understanding of the world around us \cite{albert2002statistical, katz1953new, newman2018networks}.
 
 \section{Mathematical notation}
 \label{sec:graph}
 This section introduces a brief review of the definitions and notation pertaining to graphs, as well as some of their matrix representations, that will be used later in this study.
 
-A network in mathematical literature is, in its simplest form, a collection of interconnected nodes or vertices that represent entities, and the connections or edges between these nodes that represent relationships or interactions between the entities \cite{arrigo2022dynamic}.
+A network in the mathematical literature is, in its simplest form, a collection of interconnected nodes or vertices that represent entities, and the connections or edges between these nodes that represent relationships or interactions between the entities \cite{arrigo2022dynamic}.
 
 \begin{definition}
-    A network, or graph, is an ordered pair of sets $G = (V, E)$, where $V$ is the set of nodes and $E\subset V\times V$ is the set of edges among the nodes. A weighted graph is a graph in which each edge is given a numerical weight or cost. When no weight is associated with the edges, then the graph is called unweighted.
+    A network, or graph, is an ordered triple of sets $G = (V, E, \omega)$, where $V$ is the set of nodes, $E\subset V\times V$ is the set of edges among the nodes and $\omega$ is the set of  weights, also called values, strengths or costs, associated with each edge. A weighted graph is a graph in which each edge is given a numerical weight or cost. When all these weights are given the same weight (tipically, a value of $1$), then the graph, usually represented only by $G = (V, E)$, is called unweighted.
 \end{definition}
 
-The following two definitions that are central for this work are the concept of walk and the adjacency matrix of a graph.  
+The following two definitions that are central for this work are the concept of \textit{walk} and the \textit{adjacency matrix} of a graph.  
 
 \begin{definition}
     A walk of length $w$ is a sequence of $w$ edges $(e_1, e_2, \dots, e_w)$ such that the target of $e_\ell$ coincides with the source of $e_{\ell+1}$ for all $\ell=1, 2, ..., w−1$.
 \end{definition}
   
 \begin{definition}
-	Let G =(V, E) be an unweighted graph with $N$ nodes. Its adjacency matrix $\mathbf{A}\in\mathbb{R}^{N\times N}$ is entry-wise defined as:
+	Let $G =(V, E, \omega)$ be a weighted graph with $N$ nodes. Its adjacency matrix $\mathbf{A}\in\mathbb{R}^{N\times N}$ is entry-wise defined as
  
  \begin{equation}
   A_{ij} =
     \begin{cases}
-      1 & \text{if there is an edge between nodes $i$ and $j$}\\
-      0 & \text{otherwise}
+      \omega_{ij} & \text{if there is an edge between nodes $i$ and $j$ with cost $\omega_{ij}$},\\
+      0 & \text{otherwise},
     \end{cases}       
 \end{equation}
 for all $i, j = 1,2,\dots, N$.
 \end{definition}
 
-Additionally, graphs are usually represented visually using a diagram, where nodes are represented as points and edges are represented as lines connecting the points. The direction of the edges allows us to divide graphs into \textit{directed} and \textit{undirected}. As a consequence of this, indirect graphs are represented by symmetric adjacency matrices, where $A_{ij}=A_{ji}$ and, on the contrary, direct graphs by asymmetric matrices, $A_{ij}\ne A_{ji}$. The presence of loops, i.e., edges connecting a node to itself can also be indicated in this visual representation, $A_{ii} = 1$, in terms of the adjacency matrix.
+As a particular case, the adjacency matrix for unweighted graphs will have all their non-zero entries set to $A_{ij}=1$, indicating a connection between nodes $i$ and $j$.
 
-It is also worth mentioning other relevant network properties of graph theory as:
+Additionally, graphs are usually represented visually using a diagram (e.g., Figure \ref{fig:graphsv}), where nodes are represented as points and edges are represented as lines connecting the points. The direction of the edges allows us to divide graphs into \textit{directed} and \textit{undirected}. As a consequence of this, undirected graphs are represented by symmetric adjacency matrices, i.e., $A_{ij}=A_{ji}$ and, on the contrary, directed graphs by asymmetric matrices, $A_{ij}\ne A_{ji}$. The presence of loops, i.e., edges connecting a node to itself can also be indicated in this visual representation, $A_{ii} = 1$, in terms of the adjacency matrix.
+
+\begin{figure}[h]\centering
+	\includegraphics[width=0.75\textwidth]{graphsv}
+	\caption{Examples of different network properties.}
+	\label{fig:graphsv}
+	\bigskip
+\end{figure}
+
+It is also worth mentioning other relevant network properties of graph theory for this work as:
 
 \begin{itemize}
-  \item \textit{Static networks}: A static network is a network that does not change over time. The relationships and connections between nodes are fixed and remain constant. 
-  \item \textit{Dynamic networks}: A dynamic network is a network that changes over time. The relationships and connections between nodes can evolve and alter, resulting in a continually changing network structure.
+  \item \textit{Cyclic/acyclic networks}: Cyclic networks are networks where there is at least one path from a node to itself. In other words, they contain cycles or loops. Examples of cyclic networks include recurrent neural networks (RNNs) and feedback loops in control systems. On the other hand, acyclic networks are networks that do not contain any cycles so there is no path from any node back to itself. Examples of these networks are directed acyclic graphs (DAGs) as directed binary trees.
+  \item \textit{Sparse/dense networks}: respectively, sparse/dense networks have a low/high density of connections between nodes compared to the total number of possible connections. Although there is a widespread agreement that most empirical networks are sparse, there is no formal definition of sparsity for any finite network, being the notion of "low" and "high" purely colloquial.
+  \item \textit{Static/Dynamic networks}: A static network is a network that does not change over time. The relationships and connections between nodes are fixed and remain constant. On the contrary, a dynamic network is a network that changes over time. The relationships and connections between nodes can evolve and alter, resulting in a continually changing network structure.
 \end{itemize}
 
-Linear algebra will also play a significant role in network analysis as graphs are represented by matrices. The analysis of networks often involves solving linear systems, determining eigenvalues and eigenvectors, and evaluating matrix functions. Additionally, the examination of dynamic processes on graphs will create systems of differential equations based on their structure. The behavior of the solution over time is expected to be highly impacted by graph's structure (topology), which is reflected in the spectral properties of the matrices related to the graph. This turns out to be one of the most basic questions about network's structure; the identification of most relevant nodes within a network which leads us to the concept of centrality.
+Linear algebra will play a significant role in network analysis as graphs are represented by matrices. The analysis of networks often involves solving linear systems, determining eigenvalues and eigenvectors, and evaluating matrix functions. Moreover, the examination of dynamic processes on graphs will create systems of differential equations based on their structure. The behavior of the solution over time is expected to be highly impacted by the graph's structure (network topology), which is reflected in the spectral properties of the matrices related to the graph. This turns out to be one of the most basic questions about the network's structure; the identification of most relevant nodes within a network. This leads us to the concept of \textit{centrality}.
 
 \section{Centrality measures}
 \label{sec:centra}
  Centrality measures are metrics that are used to quantify the relative importance/influence/position of a node in a network. Indicators of centrality assign numbers or rankings, usually the higher the more important, to nodes within a graph corresponding to their network position based on different criteria. This gives rise to several types of centrality measures \cite{newman2018networks}:
 
-\subsection*{Degree Centrality} Measures the number of connections a node $i$ has to other nodes in the network or what is called degree of a vertex in a graph ($k$), if we define $\mathbf{x}=(x_1,x_2,\dots,x_N)$ as the centrality vector of the graph then: 
+\subsection*{Degree Centrality} The Degree Centrality measures the number of connections a node $i$ has to other nodes in the network. This is called the degree of a node ($k$). If we define $\mathbf{x}=(x_1,x_2,\dots,x_N)$ as the centrality vector of a graph with $N$ nodes, then 
 
 \begin{equation}
-    x_i^{(deg)}=k_i=\sum_{j=1}^{N}A_{ij}
+    x_i^{(deg)}=k_i=\sum_{j=1}^{N}A_{ij}, ~~~i = 1,\dots, N.
 \end{equation}
-This measure is usually normalized by the maximal possible degree, $N − 1$, to obtain a number between 0 and 1. For certain networks, Degree Centrality can be very illuminating as it provides a straightforward and simple indication of a node's connectedness or level of popularity, but fails to consider other crucial elements of the network structure as the importance of a node or its place within the network.
+This measure is usually normalized by the maximal possible degree, $N − 1$, to obtain a number between 0 and 1. For certain networks, Degree Centrality can be very illuminating as it provides a straightforward and simple indication of a node's connectedness or level of popularity, but fails to consider other crucial elements of the network structure such as the importance of a node or its place within the network.
 
-\subsection*{Closeness Centrality} In order to extend the basic measure of degree and take into account the position of the nodes in the network, closeness and betweeness measures are defined. For its part, Closeness Centrality measures the average distance, $\sum_{j}^{}d(i,j)$, between a node and all other nodes in the network, in the normalized version it can be expressed as:
+\subsection*{Closeness Centrality} In order to extend the basic measure of degree and take into account the position of the nodes in the network, \textit{closeness} and \textit{betweenness} measures are defined. For its part, Closeness Centrality measures the average distance, $\sum_{j}^{}d(i,j)$, between a node and all other nodes in the network, where $d(i,j)$ denotes the Euclidean distance between nodes $i$ and $j$. In its normalized version it can be expressed as
 
 \begin{equation}
-    x_i^{(clos)}= \frac{N-1}{\sum_{j\ne i}^{}d(i,j)}
+    x_i^{(clos)}= \frac{N-1}{\sum_{j\ne i}^{}d(i,j)}.
 \end{equation}
 An alternative measure of Closeness Centrality is the \textit{Harmonic Centrality} which aggregates distances differently as the sum of all inverses
-of distances, $\sum_{j}^{}1/d(i,j)$. This avoids having a few nodes for which there is a large or infinite distance:
+of distances, $\sum_{j}^{}1/d(i,j)$. This avoids having a few nodes for which there is a large or infinite distance,
 
 \begin{equation}
-    x_i^{(har)}= \frac{1}{N-1}\sum_{j\ne i}^{}\frac{1}{d(i,j)}
+    x_i^{(har)}= \frac{1}{N-1}\sum_{j\ne i}^{}\frac{1}{d(i,j)}.
 \end{equation}
 
-\subsection*{Betweenness Centrality} Measures the number of times a node acts as a bridge along the shortest path between two other nodes in the network. Formally, if we redefine $g_{jk}^i$ to be the number of shortest paths from $j$ to $k$ that pass through $i$ and we define $g_{jk}$ to be the total number of shortest paths from $j$ to $k$, then the Betweenness Centrality of node $i$ on a general network is:
+\subsection*{Betweenness Centrality} Measures the number of times a node acts as a bridge along the shortest path between two other nodes in the network. Formally, if we redefine $g_{jk}^i$ to be the number of shortest paths from $j$ to $k$ that pass through $i$ and we define $g_{jk}$ to be the total number of shortest paths from $j$ to $k$, then the Betweenness Centrality of node $i$ on a general network is defined as
 
 \begin{equation}
-    x_i^{(bet)}= \sum_{j<k}^{}\frac{g_{jk}^i}{g_{jk}}
+    x_i^{(bet)}= \sum_{j<k}^{}\frac{g_{jk}^i}{g_{jk}}.
 \end{equation}
 
-\subsection*{Eigenvector Centrality} Measures the influence of a node based on the influence of its neighbors. Unlike Degree Centrality which assigns one point for each network connection, Eigenvector Centrality assigns points based on the centrality scores of a node's neighbors, resulting in a more nuanced understanding of a node's centrality. If we denote the centrality of node $i$ by $x_i$ where $\mathbf{x}$ is the centrality vector, then making use of the adjacency matrix and making $x_i$ proportional to the average of the centralities of $i$’s network neighbours we have for undirected networks:
+\subsection*{Eigenvector Centrality} The Eigenvector Centrality measures the influence of a node based on the influence of its neighbors. Unlike Degree Centrality which assigns one point for each network connection, Eigenvector Centrality assigns points based on the centrality scores of a node's neighbors, resulting in a more nuanced understanding of a node's centrality. If we denote the centrality of node $i$ by $x_i$ where $\mathbf{x}$ is the centrality vector, then making use of the adjacency matrix and making $x_i$ proportional to the average of the centralities of $i$’s network neighbours we have for undirected networks:
 
 \begin{equation}
 \label{eqn:eigc}

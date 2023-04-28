@@ -1,0 +1,223 @@
+% ---------------------------------------------------------------------
+% ---------------------------------------------------------------------
+% ---------------------------------------------------------------------
+
+\chapter[Introduction]{Introduction}
+\label{chap:intro}
+
+Networks are fundamental in \chreplaced[comment={(Too strong)}]{many fields of}{any field of current} science as they provide a powerful way to model complex systems and relationships between entities. By representing entities as nodes and connections between them as edges, networks can help researchers understand how information, energy, materials, and other resources flow through a system, identify patterns and structures within the data, and make predictions about system behavior. Many real life problems can be modeled as graphs or discretized as networks and that is why they are widely used in many fields such as physics, biology, sociology, statistics, or computer science amomg others. Network analysis in all these areas have led to significant advances in our understanding of the world around us. \chcomment{References?}
+
+\section{Mathematical notation}
+\label{sec:graph}
+This section introduces a brief review of the definitions and notation pertaining to graphs, as well as some of their matrix representations, that will be used later in this study.
+
+A network in \chadded{the} mathematical literature is, in its simplest form, a collection of interconnected nodes or vertices that represent entities, and the connections or edges between these nodes that represent relationships or interactions between the entities \cite{arrigo2022dynamic}.
+
+\begin{definition}
+    A network, or graph, is an ordered pair of sets $G = (V, E)$, where $V$ is the set of nodes and $E\subset V\times V$ is the set of edges among the nodes. A weighted graph is a graph in which each edge is given a numerical weight or cost. When no weight is associated with the edges, then the graph is called unweighted.
+\end{definition}
+
+\chcomment{Would it make sense to instead say that the graph is unweighted if all weights are equal to 1?}
+
+The following two definitions that are central for this work are the concept of \chhighlight{walk} and the \chhighlight{adjacency matrix} of a graph. \chcomment{Perhaps use italics to emphasize that these are new mathematical terms.}  
+
+\begin{definition}
+    A walk of length $w$ is a sequence of $w$ edges $(e_1, e_2, \dots, e_w)$ such that the target of $e_\ell$ coincides with the source of $e_{\ell+1}$ for all $\ell=1, 2, ..., w−1$.
+\end{definition}
+  
+\begin{definition}
+	Let G =(V, E) be an unweighted graph with $N$ nodes. Its adjacency matrix $\mathbf{A}\in\mathbb{R}^{N\times N}$ is entry-wise defined as:
+ 
+ \begin{equation}
+  A_{ij} =
+    \begin{cases}
+      1 & \text{if there is an edge between nodes $i$ and $j$}\\
+      0 & \text{otherwise}
+    \end{cases}       
+\end{equation}
+for all $i, j = 1,2,\dots, N$.
+\end{definition}
+
+\chcomment{Would it make sense to define the adjacency matrix for a weighted network and comment that in the unweighted case, all non-zero entries are one?}
+
+Additionally, graphs are usually represented visually using a diagram, where nodes are represented as points and edges are represented as lines connecting the points. The direction of the edges allows us to divide graphs into \textit{directed} and \textit{undirected}. As a consequence of this, \chreplaced{undirected}{indirect} graphs are represented by symmetric adjacency matrices, where $A_{ij}=A_{ji}$ and, on the contrary, direct graphs by asymmetric matrices, $A_{ij}\ne A_{ji}$. The presence of loops, i.e., edges connecting a node to itself can also be indicated in this visual representation, $A_{ii} = 1$, in terms of the adjacency matrix.
+
+\chcomment{It would be very helpful if you showed an example of each of the different types of network you are discussing. It should be possible to make some nice pictures using tikz or similar.}
+
+It is also worth mentioning other relevant network properties of graph theory as:
+
+\begin{itemize}
+  \item \textit{Static networks}: A static network is a network that does not change over time. The relationships and connections between nodes are fixed and remain constant. 
+  \item \textit{Dynamic networks}: A dynamic network is a network that changes over time. The relationships and connections between nodes can evolve and alter, resulting in a continually changing network structure.
+\end{itemize}
+
+\chdeleted{It can be assumed that} linear algebra will play a significant role in network analysis as graphs are represented by matrices. The analysis of networks often involves solving linear systems, determining eigenvalues and eigenvectors, and evaluating matrix functions. Moreover, the examination of dynamic processes on graphs will create systems of differential equations based on their structure. The behavior of the solution over time is expected to be highly impacted by \chadded{the} graph's structure (network topology), which is reflected in the spectral properties of the matrices related to the graph. This turns out to be one of the most basic questions about \chadded{the} network's structure; the identification of most relevant nodes within a network. This leads us to the concept of centrality.
+
+\section{Centrality measures}
+\label{sec:centra}
+ Centrality measures are metrics that are used to quantify the relative importance/influence/position of a node in a network. Indicators of centrality assign numbers or rankings, usually the higher the more important, to nodes within a graph corresponding to their network position based on different criteria. This gives rise to several types of centrality measures \cite{newman2018networks}:
+
+\subsection*{Degree Centrality} \chadded{The Degree Centrality} Measures the number of connections a node $i$ has to other nodes in the network. \chreplaced{This}{ or what} is called \chadded{the} degree of a \chreplaced[comment={(Is 'node' and 'vertex' the same thing?)}]{node}{vertex in a graph} ($k$)\chreplaced{. If}{, if} we define $\mathbf{x}=(x_1,x_2,\dots,x_N)$ as the centrality vector of the graph then: 
+
+\begin{equation}
+    x_i^{(deg)}=k_i=\sum_{j=1}^{N}A_{ij} \chadded{, \quad i = 1,\dots,N.}
+\end{equation}
+
+\chcomment{Equations are part of sentences so they should be ended with commas, full stops etc. as suitable.}
+
+This measure is usually normalized by the maximal possible degree, $N − 1$, to obtain a number between 0 and 1. For certain networks, Degree Centrality can be very illuminating as it provides a straightforward and simple indication of a node's connectedness or level of popularity, but fails to consider other crucial elements of the network structure \chadded{such} as the importance of a node or its place within the network.
+
+\subsection*{Closeness Centrality} In order to extend the basic measure of degree and take into account the position of the nodes in the network, \chhighlight{closeness} and \chhighlight{betweenness} \chcomment{(italics?)} measures are defined. For its part, Closeness Centrality measures the average distance, $\sum_{j}^{}d(i,j)$, between a node and all other nodes in the network. In its normalized version it can be expressed as:
+
+\begin{equation}
+    x_i^{(clos)}= \frac{N-1}{\sum_{j\ne i}^{}d(i,j)}
+\end{equation}
+An alternative measure of Closeness Centrality is the \textit{Harmonic Centrality} which aggregates distances differently as the sum of all inverses
+of distances, $\sum_{j}^{}1/d(i,j)$. This avoids having a few nodes for which there is a large or infinite distance:
+
+\begin{equation}
+    x_i^{(har)}= \frac{1}{N-1}\sum_{j\ne i}^{}\frac{1}{d(i,j)}
+\end{equation}
+
+\subsection*{Betweenness Centrality} Measures the number of times a node acts as a bridge along the shortest path between two other nodes in the network. Formally, if we redefine $g_{jk}^i$ to be the number of shortest paths from $j$ to $k$ that pass through $i$ and we define $g_{jk}$ to be the total number of shortest paths from $j$ to $k$, then the Betweenness Centrality of node $i$ on a general network is defined as:
+
+\begin{equation}
+    x_i^{(bet)}= \sum_{j<k}^{}\frac{g_{jk}^i}{g_{jk}}
+\end{equation}
+
+\chcomment{How is the distance $d(i,j)$ defined?}
+
+\subsection*{Eigenvector Centrality} \chadded{The Eigenvector Centrality} Measures the influence of a node based on the influence of its neighbors. Unlike Degree Centrality which assigns one point for each network connection, Eigenvector Centrality assigns points based on the centrality scores of a node's neighbors, resulting in a more nuanced understanding of a node's centrality. If we denote the centrality of node $i$ by $x_i$ where $\mathbf{x}$ is the centrality vector, then making use of the adjacency matrix and making $x_i$ proportional to the average of the centralities of $i$’s network neighbours we have for undirected networks:
+
+\begin{equation}
+\label{eqn:eigc}
+    x_i= \kappa\sum_{j=1}^{N}A_{ij}x_j
+\end{equation}
+where $\kappa$ is a constant. We can rewrite this equation in matrix form considering $\kappa=1/\lambda$ as
+
+\begin{equation}
+    \lambda \mathbf{x} = \mathbf{A}\mathbf{x}
+\end{equation}
+Hence, $\mathbf{x}$ is the eigenvector of the adjacency matrix corresponding to the eigenvalue $\lambda$. Assuming that we wish the centralities to be non-negative, it is shown by the Perron–Frobenius theorem \cite{meyer2000matrix}, which states that for a matrix with all elements non-negative (the adjacency matrix), there is only one eigenvector that also has all elements non-negative, and that is precisely the leading eigenvector. \chcomment{(Very long sentence.)} Therefore, $\lambda$ turns out to be the largest eigenvalue of the adjacency matrix and the centrality vector, $\mathbf{x}$, the corresponding eigenvector. 
+
+\chcomment{The next paragraph is difficult to understand. Can you illustrate with an example?}
+
+Drawbacks of this type of measure are that it does not scale well for directed networks without certain modifications or, even worse, it is not applicable in acyclic networks, i.e., directed graphs with no loops. To address these problems, variants of Eigenvector Centrality such as Katz centrality and PageRank are developed.
+
+\chcomment{At this point it gets a little bit confusing. My suggestion is that you introduce PageRank first in full mathematical detail (without reference to Katz), and then tell the reader that you will consider a special case of PageRank in the remainder, known as Katz centrality.}
+
+\subsection*{Katz Centrality}
+Katz Centrality will be covered to a greater extent in section~\ref{sec:back} as it is \chadded{the} central topic of this thesis\chreplaced{. Here we only mention}{ but only mentioning here} that this centrality measure is based on the idea that a node's importance depends on both its direct connections and the connections of its neighbors. As we will see later, the computation of this centrality score will lead to the resolvent matrix of $\mathbf{A}$, which can be interpreted as an infinite weighted sum of the number of paths of all lengths from one node to all other nodes in the network. The weights in this sum decrease exponentially with the length of the path, so that longer paths are given less importance reflecting the idea that a node's influence decreases as the distance from it increases. 
+
+
+\subsection*{PageRank}
+
+The Katz centrality measure discussed above has a potential flaw. If a node with a high Katz score has links to many other nodes, then all of those linked nodes will also receive a high centrality score. PageRank, instead, is a variant in which the centrality derived from network neighbors is proportional to their centrality divided by their out-degree. Therefore, nodes that point to many others pass only a small amount of centrality on to each of those others, even if their own centrality is high.
+
+In mathematical terms, this centrality is defined by:
+
+\begin{equation}
+\label{eqn:pr1}
+    x_i= \alpha\sum_{j=1}^{N}A_{ij}\frac{x_j}{k_j^{\text{out}}} + \beta
+\end{equation}
+where $\mathbf{A}$ is the adjacency matrix and $\alpha$, $\beta$ are positive free parameters as in Katz Centrality (\ref{eqn:katz1}). \chcomment{What is $k_j^{out}$? What do $\alpha$ and $\beta$ signify?}
+
+Setting $k_j^{\text{out}}=1$ to avoid zero-division for nodes with no outgoing edges we can express Eq. (\ref{eqn:pr1}) in matrix form:
+
+\begin{equation}
+\label{eqn:pr2}
+    \mathbf{x} = \alpha\mathbf{AD^{-1}x} + \beta \mathbf{1}
+\end{equation}
+with $\mathbf{1}$ being the vector of ones $(1,\dots,1)$ and $\mathbf{D}$ being the diagonal matrix with elements $D_{ii} = max(k_i^{\text{out}},1)$. Rearranging for $\mathbf{x}$ and setting the conventional value of $\beta=1$, the PageRank centrality yields:
+
+\begin{equation}
+\label{eqn:pr3}
+    \mathbf{x} = (\mathbf{I} - \alpha\mathbf{AD^{-1}})^{-1} \mathbf{1}
+\end{equation}
+\chreplaced{Here, $\alpha \in (0,1)$}{with $0<\alpha<1$, it} should be \chreplaced{smaller than}{less} than the inverse of the largest eigenvalue of $\mathbf{AD}^{-1}$ (Google uses $\alpha = 0.85$).
+
+
+PageRank was developed by Google co-founders Larry Page and Sergey Brin as a way to rank websites in their search engine results. The basic idea behind PageRank is that a node is considered important if it is linked to by many other important nodes. The PageRank score of a node is determined by the sum of the PageRank scores of the nodes that link to it, with a damping factor applied to reduce the influence of nodes with many outbound links. PageRank centrality is widely used in the field of network analysis and has been applied to a wide range of networks, including the World Wide Web, social networks, and biological networks. \chcomment{References?}
+
+\chdeleted{As we have observed,} each centrality measure provides a different perspective on the importance of a node in a network (see Figure \ref{centrality}) and can be useful in various applications, such as network analysis, recommendation systems, or identifying key players in complex systems. The most appropriate centrality measure will require a more detailed analysis of the specific characteristics of the network in question.
+
+\begin{figure}[h]\centering
+	\includegraphics[width=1.0\textwidth]{centrality_plots}
+	\caption{Examples of A) Degree centrality, B) Betweenness centrality, C) Closeness centrality, D) Eigenvector centrality, E) Katz centrality and F) PageRank from \chdeleted{the well-known} Zachary’s Karate Club graph dataset. \chcomment{Reference?}}
+	\label{centrality}
+	\bigskip
+\end{figure}
+
+\section{Background on Katz centrality in static networks}
+\label{sec:back}
+In the task of finding the most important nodes in a network, one of the most widely used methods is Katz Centrality. To solve Eigenvector Centrality problems in networks that do not have strongly connected components of more than one node resulting in a zero centrality vector, the main idea of Katz centrality is to give each node a small amount of centrality for free.
+
+Let $\mathbf{A}\in\mathbb{R}^{N\times N}$ be the adjacency matrix for a static network of $N$ nodes. Then, from Eq. (\ref{eqn:eigc}) we define the centrality as:
+
+\begin{equation}
+\label{eqn:katz1}
+    x_i= \alpha\sum_{j=1}^{N}A_{ij}x_j + \beta
+\end{equation}
+where $\alpha$ and $\beta$ are positive parameters. The first term correspond to the Eigenvector Centrality and the second term is the “free” part, i.e., the constant extra amount that all nodes receive. By including this additional component, we make sure that nodes with no incoming connections still receive centrality, and once they have a non-zero centrality score, they can distribute it to the other nodes they are linked to. This results in nodes that are connected to many others having a high centrality, regardless of whether they are part of a strongly connected component or an out-component.
+
+\chcomment{The explanation above would have been useful already when you introduced PageRank. Here, it would suffice to say that Katz is obtained when $k_j^{out}=1$ for each $j$.}
+
+Rewriting Eq. (\ref{eqn:katz1}) in matrix form, we obtain:
+
+\begin{equation}
+\label{eqn:katz2}
+    \mathbf{x}= \alpha\mathbf{Ax} + \beta\mathbf{1}
+\end{equation}
+where $\mathbf{1}$ is the uniform vector of ones, $(1,1,\dots,1)$ of size $N$. Rearranging for $\mathbf{x}$, it follows that $\mathbf{x} = \beta (\mathbf{I}-\alpha\mathbf{A})^{-1}\mathbf{1}$.
+We are primarily concerned with the comparison of centrality scores between nodes, rather than the exact numerical value of the scores. Therefore, the overall multiplier is not important. For ease of calculation, typically $\beta$ is set to 1, which gives the following expression for Katz Centrality measure:
+
+\begin{equation}
+\label{eqn:katz3}
+    \mathbf{x} = (\mathbf{I}-\alpha\mathbf{A})^{-1}\mathbf{1}
+\end{equation}
+We seek $\alpha$ such that $(\mathbf{I}-\alpha\mathbf{A})^{-1}$ does not diverges, i.e. $\text{det}(\mathbf{I}-\alpha\mathbf{A})\neq 0$, or what is the same $\text{det}(\mathbf{A}-\alpha^{-1}\mathbf{I})\neq 0$, that it is simply the characteristic equation whose roots $\alpha^{-1}$ are equal to the eigenvalues of the adjacency matrix. The first value of $\alpha$ that makes this determinant $0$ is $\alpha^{-1}=\lambda_1$ so this suggests a good value for $\alpha$ bounded by $0 < \alpha < 1/\lambda_1 $, being $\lambda_1$ the largest eigenvalue of $\mathbf{A}$. 
+
+\chcomment{Quite a lot of repetition from PageRank. Let's talk about how to make this flow better.}
+
+In the choice of $\alpha$ we must take into account that the closer we are to the largest eigenvalue the maximum amount of weight on the eigenvector term will be place and the smallest amount on the constant term. If we let instead $\alpha\to 0$, then only the constant term will survive in Eq. (\ref{eqn:katz1}) resulting in all nodes with equal centrality.
+
+Eq. (\ref{eqn:katz3}) can be expressed using Neumann series, as a generalization of geometric series, by: 
+
+\begin{equation}
+\label{eqn:katz4}
+    \chadded{\mathbf{x} = }\left(\sum_{k=0}^{\infty}\alpha^k \mathbf{A}^k\right)\mathbf{1} = (\mathbf{I}-\alpha\mathbf{A})^{-1}\mathbf{1}
+\end{equation}
+giving a practical expansion to compute by approximation/truncation the resolvent of the adjacency matrix:
+
+\begin{equation}
+\label{eqn:katz5}
+    (\mathbf{I}-\alpha\mathbf{A})^{-1} = \mathbf{I} + \alpha\mathbf{A} + \alpha^2\mathbf{A}^2 + \cdots + \alpha^k\mathbf{A}^k + \cdots
+\end{equation}
+which converges for $\alpha<1/\rho(A)$ where $\rho(\cdot)$ denotes the spectral radius. 
+
+This series is in fact the original form of centrality conceived in 1953 by Leo Katz  \cite{katz1953new}, who considered for each node $i$ the influence of all the nodes connected by a $k$-length walk to $i$ with no restriction in reuse of nodes and edges. Thus, $\alpha$ can be considered an attenuation parameter as the probability that an edge is successfully traversed, penalizing those nodes furthest away from $i$. 
+
+Considering messages being passed along the directed edges, one important consequence of the above expansion is that elements of the \chhighlight{resolvent matrix} \chcomment{(I don't think you have defined it yet).} can be considered as a measure of the ability for a node $i$ to pass information to $j$ taking into account all possible routes, with longer ones given less importance. In that sense, if we consider row sums in the resolvent matrix as a linear combination of powers of $\mathbf{A}$ we can talk about \chadded{the} \textit{broadcast centrality vector} ($\mathbf{b}$) as the ability to send information for each node in the network:  
+
+\begin{equation}
+\label{eqn:broad}
+    \mathbf{b}=(\mathbf{I}-\alpha\mathbf{A})^{-1} \mathbf{1}
+\end{equation}
+\chreplaced{Similarly,}{or} \chadded{the} column sums \chreplaced{of the resolvent matrix}{which} gives a notion of the ability to receive information\chreplaced{, which}{what} is defined as the \textit{receive centrality vector} ($\mathbf{r}$) of the network:
+
+\begin{equation}
+\label{eqn:receiv}
+    \mathbf{r} = (\mathbf{I}-\alpha\mathbf{A})^{-T} \mathbf{1}
+\end{equation}
+Broadly speaking, a node with a high Katz broadcast centrality will be an effective starting point for spreading a rumor, and a node with high Katz receive centrality will be an ideal location to receive the latest rumor.
+
+Overall, Katz centrality is a widely used centrality measure, for both directed and undirected networks, because it provides a nuanced and flexible way to assess the importance of nodes in a network based on their position in the network and their potential for information flow and communication.
+
+\section{Motivation of the study}
+\label{sec:motiv}
+Dynamic networks, or what is the same, systems involving transient interactions are commonly found in real problems across various fields. Currently, the most popular approach is to examine network activity over discrete time frames or snapshots and analyze network status at these time slices. This method presents a number of challenges when it comes to modeling and computing, as it fails to account for the time-sensitive nature of network connections. If the time frame is too large, the ability to reproduce high-frequency transient behaviour, where an edge switches on and off multiple times in the space of a single window, is lost\chreplaced{. On the other hand,}{but} if it is too narrow, it could result in a large number of empty time frames that can lead to redundant processes, wasting computational effort. Additionally, when time windows are too finely spaced, a static model may give a false impression of accuracy since it is not able to reflect altogether the time at which instantaneous information is sent, then received and later processed in time, as \chdeleted{it} happens in many human communication media, with the subsequent loss of information in the network.
+
+Therefore, to address these limitations the present work \chdeleted{develops and} analyzes a continuous-time framework \chadded{developed in $\dots$} that can directly extract centrality information from \chadded{a} network's time-dependent adjacency matrix. This new centrality system expands the concept of the well-known Katz measure and \chdeleted{it} allows us to identify and monitor the most influential nodes in dynamic networks over time at any level of detail in a \chdeleted{more} natural and efficient way.
+
+% ---------------------------------------------------------------------
+% ---------------------------------------------------------------------
