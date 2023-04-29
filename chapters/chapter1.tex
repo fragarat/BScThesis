@@ -36,7 +36,7 @@ The following two definitions that are central for this work are the concept of 
 for all $i, j = 1,2,\dots, N$.
 \end{definition}
 
-As a particular case, the adjacency matrix for unweighted graphs will have all their non-zero entries set to $A_{ij}=1$, indicating a connection between nodes $i$ and $j$.
+As a particular case, the adjacency matrix for unweighted graphs will have all their non-zero entries set to $A_{ij}=1$, indicating a link between nodes $i$ and $j$.
 
 Additionally, graphs are usually represented visually using a diagram (e.g., Figure \ref{fig:graphsv}), where nodes are represented as points and edges are represented as lines connecting the points. The direction of the edges allows us to divide graphs into \textit{directed} and \textit{undirected}. As a consequence of this, undirected graphs are represented by symmetric adjacency matrices, i.e., $A_{ij}=A_{ji}$ and, on the contrary, directed graphs by asymmetric matrices, $A_{ij}\ne A_{ji}$. The presence of loops, i.e., edges connecting a node to itself can also be indicated in this visual representation, $A_{ii} = 1$, in terms of the adjacency matrix.
 
@@ -50,8 +50,9 @@ Additionally, graphs are usually represented visually using a diagram (e.g., Fig
 It is also worth mentioning other relevant network properties of graph theory for this work as:
 
 \begin{itemize}
-  \item \textit{Cyclic/acyclic networks}: Cyclic networks are networks where there is at least one path from a node to itself. In other words, they contain cycles or loops. Examples of cyclic networks include recurrent neural networks (RNNs) and feedback loops in control systems. On the other hand, acyclic networks are networks that do not contain any cycles so there is no path from any node back to itself. Examples of these networks are directed acyclic graphs (DAGs) as directed binary trees.
-  \item \textit{Sparse/dense networks}: respectively, sparse/dense networks have a low/high density of connections between nodes compared to the total number of possible connections. Although there is a widespread agreement that most empirical networks are sparse, there is no formal definition of sparsity for any finite network, being the notion of "low" and "high" purely colloquial.
+  \item \textit{Simple network}: A simple network is a type of network where each edge connects only two distinct nodes, i.e., there are no self-loops or multiple edges between the same pair of nodes. Unless otherwise stated, all graphs analyzed in this study will be considered simple networks.
+  \item \textit{Cyclic/Acyclic networks}: Cyclic networks are networks where there is at least one path from a node to itself. In other words, they contain cycles or loops. Examples of cyclic networks include recurrent neural networks (RNNs) and feedback loops in control systems. On the other hand, acyclic networks are networks that do not contain any cycles so there is no path from any node back to itself. Examples of these networks are directed acyclic graphs (DAGs) as directed binary trees.
+  \item \textit{Sparse/Dense networks}: respectively, a sparse/dense network is a type of network where the number of edges (or connections) between nodes is/is not much smaller than the maximum possible number of edges in the network, resulting in a relatively low density of connections. Although there is a widespread agreement that most empirical networks are sparse, there is no formal definition of sparsity for any finite network, being the notion of "much smaller" purely colloquial.
   \item \textit{Static/Dynamic networks}: A static network is a network that does not change over time. The relationships and connections between nodes are fixed and remain constant. On the contrary, a dynamic network is a network that changes over time. The relationships and connections between nodes can evolve and alter, resulting in a continually changing network structure.
 \end{itemize}
 
@@ -178,7 +179,7 @@ which converges for $\alpha<1/\rho(A)$ where $\rho(\cdot)$ denotes the spectral 
 
 This series is in fact the original form of centrality conceived by Leo Katz, who considered for each node $i$ the influence of all the nodes connected by a $k$-length walk to $i$ with no restriction in reuse of nodes and edges. Thus, $\alpha$ can be considered an attenuation parameter as the probability that an edge is successfully traversed, penalizing those nodes furthest away from $i$. 
 
-Considering messages being passed along the directed edges, one important consequence of the above expansion is that elements of the resolvent matrix can be considered as a measure of the ability for a node $i$ to pass information to $j$ taking into account all possible routes, with longer ones given less importance. In that sense, if we consider row sums in the resolvent matrix as a linear combination of powers of $\mathbf{A}$ we can talk about the \textit{broadcast centrality vector} ($\mathbf{b}$) as the ability to send information for each node in the network 
+Considering messages being passed along the directed edges, one important consequence of the above expansion is that elements of the resolvent matrix can be considered as a measure of the ability for a node $i$ to pass information to $j$ taking into account all possible routes, with longer ones given less importance. In that sense, if we consider row sums in the resolvent matrix as a linear combination of powers of $\mathbf{A}$, we can talk about the \textit{broadcast centrality vector} ($\mathbf{b}$) as the ability to send information for each node in the network 
 
 \begin{equation}
 \label{eqn:broad}
@@ -192,7 +193,9 @@ Similarly, the column sums of the resolvent matrix give a notion of the ability 
 \end{equation}
 Broadly speaking, a node with a high Katz broadcast centrality will be an effective starting point for spreading a rumor, and a node with high Katz receive centrality will be an ideal location to receive the latest rumor.
 
-Overall, Katz centrality is a widely used centrality measure, for both directed and undirected networks, because it provides a nuanced and flexible way to assess the importance of nodes in a network based on their position in the network and their potential for information flow and communication.
+In summary, Katz Centrality is a very useful centrality measure, for both directed and undirected networks, because it provides a nuanced and flexible way to assess the importance of nodes in a network based not only on their position but also on the indirect influence of a node's neighbors, which can be important in many real-world networks.
+
+
 
 \section{Motivation of the study}
 \label{sec:motiv}
