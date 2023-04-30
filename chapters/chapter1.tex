@@ -66,32 +66,32 @@ Linear algebra will play a significant role in network analysis as graphs are re
 \label{sec:centra}
  Centrality measures are metrics that are used to quantify the relative importance/influence/position of a node in a network. Indicators of centrality assign numbers or rankings, usually the higher the more important, to nodes within a graph corresponding to their network position based on different criteria. This gives rise to several types of centrality measures \cite{newman2018networks}:
 
-\subsection*{Degree Centrality} The Degree Centrality measures the number of connections a node $i$ has to other nodes in the network. This is called the degree of a node ($k$). If we define $\mathbf{x}=(x_1,x_2,\dots,x_N)$ as the centrality vector of a graph with $N$ nodes, then 
+\subsection*{Degree centrality} The Degree centrality measures the number of connections a node $i$ has to other nodes in the network. This is called the degree of a node ($k$). If we define $\mathbf{x}=(x_1,x_2,\dots,x_N)$ as the centrality vector of a graph with $N$ nodes, then 
 
 \begin{equation}
     x_i^{(deg)}=k_i=\sum_{j=1}^{N}A_{ij}, ~~~i = 1,\dots, N.
 \end{equation}
-This measure is usually normalized by the maximal possible degree, $N − 1$, to obtain a number between 0 and 1. For certain networks, Degree Centrality can be very illuminating as it provides a straightforward and simple indication of a node's connectedness or level of popularity, but fails to consider other crucial elements of the network structure such as the importance of a node or its place within the network.
+This measure is usually normalized by the maximal possible degree, $N − 1$, to obtain a number between 0 and 1. For certain networks, Degree centrality can be very illuminating as it provides a straightforward and simple indication of a node's connectedness or level of popularity, but fails to consider other crucial elements of the network structure such as the importance of a node or its place within the network.
 
-\subsection*{Closeness Centrality} In order to extend the basic measure of degree and take into account the position of the nodes in the network, \textit{closeness} and \textit{betweenness} measures are defined. For its part, Closeness Centrality measures the average distance, $\sum_{j}^{}d(i,j)$, between a node and all other nodes in the network, where $d(i,j)$ denotes the Euclidean distance between nodes $i$ and $j$. In its normalized version it can be expressed as
+\subsection*{Closeness centrality} In order to extend the basic measure of degree and take into account the position of the nodes in the network, \textit{closeness} and \textit{betweenness} measures are defined. For its part, Closeness centrality measures the average distance, $\sum_{j}^{}d(i,j)$, between a node and all other nodes in the network, where $d(i,j)$ denotes the Euclidean distance between nodes $i$ and $j$. In its normalized version it can be expressed as
 
 \begin{equation}
     x_i^{(clos)}= \frac{N-1}{\sum_{j\ne i}^{}d(i,j)}.
 \end{equation}
-An alternative measure of Closeness Centrality is the \textit{Harmonic Centrality} which aggregates distances differently as the sum of all inverses
+An alternative measure of Closeness centrality is the \textit{Harmonic centrality} which aggregates distances differently as the sum of all inverses
 of distances, $\sum_{j}^{}1/d(i,j)$. This avoids having a few nodes for which there is a large or infinite distance,
 
 \begin{equation}
     x_i^{(har)}= \frac{1}{N-1}\sum_{j\ne i}^{}\frac{1}{d(i,j)}.
 \end{equation}
 
-\subsection*{Betweenness Centrality} Measures the number of times a node acts as a bridge along the shortest path between two other nodes in the network. Formally, if we redefine $g_{jk}^i$ to be the number of shortest paths from $j$ to $k$ that pass through $i$ and we define $g_{jk}$ to be the total number of shortest paths from $j$ to $k$, then the Betweenness Centrality of node $i$ on a general network is defined as
+\subsection*{Betweenness centrality} Measures the number of times a node acts as a bridge along the shortest path between two other nodes in the network. Formally, if we redefine $g_{jk}^i$ to be the number of shortest paths from $j$ to $k$ that pass through $i$ and we define $g_{jk}$ to be the total number of shortest paths from $j$ to $k$, then the Betweenness centrality of node $i$ on a general network is defined as
 
 \begin{equation}
     x_i^{(bet)}= \sum_{j<k}^{}\frac{g_{jk}^i}{g_{jk}}.
 \end{equation}
 
-\subsection*{Eigenvector Centrality} The Eigenvector Centrality measures the influence of a node based on the influence of its neighbors. Unlike Degree Centrality which assigns one point for each network connection, Eigenvector Centrality assigns points based on the centrality scores of a node's neighbors, resulting in a more nuanced understanding of a node's centrality. If we denote the centrality of node $i$ by $x_i$ where $\mathbf{x}$ is the centrality vector, then making use of the adjacency matrix and making $x_i$ proportional to the average of the centralities of $i$’s network neighbours we have for undirected networks
+\subsection*{Eigenvector centrality} The Eigenvector centrality measures the influence of a node based on the influence of its neighbors. Unlike Degree centrality which assigns one point for each network connection, Eigenvector centrality assigns points based on the centrality scores of a node's neighbors, resulting in a more nuanced understanding of a node's centrality. If we denote the centrality of node $i$ by $x_i$ where $\mathbf{x}$ is the centrality vector, then making use of the adjacency matrix and making $x_i$ proportional to the average of the centralities of $i$’s network neighbours we have for undirected networks
 
 \begin{equation}
 \label{eqn:eigc}
@@ -113,18 +113,18 @@ Hence, $\mathbf{x}$ is the eigenvector of the adjacency matrix corresponding to 
 
 Drawbacks of this type of measure are that it does not scale well for directed networks (asymmetric adjacency matrices) where it is not always possible to compute a unique, real leading eigenvector. Or, even worse, it is not applicable in acyclic networks. Figure \ref{fig:acyclic} illustrates how node $1$ in that network has only in-going edges and hence will have eigenvector zero centrality, according to (\ref{eqn:eigc}). Node $3$ has an out-going edge and two in-going edges, but the in-going one is incident on node $1$, and hence node $3$ will also have zero centrality. Following this argument for the remainder nodes, the result is a zero centrality for the whole network. To address these problems, variants based on Eigenvector Centrality such as PageRank and Katz centrality were developed.
 
-\subsection*{PageRank and Katz Centrality}
-In the task of finding the most important nodes in a network, two of the most widely used methods are PageRank and Katz Centrality. To solve Eigenvector Centrality problems in networks that do not have strongly connected components of more than one node resulting in a zero centrality vector, the main idea of these two methods is to give each node a small amount of centrality for free. 
+\subsection*{PageRank and Katz centrality}
+In the task of finding the most important nodes in a network, two of the most widely used methods are PageRank and Katz centrality. To solve Eigenvector centrality problems in networks that do not have strongly connected components of more than one node resulting in a zero centrality vector, the main idea of these two methods is to give each node a small amount of centrality for free. 
 
-Let $\mathbf{A}\in\mathbb{R}^{N\times N}$ be the adjacency matrix for a static network of $N$ nodes. Then, from (\ref{eqn:eigc}) PageRank Centrality is defined as
+Let $\mathbf{A}\in\mathbb{R}^{N\times N}$ be the adjacency matrix for a static network of $N$ nodes. Then, from (\ref{eqn:eigc}) PageRank centrality is defined as
 
 \begin{equation}
 \label{eqn:pr1}
     x_i= \alpha\sum_{j=1}^{N}A_{ij}\frac{x_j}{k_j^{\text{out}}} + \beta,
 \end{equation}
-where $\alpha$, $\beta$ are positive parameters and $k_j^{\text{out}}$ denotes the out-degree of node $j$, i.e., the number of out-going links from that node. The first term correspond to the Eigenvector Centrality and the second term is the “free” part, the constant extra amount that all nodes receive. By including this additional component, we make sure that nodes with no incoming connections still receive centrality, and once they have a non-zero centrality score, they can distribute it to the other nodes they are linked to. This results in nodes that are connected to many others having a high centrality, regardless of whether they are part of a strongly connected component or an out-component.
+where $\alpha$, $\beta$ are positive parameters and $k_j^{\text{out}}$ denotes the out-degree of node $j$, i.e., the number of out-going links from that node. The first term correspond to the Eigenvector centrality and the second term is the “free” part, the constant extra amount that all nodes receive. By including this additional component, we make sure that nodes with no incoming connections still receive centrality, and once they have a non-zero centrality score, they can distribute it to the other nodes they are linked to. This results in nodes that are connected to many others having a high centrality, regardless of whether they are part of a strongly connected component or an out-component.
 
-The difference between PageRank and Katz centrality resides precisily in the way they spread the centrality over the network. In mathematical terms, Katz Centrality is obtained from (\ref{eqn:pr1}) when $k_j^{\text{out}}=1$ for each $j$,
+The difference between PageRank and Katz centrality resides precisely in the way they spread the centrality over the network. In mathematical terms, Katz centrality is obtained from (\ref{eqn:pr1}) when $k_j^{\text{out}}=1$ for each $j$,
 
 \begin{equation}
 \label{eqn:katz1}
@@ -133,7 +133,7 @@ The difference between PageRank and Katz centrality resides precisily in the way
 
 If a node with a high Katz score has links to many other nodes, then all of those linked nodes will also receive a high centrality score. PageRank, instead, is a variant in which the centrality derived from network neighbors is proportional to their centrality divided by their out-degree. Therefore, nodes that point to many others pass only a small amount of centrality on to each of those others, even if their own centrality is high.
 
-By convenience, we set $k_j^{\text{out}}=1$ in (\ref{eqn:pr1}) to avoid zero-division for nodes with no outgoing edges. Thus, we can express PageRank Centrality in matrix form as
+By convenience, we set $k_j^{\text{out}}=1$ in (\ref{eqn:pr1}) to avoid zero-division for nodes with no outgoing edges. Thus, we can express PageRank centrality in matrix form as
 
 \begin{equation}
 \label{eqn:pr2}
@@ -145,29 +145,29 @@ with $\mathbf{1}$ being the vector of ones $(1,\dots,1)$ and $\mathbf{D}$ being 
 \label{eqn:pr3}
     \mathbf{x} = (\mathbf{I} - \alpha\mathbf{AD}^{-1})^{-1} \mathbf{1}.
 \end{equation}
-Again, a similar expression for Katz Centrality is obtained if we consider $\mathbf{D}^{-1}= \mathbf{I}$, for $\mathbf{I}$ denoting the identity matrix of order $N$.
+Again, a similar expression for Katz centrality is obtained if we consider $\mathbf{D}^{-1}= \mathbf{I}$, for $\mathbf{I}$ denoting the identity matrix of order $N$.
 
 We seek $\alpha$ such that $(\mathbf{I}-\alpha\mathbf{AD}^{-1})^{-1}$ does not diverges, i.e. $\text{det}(\mathbf{I}-\alpha\mathbf{AD}^{-1})\neq 0$, or what is the same, $\text{det}(\mathbf{AD}^{-1}-\alpha^{-1}\mathbf{I})\neq 0$, that it is simply the characteristic equation whose roots $\alpha^{-1}$ are equal to the eigenvalues of the adjacency matrix. The first value of $\alpha$ that makes this determinant $0$ is $\alpha^{-1}=\lambda_1$ so this suggests a good value for $\alpha$ bounded by $0 < \alpha < 1/\lambda_1 $, being $\lambda_1$ the largest eigenvalue of $\mathbf{AD}^{-1}$ (Google uses $\alpha = 0.85$). In the choice of $\alpha$ we must take into account that the closer we are to the largest eigenvalue the maximum amount of weight on the eigenvector term will be place and the smallest amount on the constant term. If we let instead $\alpha\to 0$, then only the constant term will survive in (\ref{eqn:katz1}) resulting in all nodes with equal centrality.
 
 PageRank was developed by Google co-founders Larry Page and Sergey Brin as a way to rank websites in their search engine results. The basic idea behind PageRank is that a node is considered important if it is linked to by many other important nodes. The PageRank score of a node is determined by the sum of the PageRank scores of the nodes that link to it, with a damping factor applied to reduce the influence of nodes with many outbound links. 
 
-PageRank and Katz Centrality are widely used in the field of network analysis and has been applied to a wide range of networks, including the World Wide Web, social networks, or biological networks \cite{brin1998anatomy,jeong2001lethality,wasserman1994social}. Overall, each centrality measure provides a different perspective on the importance of a node in a network (see Figure \ref{centrality}) and can be useful in various applications, such as network analysis, recommendation systems, or identifying key players in complex systems. The most appropriate centrality measure will require a more detailed analysis of the specific characteristics of the network in question.
+PageRank and Katz centrality are widely used in the field of network analysis and has been applied to a wide range of networks, including the World Wide Web, social networks, or biological networks \cite{brin1998anatomy,jeong2001lethality,wasserman1994social}. Overall, each centrality measure provides a different perspective on the importance of a node in a network (see Figure \ref{centrality}) and can be useful in various applications, such as network analysis, recommendation systems, or identifying key players in complex systems. The most appropriate centrality measure will require a more detailed analysis of the specific characteristics of the network in question.
 
-Katz Centrality is discussed further in the next section \ref{sec:back} as it is the central topic of this thesis.
+Katz centrality is discussed further in the next section \ref{sec:back} as it is the central topic of this thesis.
 
 \begin{figure}[h]\centering
 	\includegraphics[width=1.0\textwidth]{centrality_plots}
-	\caption{Examples of A) Degree Centrality, B) Betweenness Centrality, C) Closeness Centrality, D) Eigenvector Centrality, E) Katz Centrality and F) PageRank from Zachary’s Karate Club graph dataset \cite{zachary1977information}.}
+	\caption{Examples of A) Degree centrality, B) Betweenness centrality, C) Closeness centrality, D) Eigenvector centrality, E) Katz centrality and F) PageRank from Zachary’s Karate Club graph dataset \cite{zachary1977information}.}
 	\label{centrality}
 	\bigskip
 \end{figure}
 
-\section{Background on Katz Centrality in static networks}
+\section{Background on Katz centrality in static networks}
 \label{sec:back}
 
-Katz Centrality was first introduced by Leo Katz \cite{katz1953new} in 1953 as a way to measure the relative importance of nodes in a network based on the number of paths that pass through them. This measure is obtained by assigning a score to each node in the network based on the sum of the scores of all nodes that are one step away from it, plus a fraction of the scores of all nodes that are two steps away, and so on, up to an arbitrary limit or threshold.
+Katz centrality was first introduced by Leo Katz \cite{katz1953new} in 1953 as a way to measure the relative importance of nodes in a network based on the number of paths that pass through them. This measure is obtained by assigning a score to each node in the network based on the sum of the scores of all nodes that are one step away from it, plus a fraction of the scores of all nodes that are two steps away, and so on, up to an arbitrary limit or threshold.
 
-Expression (\ref{eqn:pr3}) for Katz Centrality can be rewritten using Neumann series, as a generalization of geometric series, by
+Expression (\ref{eqn:pr3}) for Katz centrality can be rewritten using Neumann series, as a generalization of geometric series, by
 
 \begin{equation}
 \label{eqn:katz2}
