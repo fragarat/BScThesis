@@ -14,7 +14,7 @@ This section introduces a brief review of the definitions and notation pertainin
 A network in the mathematical literature is, in its simplest form, a collection of interconnected nodes or vertices that represent entities, and the connections or edges between these nodes that represent relationships or interactions between the entities \cite{arrigo2022dynamic}.
 
 \begin{definition}
-    A network, or graph, is an ordered triple of sets $G = (V, E, \omega)$, where $V$ is the set of nodes, $E\subset V\times V$ is the set of edges among the nodes and $\omega$ is the set of  weights, also called values, strengths or costs, associated with each edge. A weighted graph is a graph in which each edge is given a numerical weight or cost. When all these weights are given the same weight (tipically, a value of $1$), then the graph, usually represented only by $G = (V, E)$, is called unweighted.
+    A network, or graph, is an ordered triple of sets $G = (V, E, \omega)$, where $V$ is the set of nodes, $E\subset V\times V$ is the set of edges among the nodes and $\omega$ is the set of  weights, also called values, strengths or costs, associated with each edge. A weighted graph is a graph in which each edge is given a numerical weight or cost. When all these weights are given the same weight (typically, a value of $1$), then the graph, represented only by $G = (V, E)$, is called unweighted.
 \end{definition}
 
 The following two definitions that are central for this work are the concept of \textit{walk} and the \textit{adjacency matrix} of a graph.  
@@ -29,14 +29,19 @@ The following two definitions that are central for this work are the concept of 
  \begin{equation}
   A_{ij} =
     \begin{cases}
-      \omega_{ij} & \text{if there is an edge between nodes $i$ and $j$ with cost $\omega_{ij}$},\\
+      \sum\omega_{ij} & \text{if there is an edge between nodes $i$ and $j$ with cost $\omega_{ij}$},\\
       0 & \text{otherwise},
     \end{cases}       
 \end{equation}
 for all $i, j = 1,2,\dots, N$.
 \end{definition}
 
-As a particular case, the adjacency matrix for unweighted graphs will have all their non-zero entries set to $A_{ij}=1$, indicating a link between nodes $i$ and $j$.
+Unless otherwise stated, all graphs analyzed in this study will be considered \textit{simple networks}.
+
+\begin{definition}
+    A simple network is a type of network where each edge connects only two distinct nodes, i.e., there are no self-loops or multiple edges between the same pair of nodes. 
+\end{definition}
+As a particular case, the adjacency matrix for simple unweighted graphs will have all their non-zero entries set to $A_{ij}=1$, indicating a link between nodes $i$ and $j$.
 
 Additionally, graphs are usually represented visually using a diagram (e.g., Figure \ref{fig:graphsv}), where nodes are represented as points and edges are represented as lines connecting the points. The direction of the edges allows us to divide graphs into \textit{directed} and \textit{undirected}. As a consequence of this, undirected graphs are represented by symmetric adjacency matrices, i.e., $A_{ij}=A_{ji}$ and, on the contrary, directed graphs by asymmetric matrices, $A_{ij}\ne A_{ji}$. The presence of loops, i.e., edges connecting a node to itself can also be indicated in this visual representation, $A_{ii} = 1$, in terms of the adjacency matrix.
 
@@ -50,9 +55,8 @@ Additionally, graphs are usually represented visually using a diagram (e.g., Fig
 It is also worth mentioning other relevant network properties of graph theory for this work as:
 
 \begin{itemize}
-  \item \textit{Simple network}: A simple network is a type of network where each edge connects only two distinct nodes, i.e., there are no self-loops or multiple edges between the same pair of nodes. Unless otherwise stated, all graphs analyzed in this study will be considered simple networks.
   \item \textit{Cyclic/Acyclic networks}: Cyclic networks are networks where there is at least one path from a node to itself. In other words, they contain cycles or loops. Examples of cyclic networks include recurrent neural networks (RNNs) and feedback loops in control systems. On the other hand, acyclic networks are networks that do not contain any cycles so there is no path from any node back to itself. Examples of these networks are directed acyclic graphs (DAGs) as directed binary trees.
-  \item \textit{Sparse/Dense networks}: respectively, a sparse/dense network is a type of network where the number of edges (or connections) between nodes is/is not much smaller than the maximum possible number of edges in the network, resulting in a relatively low density of connections. Although there is a widespread agreement that most empirical networks are sparse, there is no formal definition of sparsity for any finite network, being the notion of "much smaller" purely colloquial.
+  \item \textit{Sparse/Dense networks}: respectively, a sparse/dense network is a type of network where the number of edges (or connections) between nodes is/is not much smaller than the maximum possible number of edges in the network, resulting in a relatively low/high density of connections. Although there is a widespread agreement that most empirical networks are sparse, there is no formal definition of sparsity for any finite network, being the notion of "much smaller" purely colloquial.
   \item \textit{Static/Dynamic networks}: A static network is a network that does not change over time. The relationships and connections between nodes are fixed and remain constant. On the contrary, a dynamic network is a network that changes over time. The relationships and connections between nodes can evolve and alter, resulting in a continually changing network structure.
 \end{itemize}
 
@@ -124,7 +128,7 @@ The difference between PageRank and Katz centrality resides precisily in the way
 
 \begin{equation}
 \label{eqn:katz1}
-    x_i= \alpha\sum_{j=1}^{N}A_{ij}x_j + \beta
+    x_i= \alpha\sum_{j=1}^{N}A_{ij}x_j + \beta.
 \end{equation}
 
 If a node with a high Katz score has links to many other nodes, then all of those linked nodes will also receive a high centrality score. PageRank, instead, is a variant in which the centrality derived from network neighbors is proportional to their centrality divided by their out-degree. Therefore, nodes that point to many others pass only a small amount of centrality on to each of those others, even if their own centrality is high.
@@ -143,13 +147,13 @@ with $\mathbf{1}$ being the vector of ones $(1,\dots,1)$ and $\mathbf{D}$ being 
 \end{equation}
 Again, a similar expression for Katz Centrality is obtained if we consider $\mathbf{D}^{-1}= \mathbf{I}$, for $\mathbf{I}$ denoting the identity matrix of order $N$.
 
-We seek $\alpha$ such that $(\mathbf{I}-\alpha\mathbf{AD}^{-1})^{-1}$ does not diverges, i.e. $\text{det}(\mathbf{I}-\alpha\mathbf{AD}^{-1})\neq 0$, or what is the same, $\text{det}(\mathbf{AD}^{-1}-\alpha^{-1}\mathbf{I})\neq 0$, that it is simply the characteristic equation whose roots $\alpha^{-1}$ are equal to the eigenvalues of the adjacency matrix. The first value of $\alpha$ that makes this determinant $0$ is $\alpha^{-1}=\lambda_1$ so this suggests a good value for $\alpha$ bounded by $0 < \alpha < 1/\lambda_1 $, being $\lambda_1$ the largest eigenvalue of $\mathbf{AD}^{-1}$ (Google uses $\alpha = 0.85$). In the choice of $\alpha$ we must take into account that the closer we are to the largest eigenvalue the maximum amount of weight on the eigenvector term will be place and the smallest amount on the constant term. If we let instead $\alpha\to 0$, then only the constant term will survive in Eq. (\ref{eqn:katz1}) resulting in all nodes with equal centrality.
+We seek $\alpha$ such that $(\mathbf{I}-\alpha\mathbf{AD}^{-1})^{-1}$ does not diverges, i.e. $\text{det}(\mathbf{I}-\alpha\mathbf{AD}^{-1})\neq 0$, or what is the same, $\text{det}(\mathbf{AD}^{-1}-\alpha^{-1}\mathbf{I})\neq 0$, that it is simply the characteristic equation whose roots $\alpha^{-1}$ are equal to the eigenvalues of the adjacency matrix. The first value of $\alpha$ that makes this determinant $0$ is $\alpha^{-1}=\lambda_1$ so this suggests a good value for $\alpha$ bounded by $0 < \alpha < 1/\lambda_1 $, being $\lambda_1$ the largest eigenvalue of $\mathbf{AD}^{-1}$ (Google uses $\alpha = 0.85$). In the choice of $\alpha$ we must take into account that the closer we are to the largest eigenvalue the maximum amount of weight on the eigenvector term will be place and the smallest amount on the constant term. If we let instead $\alpha\to 0$, then only the constant term will survive in (\ref{eqn:katz1}) resulting in all nodes with equal centrality.
 
 PageRank was developed by Google co-founders Larry Page and Sergey Brin as a way to rank websites in their search engine results. The basic idea behind PageRank is that a node is considered important if it is linked to by many other important nodes. The PageRank score of a node is determined by the sum of the PageRank scores of the nodes that link to it, with a damping factor applied to reduce the influence of nodes with many outbound links. 
 
 PageRank and Katz Centrality are widely used in the field of network analysis and has been applied to a wide range of networks, including the World Wide Web, social networks, or biological networks \cite{brin1998anatomy,jeong2001lethality,wasserman1994social}. Overall, each centrality measure provides a different perspective on the importance of a node in a network (see Figure \ref{centrality}) and can be useful in various applications, such as network analysis, recommendation systems, or identifying key players in complex systems. The most appropriate centrality measure will require a more detailed analysis of the specific characteristics of the network in question.
 
-Katz Centrality is covered to a greater extent in the next section \ref{sec:back} as it is the central topic of this thesis.
+Katz Centrality is discussed further in the next section \ref{sec:back} as it is the central topic of this thesis.
 
 \begin{figure}[h]\centering
 	\includegraphics[width=1.0\textwidth]{centrality_plots}
