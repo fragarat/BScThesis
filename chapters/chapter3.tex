@@ -3,12 +3,6 @@
 
 From the point of view of computational cost, it is convenient to make a brief analysis of the relevant new continuous-time framework obtained in Eq. \ref{eqn:u3.3}. The main problem that we can find when dealing with large networks (matrices) resides in the computation of the matrix logarithm, which can be computationally expensive.
 
-This function computes the natural logarithm of a matrix, which is defined as follows \cite{higham2008functions}:
-
-\begin{definition}
-    A logarithm of $A \in \mathbb{C}^{N\times N}$ is any matrix $X$ such that $e^X = A$ where $e^X = I + X + \frac{X^2}{2!} + \frac{X^3}{3!} + \cdots$. If $A$ is assumed to have no eigenvalues on $\mathbb{R}^{-}$, then we call this logarithm to be the principal logarithm of $A$, which is the unique logarithm whose spectrum lies in the strip $\{ z : −\pi < Im(z) < \pi \}$.
-\end{definition}
-
 The matrix logarithm can be approximated by its Taylor series expansion. The Taylor series expansion of the matrix logarithm of a matrix $I - \alpha A$ can be expressed as:
 
 $$log(I - \alpha A) = \sum_{k=1}^{\infty} (-1)^{k+1}\frac{\alpha^k}{k}A^k$$

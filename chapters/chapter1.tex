@@ -14,7 +14,7 @@ This section introduces a brief review of the definitions and notation pertainin
 A network in the mathematical literature is, in its simplest form, a collection of interconnected nodes or vertices that represent entities, and the connections or edges between these nodes that represent relationships or interactions between the entities \cite{arrigo2022dynamic}.
 
 \begin{definition}
-    A network, or graph, is an ordered triple of sets $G = (V, E, \omega)$, where $V$ is the set of nodes, $E\subset V\times V$ is the set of edges among the nodes and $\omega$ is the set of  weights, also called values, strengths or costs, associated with each edge. A weighted graph is a graph in which each edge is given a numerical weight or cost. When all these weights are given the same weight (typically, a value of $1$), then the graph, represented only by $G = (V, E)$, is called unweighted.
+    A weighted network, or graph, is an ordered triple of sets $G = (V, E, \mathcal{W})$, where $V$ is the set of nodes, $E\subset V\times V$ is the set of edges among the nodes and $\mathcal{W}$ is a map that assigns to each edge a weight or cost, usually a positive real number. When all these weights are given the same relevance or weight (by convention, $\omega=1$), then the graph, represented only by $G = (V, E)$, is called unweighted.
 \end{definition}
 
 The following two definitions that are central for this work are the concept of \textit{walk} and the \textit{adjacency matrix} of a graph.  
@@ -24,12 +24,12 @@ The following two definitions that are central for this work are the concept of 
 \end{definition}
   
 \begin{definition}
-	Let $G =(V, E, \omega)$ be a weighted graph with $N$ nodes. Its adjacency matrix $\mathbf{A}\in\mathbb{R}^{N\times N}$ is entry-wise defined as
+	Let $G =(V, E, \mathcal{W})$ be a weighted graph with $N$ nodes. Its adjacency matrix $\mathbf{A}\in\mathbb{R}^{N\times N}$ is entry-wise defined as
  
  \begin{equation}
   A_{ij} =
     \begin{cases}
-      \sum\omega_{ij} & \text{if there is an edge between nodes $i$ and $j$ with cost $\omega_{ij}$},\\
+      \sum_{e_{ij}}\omega_{ij} & \text{if there is an edge $e_{ij}$ between nodes $i$ and $j$ with cost $\omega_{ij}$},\\
       0 & \text{otherwise},
     \end{cases}       
 \end{equation}
@@ -167,19 +167,25 @@ Katz centrality is discussed further in the next section \ref{sec:back} as it is
 
 Katz centrality was first introduced by Leo Katz \cite{katz1953new} in 1953 as a way to measure the relative importance of nodes in a network based on the number of paths that pass through them. This measure is obtained by assigning a score to each node in the network based on the sum of the scores of all nodes that are one step away from it, plus a fraction of the scores of all nodes that are two steps away, and so on, up to an arbitrary limit or threshold.
 
-Expression (\ref{eqn:pr3}) for Katz centrality can be rewritten using Neumann series, as a generalization of geometric series, by
+Expression (\ref{eqn:pr3}) provides a way to compute Katz centrality based on the \textit{resolvent of the adjacency matrix}.
+
+\begin{definition}
+    Given a square matrix $\mathbf{A}$ its resolvent is the matrix-valued function $R_A(\alpha) = (\mathbf{I} − \alpha \mathbf{A})^{−1}$, defined for all $\alpha^{-1} \in \mathbb{C}\setminus\sigma(\mathbf{A})$. 
+\end{definition}
+
+Thus, Katz centrality can be rewritten using Neumann series, as a generalization of geometric series, by
 
 \begin{equation}
 \label{eqn:katz2}
     \mathbf{x}=(\mathbf{I}-\alpha\mathbf{A})^{-1}\mathbf{1}=\left(\sum_{k=0}^{\infty}\alpha^k \mathbf{A}^k\right)\mathbf{1},
 \end{equation}
-giving a practical expansion to compute by approximation/truncation the \textit{resolvent of the adjacency matrix} 
+giving a practical expansion to compute by approximation/truncation the resolvent of the adjacency matrix
 
 \begin{equation}
 \label{eqn:katz3}
     (\mathbf{I}-\alpha\mathbf{A})^{-1} = \mathbf{I} + \alpha\mathbf{A} + \alpha^2\mathbf{A}^2 + \cdots + \alpha^k\mathbf{A}^k + \cdots
 \end{equation}
-which converges for $\alpha<1/\rho(A)$ where $\rho(\cdot)$ denotes the spectral radius. 
+which converges for $\alpha<1/\rho(\mathbf{A})$ where $\rho(\cdot)$ denotes the spectral radius. 
 
 This series is in fact the original form of centrality conceived by Leo Katz, who considered for each node $i$ the influence of all the nodes connected by a $k$-length walk to $i$ with no restriction in reuse of nodes and edges. Thus, $\alpha$ can be considered an attenuation parameter as the probability that an edge is successfully traversed, penalizing those nodes furthest away from $i$. 
 
