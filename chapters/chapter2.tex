@@ -121,18 +121,18 @@ On the other hand, we note that the receive centrality vector, $\mathbf{r}(t)$, 
     \mathbf{r^{\prime}}(t) = -\beta (\mathbf{r}(t) - \mathbf{1}) - (\log (\mathbf{I} - \alpha \mathbf{A}(t)))^T\mathbf{r}(t)
 \end{equation} with $\mathbf{r}(0)=\mathbf{1}$. This implies a considerable reduction of order $\mathcal{O}(N)$ with respect to equation (\ref{eqn:u3.3}) if we assume that $\mathbf{A}$ represents the adjacency matrix for a sparse network with a computational cost that grows linearly with the number of nonzero entries.
 
-Unfortunately, it is not possible to derive a vector-valued ODE for the dynamic broadcast vector using the same method. This dissimilarity comes from the fact that the receive vector $\mathbf{r}(t)$ monitors the total amount of information that flows into each node, so this information can be carried forward in time as new links emerge. In contrast, the broadcast vector $\mathbf{b}(t)$ tracks the information that has left each node but it does not indicate the current location of the information because this has not been recorded, and therefore, we cannot update it based solely on $\mathbf{b}(t)$. In mathematical terms, 
+Unfortunately, it is not possible to derive a vector-valued ODE for the dynamic broadcast vector using the same method. This dissimilarity comes from the fact that the receive vector $\mathbf{r}(t)$ monitors the total amount of information that flows into each node, so this information can be carried forward in time as new links emerge. In contrast, the broadcast vector $\mathbf{b}(t)$ tracks the information that has left each node but it does not indicate the current location of the information because this has not been recorded, and therefore, we cannot update it based solely on $\mathbf{b}(t)$. In terms of the dynamic communicability matrix, at every step $k$, the receive centrality of nodes can be refreshed by solving a single sparse linear system (\ref{eqn:rm1}) that employs the current network time slice as the coefficient matrix. This approach eliminates the necessity of storing and updating the complete matrix $\mathbf{Q}(t_k)$ to retrieve the receive centrality of nodes at level $k$. This can be expressed as
 
-\begin{equation*}
+\begin{equation}
 \label{eqn:rm1}
     \mathbf{r}(t_k) \coloneqq \mathbf{1}^T \mathbf{Q}(t_k)=\mathbf{r}(t_{k-1})(\mathbf{I}-\alpha \mathbf{A}(t_k)^{-1}, \text{~~~for~} k= 0,1,\dots,M  
-\end{equation*}
-while $\mathbf{b}(t)$ needs access to the current dynamic communicability matrix at each step
+\end{equation}
+while $\mathbf{b}(t)$ needs access to the full current dynamic communicability matrix at each step
 
-\begin{equation*}
+\begin{equation}
 \label{eqn:rm2}
-    \mathbf{b}(t_M) = \mathbf{Q}(t_M)\mathbf{1}.  
-\end{equation*}
+    \mathbf{b}(t_k) = \mathbf{Q}(t_k)\mathbf{1}, \text{~~~for~} k= 0,1,\dots,M.  
+\end{equation}
 
 \newpage
 
