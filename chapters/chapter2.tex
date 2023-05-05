@@ -59,11 +59,13 @@ Conceiving a $\delta t$-dependent power in the resolvent matrix products of (\re
 
 $$(\mathbf{I} - \alpha\mathbf{A}(t))^{-(1/2)\delta t} (\mathbf{I} - \alpha\mathbf{A}(t))^{-(1/2)\delta t} = (\mathbf{I} - \alpha\mathbf{A}(t))^{-\delta t}$$ show us that this scaling under the limit $\delta t \to 0$ is consistent and meaningful.
 
-Now, for practical purposes we define the \textit{principal logarithm} of a matrix \cite{higham2008functions}.
+Now, for practical purposes we define the \textit{principal logarithm} of a matrix \cite[Ch.\ 11]{higham2008functions}.
 \begin{definition}
-    A logarithm of $A \in \mathbb{C}^{N\times N}$ is any matrix $X$ such that $e^X = A$ where $e^X = I + X + \frac{X^2}{2!} + \frac{X^3}{3!} + \cdots$. The matrix logarithm is not unique, since if $e^X = A$ then $e^{X+2k\pi iI} = A$ for any integer $k$. If $A$ is assumed to have no negative real eigenvalues, then we call this logarithm to be the principal logarithm of $A$, which is the unique logarithm whose spectrum lies in the strip $\{ z : −\pi < Im(z) < \pi \}$.
+    A logarithm of $A \in \mathbb{C}^{N\times N}$ is any matrix $X$ such that $e^X = A$ where $e^X = I + X + \frac{X^2}{2!} + \frac{X^3}{3!} + \cdots$. The matrix logarithm is not unique, since if $e^X = A$ then $e^{X+2k\pi iI} = A$ for any integer $k$. If $A$ has no negative real eigenvalues, then we call this the principal logarithm of $A$, which is the unique logarithm whose spectrum lies in the strip $\{ z : −\pi < Im(z) < \pi \}$.
 \end{definition}
-From this point on we assume that the adjacency matrix $\mathbf{A}$ has no negative real eigenvalues and that the logarithm is the principal logarithm. Then, from (\ref{eqn:rundyncommat}), taking the identity matrix to the left hand side, we define for convenience $\mathbf{U}(t)=\mathbf{I} + \mathbf{S}(t)$. If we apply the matrix exponential and logarithm with the identities \cite{higham2008functions}
+From this point on, we will assume the principal logarithm when referring to the logarithm of a matrix. 
+
+For convenience, we take the identity matrix to the left hand side from (\ref{eqn:rundyncommat}), and define the $\textit{communicability}$ matrix $(\mathbf{U})$, as  $\mathbf{U}(t)=\mathbf{I} + \mathbf{S}(t)$. Applying the matrix exponential and matrix logarithm with the identities \cite[Ch.\ 11]{higham2008functions}
 
 $$\mathbf{H} =e^{\log \mathbf{H}} \text{~~and~~} \log \mathbf{H}^\alpha =\alpha\log \mathbf{H} \text{~~~for~~} -1 \le \alpha \le 1,$$ 
 
@@ -71,7 +73,7 @@ we obtain
 
 \begin{equation}
 \label{eqn:u3.1}
-    \mathbf{U}(t + \delta t) = (\mathbf{I} + e^{-\beta\delta t}(\mathbf{U}(t) - \mathbf{I})) \exp\left(-\delta t \log (\mathbf{I} - \alpha \mathbf{A}(t + \delta t)) \right).
+    \mathbf{U}(t + \delta t) = \left(\mathbf{I} + e^{-\beta\delta t}(\mathbf{U}(t) - \mathbf{I})\right) \exp\left(-\delta t \log (\mathbf{I} - \alpha \mathbf{A}(t + \delta t)) \right).
 \end{equation} 
 
 Expanding in Taylor series to the first order the right-hand
@@ -93,6 +95,8 @@ By taking the limit $\delta t \to 0$, we finally arrive at the matrix ODE propos
 \end{equation}
 
 This matrix ODE (\ref{eqn:u3.3}) provides us with a continuous-time framework for a dynamic system driven by its adjacency matrix, $\mathbf{A}(t)$ with $\mathbf{U}(t)_{ij}$ for $i\ne j$ quantifying the current ability of node $i$ to pass information to node $j$, so that longer and older walks are less important.
+
+\newpage
 
 In the same way as we did with Katz centrality for static networks in (\ref{eqn:broad}--\ref{eqn:receiv}), we define two dynamic vectors, namely the broadcast vector $\mathbf{b}(t)$ and the receive vector $\mathbf{r}(t)$, as shown in equation (\ref{eqn:u3.4}). These vectors enable us to measure the current inclination of each node to broadcast, or to receive information, across a dynamic network under assumptions of less significance to longer and older walks
 
@@ -121,7 +125,11 @@ On the other hand, we note that the receive centrality vector, $\mathbf{r}(t)$, 
     \mathbf{r^{\prime}}(t) = -\beta (\mathbf{r}(t) - \mathbf{1}) - (\log (\mathbf{I} - \alpha \mathbf{A}(t)))^T\mathbf{r}(t)
 \end{equation} with $\mathbf{r}(0)=\mathbf{1}$. This implies a considerable reduction of order $\mathcal{O}(N)$ with respect to equation (\ref{eqn:u3.3}) if we assume that $\mathbf{A}$ represents the adjacency matrix for a sparse network with a computational cost that grows linearly with the number of nonzero entries.
 
-Unfortunately, it is not possible to derive a vector-valued ODE for the dynamic broadcast vector using the same method. This dissimilarity comes from the fact that the receive vector $\mathbf{r}(t)$ monitors the total amount of information that flows into each node, so this information can be carried forward in time as new links emerge. In contrast, the broadcast vector $\mathbf{b}(t)$ tracks the information that has left each node but it does not indicate the current location of the information because this has not been recorded, and therefore, we cannot update it based solely on $\mathbf{b}(t)$. In terms of the dynamic communicability matrix, at every step $k$, the receive centrality of nodes can be refreshed by solving a single sparse linear system (\ref{eqn:rm1}) that employs the current network time slice as the coefficient matrix. This approach eliminates the necessity of storing and updating the complete matrix $\mathbf{Q}(t_k)$ to retrieve the receive centrality of nodes at level $k$. This can be expressed as
+Unfortunately, it is not possible to derive a vector-valued ODE for the dynamic broadcast vector using the same method. This dissimilarity comes from the fact that the receive vector $\mathbf{r}(t)$ monitors the total amount of information that flows into each node, so this information can be carried forward in time as new links emerge. In contrast, the broadcast vector $\mathbf{b}(t)$ tracks the information that has left each node but it does not indicate the current location of the information because this has not been recorded, and therefore, we cannot update it based solely on $\mathbf{b}(t)$. 
+
+\newpage
+
+In terms of the dynamic communicability matrix, at every step $k$, the receive centrality of nodes can be refreshed by solving a single sparse linear system (\ref{eqn:rm1}) that employs the current network time slice as the coefficient matrix. This approach eliminates the necessity of storing and updating the complete matrix $\mathbf{Q}(t_k)$ to retrieve the receive centrality of nodes at level $k$. This can be expressed as
 
 \begin{equation}
 \label{eqn:rm1}
@@ -133,8 +141,6 @@ while $\mathbf{b}(t)$ needs access to the full current dynamic communicability m
 \label{eqn:rm2}
     \mathbf{b}(t_k) = \mathbf{Q}(t_k)\mathbf{1}, \text{~~~for~} k= 0,1,\dots,M.  
 \end{equation}
-
-\newpage
 
 \begin{highlightedParagraphC}
  
@@ -154,7 +160,11 @@ The choice of downweighting parameters, $\alpha$ and $\beta$, plays an important
 
 On one side, the value of the parameter $\beta$, which downweights temporal information, can be interpreted as the rate at which news or information becomes less relevant as time passes. This means that if a piece of information is $t$ units of time old, its relevance will be decreased by $e^{−\beta t}$. Therefore, by studying the typical half-life of a link, we can determine an appropriate value for this parameter and use it to quantify the rate at which information becomes outdated. According to Mason \cite{lifespan}, the lifespan of a link varies greatly depending on its nature. Links belonging to social networks such as YouTube, Facebook or Twitter can remain active between 2-8 hours and, on the contrary, news have a much shorter life with only a few minutes after which they are no longer relevant. To estimate the value of $\beta$, researchers often use statistical methods such as maximum likelihood estimation or least squares regression to fit the decay model to empirical data. This involves finding the value of $\beta$ that best fits the observed decay pattern, based on a set of observed edge weights over time.
 
-On the other hand, the value of the edge-attenuation parameter $\alpha$, which penalizes longer walks in the network, is determined in the discrete case as we saw in (\ref{eqn:dyncommat}) by the reciprocal of the largest spectral radius among the matrices $\{\mathbf{A}(t_k)\}$. In a continuous-time ODE system as (\ref{eqn:u3.3}), the logarithm $\log(\mathbf{I} - \alpha \mathbf{A}(t))$ is well-defined if $1 - \alpha \lambda_i > 0$ for all real eigenvalues $\lambda_i$ of $\mathbf{A}(t)$ \cite{higham2008functions}.
+On the other hand, the value of the edge-attenuation parameter $\alpha$, which penalizes longer walks in the network, is determined in the discrete case as we saw in (\ref{eqn:dyncommat}) by the reciprocal of the largest spectral radius among the matrices $\{\mathbf{A}(t_k)\}$. Similarly, for the continuous-time ODE system (\ref{eqn:u3.3}), the principal matrix logarithm function $\log (\mathbf{I} - \alpha \mathbf{A}(t))$ is well-defined when \cite[Ch.\ 11]{higham2008functions} 
+
+$$1 - \alpha\rho(\mathbf{A}(t)) > 0 \iff \alpha < \rho(\mathbf{A}(t))^{-1} \text{~~~for all~~} t>0.$$
+
+This implies that, much like in the discrete case, the full temporal evolution of our network has to be known before deriving $\mathbf{U}(t)$.
 
 As a particular example of the choice of $\alpha$, let us consider the context of undirected one-to-one communication, such as voice calls with no tele-conferences, i.e., no more than one active connection per node at a given time. It is observed that the the adjacency matrix $\mathbf{A}(t)$ for this kind of network can always be permuted into a block diagonal structure, with non-trivial blocks of the form
 
@@ -163,11 +173,15 @@ $$\begin{bmatrix}
 1 & 0 
 \end{bmatrix}$$ where $\lambda_1=1$.
 
-Consequently, the constraint on $\alpha$ is restricted to $\alpha<1$.
+Consequently, the constraint on $\alpha$ is restricted to $\alpha<1$. This condition will be applied for the choice of $\alpha$ when dealing with the second and third numerical experiments of this thesis, both of which simulate this type of communication network.
+
+\newpage
 
 \begin{highlightedParagraphC}
+
+Alternative approaches can be considered by replacing the resolvent function with an opportune matrix function.
  
-The choice of other matrix functions or different types of dynamic walks in the resolvent (\ref{eqn:katz3}), arises a slightly different system of equations.
+%The choice of other matrix functions or different types of dynamic walks in the resolvent (\ref{eqn:katz3}), arises a slightly different system of equations.
 
 \end{highlightedParagraphC}
 
@@ -184,7 +198,7 @@ where $H(\mathbf{A}(t))$ is some matrix function. One suitable option for this m
     \mathbf{U^{\prime}}(t) = -\beta (\mathbf{U}(t) - \mathbf{I}) + \mathbf{U}(t)\log (H(\mathbf{A}(t)))
 \end{equation}
 
-Truncated power series for the resolvent matrix of the adjacency matrix $\mathbf{A}(t)$ will be used later in this work to approximate the computation of the matrix logarithm for networks with a large number of nodes.
+Truncated power series for the resolvent matrix of the adjacency matrix $\mathbf{A}(t)$ will be used later in this work to approximate the computation of the matrix logarithm in networks involving a large number of nodes.
 
 
 

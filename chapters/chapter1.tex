@@ -5,7 +5,7 @@
 \chapter[Introduction]{Introduction}
 \label{chap:intro}
 
-Networks are fundamental in many fields of science as they provide a powerful way to model complex systems and relationships between entities at different scales. By representing entities as nodes and connections between them as edges, networks can help researchers understand how information, energy, materials, and other resources flow through a system, identify patterns and structures within the data, and make predictions about system behavior. Many real life problems can be modeled as graphs or discretized as networks and that is why they are widely used in many fields such as physics, biology, sociology, statistics, or computer science amomg others. Network analysis in all these areas have led to significant advances in our understanding of the world around us \cite{albert2002statistical, katz1953new, newman2018networks}.
+Networks are fundamental in many fields of science as they provide a powerful way to model complex systems and relationships between entities at different scales. By representing entities as nodes and connections between them as edges, networks can help researchers understand how information, energy, materials, and other resources flow through a system, identify patterns and structures within the data, and make predictions about system behavior. Many real life problems can be modeled as graphs or discretized as networks and that is why they are widely used in many fields such as physics, biology, sociology, statistics, or computer science amomg others. Network analysis in all these areas have led to significant advances in our understanding of the world around us \cite{albert2002statistical, katz1953new}, \cite[Part I]{newman2018networks}.
 
 \section{Mathematical notation}
 \label{sec:graph}
@@ -43,7 +43,7 @@ Unless otherwise stated, all graphs analyzed in this study will be considered \t
 \end{definition}
 As a particular case, the adjacency matrix for simple unweighted graphs will have all their non-zero entries set to $A_{ij}=1$, indicating a link between nodes $i$ and $j$.
 
-Additionally, graphs are usually represented visually using a diagram (e.g., Figure \ref{fig:graphsv}), where nodes are represented as points and edges are represented as lines connecting the points. The direction of the edges allows us to divide graphs into \textit{directed} and \textit{undirected}. As a consequence of this, undirected graphs are represented by symmetric adjacency matrices, i.e., $A_{ij}=A_{ji}$ and, on the contrary, directed graphs by asymmetric matrices, $A_{ij}\ne A_{ji}$. The presence of loops, i.e., edges connecting a node to itself can also be indicated in this visual representation, $A_{ii} = 1$, in terms of the adjacency matrix.
+Additionally, graphs are usually represented visually using a diagram (e.g., Fig. \ref{fig:graphsv}), where nodes are represented as points and edges are represented as lines connecting the points. The direction of the edges allows us to divide graphs into \textit{directed} and \textit{undirected}. As a consequence of this, undirected graphs are represented by symmetric adjacency matrices, i.e., $A_{ij}=A_{ji}$ and, on the contrary, directed graphs by asymmetric matrices, $A_{ij}\ne A_{ji}$. The presence of loops, i.e., edges connecting a node to itself can also be indicated in this visual representation, $A_{ii} = 1$, in terms of the adjacency matrix.
 
 \begin{figure}[h]\centering
 	\includegraphics[width=0.75\textwidth]{graphsv}
@@ -64,7 +64,7 @@ Linear algebra will play a significant role in network analysis as graphs are re
 
 \section{Centrality measures}
 \label{sec:centra}
- Centrality measures are metrics that are used to quantify the relative importance/influence/position of a node in a network. Indicators of centrality assign numbers or rankings, usually the higher the more important, to nodes within a graph corresponding to their network position based on different criteria. This gives rise to several types of centrality measures \cite{newman2018networks}:
+ Centrality measures are metrics that are used to quantify the relative importance/influence/position of a node in a network. Indicators of centrality assign numbers or rankings, usually the higher the more important, to nodes within a graph corresponding to their network position based on different criteria. This gives rise to several types of centrality measures \cite[Ch.\ 7]{newman2018networks}:
 
 \subsection*{Degree centrality} The Degree centrality measures the number of connections a node $i$ has to other nodes in the network. This is called the degree of a node ($k$). If we define $\mathbf{x}=(x_1,x_2,\dots,x_N)$ as the centrality vector of a graph with $N$ nodes, then 
 
@@ -91,7 +91,7 @@ of distances, $\sum_{j}^{}1/d(i,j)$. This avoids having a few nodes for which th
     x_i^{(bet)}= \sum_{j<k}^{}\frac{g_{jk}^i}{g_{jk}}.
 \end{equation}
 
-\subsection*{Eigenvector centrality} The Eigenvector centrality measures the influence of a node based on the influence of its neighbors. Unlike Degree centrality which assigns one point for each network connection, Eigenvector centrality assigns points based on the centrality scores of a node's neighbors, resulting in a more nuanced understanding of a node's centrality. If we denote the centrality of node $i$ by $x_i$ where $\mathbf{x}$ is the centrality vector, then making use of the adjacency matrix and making $x_i$ proportional to the average of the centralities of $i$’s network neighbours we have for undirected networks
+\subsection*{Eigenvector centrality} The Eigenvector centrality measures the influence of a node based on the influence of its neighbors. Unlike Degree centrality which assigns one point for each network connection, Eigenvector centrality assigns points based on the centrality scores of a node's neighbors, resulting in a more nuanced understanding of a node's centrality. If we denote the centrality of node $i$ by $x_i$ where $\mathbf{x}$ is the centrality vector, then making use of the adjacency matrix and making $x_i$ proportional to the average of the centralities of $i$’s network neighbours we have for simple networks
 
 \begin{equation}
 \label{eqn:eigc}
@@ -102,16 +102,16 @@ where $\kappa$ is a constant. We can rewrite this equation in matrix form consid
 \begin{equation}
     \lambda \mathbf{x} = \mathbf{A}\mathbf{x}.
 \end{equation}
-Hence, $\mathbf{x}$ is the eigenvector of the adjacency matrix corresponding to the eigenvalue $\lambda$. By the Perron–Frobenius theorem \cite{meyer2000matrix}, a matrix with all elements non-negative, like an adjacency matrix, has only one eigenvector with all elements non-negative and that is precisely the leading eigenvector. Therefore, assuming that we wish the centralities to be non-negative, it is shown that $\lambda$ corresponds to the largest eigenvalue of the adjacency matrix ($\lambda_1$) and the centrality vector, $\mathbf{x}$, to the corresponding eigenvector.
+Hence, $\mathbf{x}$ is the eigenvector of the adjacency matrix corresponding to the eigenvalue $\lambda$. By the Perron–Frobenius theorem \cite[Ch.\ 8]{meyer2000matrix}, a real square matrix with all elements non-negative, like an adjacency matrix, has only one eigenvector with all elements with the same sign and that is precisely the leading eigenvector. Therefore, assuming that we wish the centralities to be non-negative, it is shown that $\lambda$ corresponds the spectral radius of $\mathbf{A}$, i.e., the largest absolute value of its eigenvalues, ($\kappa=(\lvert \lambda_1 \rvert^{-1}$) and the centrality vector, $\mathbf{x}$, to its corresponding eigenvector.
 
 \begin{figure}[h]\centering
-	\includegraphics[width=0.15\textwidth]{acyclic}
+	\includegraphics[width=0.19\textwidth]{acyclic}
 	\caption{Acyclic graph.}
 	\label{fig:acyclic}
 	\bigskip
 \end{figure}
 
-Drawbacks of this type of measure are that it does not scale well for directed networks (asymmetric adjacency matrices) where it is not always possible to compute a unique, real leading eigenvector. Or, even worse, it is not applicable in acyclic networks. Figure \ref{fig:acyclic} illustrates how node $1$ in that network has only in-going edges and hence will have eigenvector zero centrality, according to (\ref{eqn:eigc}). Node $3$ has an out-going edge and two in-going edges, but the in-going one is incident on node $1$, and hence node $3$ will also have zero centrality. Following this argument for the remainder nodes, the result is a zero centrality for the whole network. To address these problems, variants based on Eigenvector Centrality such as PageRank and Katz centrality were developed.
+Drawbacks of this type of measure are that it does not scale well for directed networks (asymmetric adjacency matrices) where it is not always possible to compute a unique, real leading eigenvector. Or, even worse, it is not applicable in acyclic networks. Fig. \ref{fig:acyclic} illustrates how node $1$ in that network has only in-going edges and hence will have eigenvector zero centrality, according to (\ref{eqn:eigc}). Node $3$ has an out-going edge and two in-going edges, but the in-going one is incident on node $1$, and hence node $3$ will also have zero centrality. Following this argument for the remainder nodes, the result is a zero centrality for the whole network. To address these problems, variants based on Eigenvector Centrality such as PageRank and Katz centrality were developed.
 
 \subsection*{PageRank and Katz centrality}
 In the task of finding the most important nodes in a network, two of the most widely used methods are PageRank and Katz centrality. To solve Eigenvector centrality problems in networks that do not have strongly connected components of more than one node resulting in a zero centrality vector, the main idea of these two methods is to give each node a small amount of centrality for free. 
@@ -147,11 +147,14 @@ with $\mathbf{1}$ being the vector of ones $(1,\dots,1)$ and $\mathbf{D}$ being 
 \end{equation}
 Again, a similar expression for Katz centrality is obtained if we consider $\mathbf{D}^{-1}= \mathbf{I}$, for $\mathbf{I}$ denoting the identity matrix of order $N$.
 
-We seek $\alpha$ such that $(\mathbf{I}-\alpha\mathbf{AD}^{-1})^{-1}$ does not diverges, i.e. $\text{det}(\mathbf{I}-\alpha\mathbf{AD}^{-1})\neq 0$, or what is the same, $\text{det}(\mathbf{AD}^{-1}-\alpha^{-1}\mathbf{I})\neq 0$, that it is simply the characteristic equation whose roots $\alpha^{-1}$ are equal to the eigenvalues of the adjacency matrix. The first value of $\alpha$ that makes this determinant $0$ is $\alpha^{-1}=\lambda_1$ so this suggests a good value for $\alpha$ bounded by $0 < \alpha < 1/\lambda_1 $, being $\lambda_1$ the largest eigenvalue of $\mathbf{AD}^{-1}$ (Google uses $\alpha = 0.85$). In the choice of $\alpha$ we must take into account that the closer we are to the largest eigenvalue the maximum amount of weight on the eigenvector term will be place and the smallest amount on the constant term. If we let instead $\alpha\to 0$, then only the constant term will survive in (\ref{eqn:katz1}) resulting in all nodes with equal centrality.
+We seek $\alpha$ such that $\mathbf{I}-\alpha\mathbf{AD}^{-1}$ is non-singular, i.e. $\text{det}(\mathbf{I}-\alpha\mathbf{AD}^{-1})\neq 0$, or what is the same, $\text{det}(\mathbf{AD}^{-1}-\alpha^{-1}\mathbf{I})\neq 0$. This it is simply the characteristic equation of $\mathbf{AD}^{-1}$ whose roots are equal to the eigenvalues of the matrix $\mathbf{AD}^{-1}$, $\lambda=\alpha^{-1}$. This suggests a good value for $\alpha$ bounded by $0 < \alpha < 1/\rho(\mathbf{AD}^{-1})$, denoting $\rho(\cdot)$ the spectral radius (Google uses $\alpha = 0.85$). 
+%Note that it makes more sense now to speak of spectral radius instead of leading eigenvalue since these two centralities are defined for more general networks, both directed (with asymmetric adjacency matrices) and undirected (symmetric matrices) networks.
+
+In the choice of $\alpha$ we must take into account that the closer we are to the spectral radius, the maximum amount of weight on the eigenvector term will be place and the smallest amount on the constant term. If we let instead $\alpha\to 0$, then only the constant term will survive in (\ref{eqn:katz1}) resulting in all nodes with equal centrality.
 
 PageRank was developed by Google co-founders Larry Page and Sergey Brin as a way to rank websites in their search engine results. The basic idea behind PageRank is that a node is considered important if it is linked to by many other important nodes. The PageRank score of a node is determined by the sum of the PageRank scores of the nodes that link to it, with a damping factor applied to reduce the influence of nodes with many outbound links. 
 
-PageRank and Katz centrality are widely used in the field of network analysis and has been applied to a wide range of networks, including the World Wide Web, social networks, or biological networks \cite{brin1998anatomy,jeong2001lethality,wasserman1994social}. Overall, each centrality measure provides a different perspective on the importance of a node in a network (see Figure \ref{centrality}) and can be useful in various applications, such as network analysis, recommendation systems, or identifying key players in complex systems. The most appropriate centrality measure will require a more detailed analysis of the specific characteristics of the network in question.
+PageRank and Katz centrality are widely used in the field of network analysis and has been applied to a wide range of networks, including the World Wide Web, social networks, or biological networks \cite{brin1998anatomy,jeong2001lethality},\cite[Ch.\ 5]{wasserman1994social}. Overall, each centrality measure provides a different perspective on the importance of a node in a network (see Fig. \ref{centrality}) and can be useful in various applications, such as network analysis, recommendation systems, or identifying key players in complex systems. The most appropriate centrality measure will require a more detailed analysis of the specific characteristics of the network in question.
 
 Katz centrality is discussed further in the next section \ref{sec:back} as it is the central topic of this thesis.
 
