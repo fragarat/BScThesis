@@ -2,6 +2,7 @@
 \label{chap:appa}
 
 \section*{First synthetic experiment}
+\label{sec:fse}
 
 \begin{lstlisting}[language=Python, caption=First synthetic experiment]
 #!/usr/bin/env python3
@@ -136,6 +137,48 @@ A18 = A_even()
 A19 = A_odd()
 A20 = np.zeros((N, N))
 
+w0, v0 = eig(A0)
+w1, v1 = eig(A1)
+w2, v2 = eig(A2)
+w3, v3 = eig(A3)
+w4, v4 = eig(A4)
+w5, v5 = eig(A5)
+w6, v6 = eig(A6)
+w7, v7 = eig(A7)
+w8, v8 = eig(A8)
+w9, v9 = eig(A9)
+w10, v10 = eig(A10)
+w11, v11 = eig(A11)
+w12, v12 = eig(A12)
+w13, v13 = eig(A13)
+w14, v14 = eig(A14)
+w15, v15 = eig(A15)
+w16, v16 = eig(A16)
+w17, v17 = eig(A17)
+w18, v18 = eig(A18)
+w19, v19 = eig(A19)
+
+print("w0 =", w0)
+print("w1 =", w1)
+print("w2 =", w2)
+print("w3 =", w3)
+print("w4 =", w4)
+print("w5 =", w5)
+print("w6 =", w6)
+print("w7 =", w7)
+print("w8 =", w8)
+print("w9 =", w9)
+print("w10 =", w10)
+print("w11 =", w11)
+print("w12 =", w12)
+print("w13 =", w13)
+print("w14 =", w14)
+print("w15 =", w15)
+print("w16 =", w16)
+print("w17 =", w17)
+print("w18 =", w18)
+print("w19 =", w19)
+
 # aggregate matrix to compute the agg. out degree
 agg_matrix = A0 + A1 + A2 + A3 + A4 + A5 + A6 + A7 + A8 + A9 + A10 +\
              A11 + A12 + A13 + A14 +A15 + A16 + A17 + A18 + A19
@@ -246,6 +289,7 @@ fig2.savefig('exp1_agg_out_degree.eps', format='eps')
 \end{lstlisting}
 
 \section*{Second synthetic experiment}
+\label{sec:sse}
 
 \begin{lstlisting}[language=Python, caption=Second synthetic experiment]
 #!/usr/bin/env python3
@@ -460,6 +504,7 @@ fig.savefig('exp2_btA_vs_btB.eps', format='eps')
 \end{lstlisting}
 
 \section*{Voice call experiment}
+\label{sec:vce}
 
 \begin{lstlisting}[language=Python, caption=Second synthetic experiment]
 #!/usr/bin/env python3
