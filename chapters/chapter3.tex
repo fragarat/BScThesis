@@ -181,21 +181,11 @@ The aim of the experiment is to show the usefulness of the new matrix ODE in dea
 
 The designers of the above mentioned competition provided additional information indicating that node 200 was the leader of an important community who controlled a closely connected subnetwork or inner circle consisting of nodes 1, 2, 3, and 5. However, starting from day 7, these individuals seem to have switched their phone IDs: node 200 became 300, and the others became 306, 309, 360, and 392.
 
-For this experiment, $\mathbf{A}(t)$ was assumed to be symmetric, meaning that $\mathbf{A}_{ij}(t) = \mathbf{A}_{ji}(t) = 1$ if nodes $i$ and $j$ were communicating at time $t$, which was measured in seconds. Parameters $\beta$ was chosen to be approximately $\beta = 1/(60\times 60 \times 24) \approx 1.2 \times 10^{-5}$, which corresponded to a time downweighting of $e^{-1}$ per day, and set the edge attenuation parameter $\alpha$ to a similar value of $10^{-4}$. The SciPy's \texttt{solve\_ivp} method was again used to numerically solve the ODE (\ref{eqn:u3.3}). Additionally, absolute and relative error tolerances were both set to $10^{-4}$. To improve efficiency, the matrix logarithm was approximated in this occasion with its expansion to the fifth power:
+For this experiment, $\mathbf{A}(t)$ was assumed to be symmetric, meaning that $\mathbf{A}_{ij}(t) = \mathbf{A}_{ji}(t) = 1$ if nodes $i$ and $j$ were communicating at time $t$, which was measured in seconds. Parameters $\beta$ was chosen to be approximately $\beta = 1/(60\times 60 \times 24) \approx 1.2 \times 10^{-5}$, which corresponded to a time downweighting of $e^{-1}$ per day, and set the edge attenuation parameter $\alpha$ to a similar value of $10^{-4}$. The SciPy's \texttt{solve\_ivp} method was again used to numerically solve the ODE (\ref{eqn:u3.3}) (see Appendix \ref{chap:appa} - Voice call experiment, l.257). Additionally, absolute and relative error tolerances were both set to $10^{-4}$. To improve efficiency, the matrix logarithm was approximated in this occasion with its expansion to the fifth power:
 
 $$\log(\mathbf{I} - \alpha \mathbf{A}(t)) \approx \alpha \mathbf{A}(t) - \alpha^2 \mathbf{A}(t)^2/2 + \alpha^3 \mathbf{A}(t)^3/3 - \alpha^4 \mathbf{A}(t)^4/4 + \alpha^5 \mathbf{A}(t)^5/5$$ 
 
 Visually speaking, the effects of increasing the number of terms in the expansion to 6 and 7 remained identical.
-
-This experiment yields two key findings:
-\begin{enumerate}[label=(\roman*)]
-  \item The dynamic broadcast/receive measures \eqref{eqn:u3.4} are able to identify key nodes as highly influential, even if they are not actively using much bandwidth, without any prior knowledge of an inner circle's existence.
-  \item The transformation that occurs in the network on day 7 is revealed by the running centrality measures once we know the IDs of the inner circle.
-\end{enumerate}
-
-Fig. \ref{fig:ve1a} was used to demonstrate point (i) by plotting bandwidth against dynamic broadcast, $\mathbf{b}(t)$, using data up until the end of day 6. Dynamic receive centrality, $\mathbf{r}(t)$, was also computed using its own vector-valued ODE \eqref{eqn:u4.1} obtaining similar results and a computation time reduction of approximately $30\%$. The scatter plot also includes symbols to mark certain nodes, such as a star for the ring leader, 200, and squares for the related inner-circle nodes, 1, 2, 3, and 5. The follow-on ID for the ringleader, 300, is marked with a plus symbol, and those for other members, 306, 309, 360, and 392, are marked with diamonds.
-
-The results showed that the key nodes for days 1-6 were much more dominant in terms of dynamic broadcast than overall bandwidth. Specifically, the ringleader node had a low bandwidth but ranked sixth out of 400 in terms of broadcast communicability.
 
 \begin{figure}[h]\centering
     \includegraphics[width=.79\textwidth]{voicecall_exp_1_7}
@@ -204,7 +194,15 @@ The results showed that the key nodes for days 1-6 were much more dominant in te
     \bigskip
 \end{figure}
 
-The data from days 7 to 10 is displayed in Fig. \ref{fig:ve1b}, and it confirms that the dynamic broadcast score is a more effective indicator of centrality than overall bandwidth in uncovering the inner circle. The plot shows how the new ID of the ringleader, that is indicated with an upward pointing triangle, has a low overall bandwidth, but ranks seventh highest for broadcast centrality. Although the former IDs from the inner circle, marked with squares, still possess high bandwidth, their low dynamic broadcast scores suggest that they are no longer central players.
+This experiment yields two key findings:
+\begin{enumerate}[label=(\roman*)]
+  \item The dynamic broadcast/receive measures \eqref{eqn:u3.4} are able to identify key nodes as highly influential, even if they are not actively using much bandwidth, without any prior knowledge of an inner circle's existence.
+  \item The transformation that occurs in the network on day 7 is revealed by the running centrality measures once we know the IDs of the inner circle.
+\end{enumerate}
+
+Fig. \ref{fig:ve1a} was used to demonstrate point (i) by plotting bandwidth against dynamic broadcast, $\mathbf{b}(t)$, using data up until the end of day 6. The scatter plot also includes symbols to mark certain nodes, such as a star for the ring leader, 200, and squares for the related inner-circle nodes, 1, 2, 3, and 5. The follow-on ID for the ringleader, 300, is marked with a plus symbol, and those for other members, 306, 309, 360, and 392, are marked with diamonds.
+
+The results showed that the key nodes for days 1-6 were much more dominant in terms of dynamic broadcast than overall bandwidth. Specifically, the ringleader node had a low bandwidth but ranked sixth out of 400 in terms of broadcast communicability.
 
 \begin{figure}[h]\centering
     \includegraphics[width=.79\textwidth]{voicecall_exp_7_10}
@@ -213,10 +211,43 @@ The data from days 7 to 10 is displayed in Fig. \ref{fig:ve1b}, and it confirms 
     \bigskip
 \end{figure}
 
-The communicability between the original IDs of the five most important players (ID nodes: 200, 1, 2, 3, and 5) is presented in Figure \ref{fig:ve2} to support point (ii). The graph shows how communication between these key nodes changes over a ten days period of time. At each discretized time point, the average amount of messages, broadcast ($U_{ij}$) and received ($U_{ji}$), between each pair of key nodes is measured and then scaled by the average amount of communication between all pairs of nodes in the network. By analyzing this measure, we can observe how the network changes over time, especially when the players start using different IDs after day 7.
+The data from days 7 to 10 is displayed in Fig. \ref{fig:ve1b}. The plot shows how the new ID of the ringleader, that is indicated by a plus symbol, has a low overall bandwidth, but ranks seventh highest for broadcast centrality. Although the former IDs from the inner circle, marked with diamonds, still possess high bandwidth, their low dynamic broadcast scores suggest that they are no longer central players. This experiment confirms that the dynamic broadcast score is a more effective indicator of centrality than overall bandwidth in uncovering the inner circle.
+
+Dynamic receive centrality, $\mathbf{r}(t)$, was also computed using its own vector-valued ODE \eqref{eqn:u4.1} for data from days 1 to 7 obtaining similar results and a computation time reduction per function call of approximately $30\%$ (see Appendix \ref{chap:appa} - $\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ cost comparison). The execution times in the $\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ comparison have been measured over 100 repetitions for the computation of the respective matrix/vector ODE system. We determined the frequency (time per call ratio) at which the matrix function \eqref{eqn:u3.3} or vector function \eqref{eqn:u4.1} was evaluated by the \texttt{solve\_ivp} Python method with default parameters. Results are shown in Table \ref{table:btrt}.
+
+\begin{table}[ht]
+            \bigskip
+		\centering % used for centering table
+		\begin{tabular}{c c c c} % centered columns (4 columns)
+			\hline\hline %inserts double horizontal lines
+			\textbf{Method ($\times 100$ rep.)} & \textbf{time (s)} & \textbf{function calls} & \textbf{ratio (ms/call)} \\ [0.1ex] % inserts table
+			%heading
+			\hline\hline 
+			$\mathbf{b}(t)$ & 984.47 & 32600 & 30.20 \\ % inserting body of the table
+			$\mathbf{r}(t)$ & 2627.48 & 122600 & 21.43 \\ [0.5ex] % [1ex] adds vertical space
+			\hline %inserts single line
+		\end{tabular}
+		\caption{$\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ cost comparison.} 
+       \label{table:btrt} 
+\end{table}
+
+We define the \textit{communicability between key nodes ($\mathcal{C}$)} at each discretized time point, as the average amount of messages, broadcast ($U_{ij}$) and received ($U_{ji}$), between each pair of key nodes, scaled by the average amount of communication between all pairs of nodes in the network, i.e.,
+
+\begin{equation*}
+    \mathcal{C}(t) = \frac{\overline{K}(t)}{\overline{T}(t)},
+\end{equation*}
+
+where
+
+\begin{align*}
+    \overline{K}(t) &=\frac{\sum_{i\ne j}U_{ij}(t) + U_{ji}(t)}{20} \text{~~~~~for~~} i=1,2,3,5,200 ,\\
+    \overline{T}(t) &=\frac{\sum_{i,j=1}^N U_{ij}(t) - \sum_{i=1}^N U_{ii}(t)}{N^2-N}.
+\end{align*}
+
+The communicability between the original IDs of the five most important players (ID nodes: 200, 1, 2, 3, and 5) during the ten days period is presented in Figure \ref{fig:ve2} to support point (ii). By analyzing this measure, we can observe how the structure of the network changes over time, especially when the players start using different IDs after day 7.
 
 \begin{figure}[h]\centering
-    \includegraphics[width=.75\textwidth]{voicecall_exp_dyncomm}
+    \includegraphics[width=.85\textwidth]{voicecall_exp_dyncomm}
     \caption{Voice call data: dynamic communicability between the five key nodes as a function of time.}
     \label{fig:ve2}
     \bigskip

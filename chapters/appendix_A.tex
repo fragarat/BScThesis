@@ -506,7 +506,7 @@ fig.savefig('exp2_btA_vs_btB.eps', format='eps')
 \section*{Voice call experiment}
 \label{sec:vce}
 
-\begin{lstlisting}[language=Python, caption=Second synthetic experiment]
+\begin{lstlisting}[language=Python, caption=Voice call experiment]
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
@@ -943,4 +943,211 @@ ax3.set_xticklabels(['Day {}'.format(i) for i in x_label])
 ax3.axvline(x=8, linestyle='--', color='gray', linewidth=0.8)
 
 fig3.savefig('voicecall_exp_dyncomm.eps', format='eps')
+\end{lstlisting}
+
+\section*{$\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ cost comparison}
+\label{sec:brc}
+\begin{lstlisting}[language=Python, caption=Broadcast - Receive centrality comparison]
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+#############################################################
+##################### RECEIVE CENTRALITY ####################
+#############################################################
+
+########################## MODULES ##########################
+
+import numpy as np
+from scipy.integrate import solve_ivp
+#from scipy.linalg import logm
+import pandas as pd
+import time
+
+######################## VARIABLES #####################
+# number of nodes
+N = 400 
+# alpha and beta parameters
+a = 1E-4
+b = 1.2E-5
+# identity matrix of size NxN
+I = np.eye(N)
+# ones vector
+r0 = np.ones(N)
+
+# Path to the csv file
+csv_file_path = "CellPhoneCallRecords.csv"
+
+# Max. call time duration in seconds
+t_max = 3000
+
+#################### logm approx. #####################
+
+def logm_approx(A, a=a):
+    '''
+    Returns the approximation of the function logm by truncation to the 
+    fifth power of its series expansion.
+
+            Parameters:
+                    A (arr): NxN array 
+                    a (float): parameter
+
+            Returns:
+                    principal matrix logarithm approximation 
+    '''
+    A2 = A @ A
+    A3 = A2 @ A
+    A4 = A3 @ A
+    A5 = A4 @ A
+    
+    return a * A - (a**2/2) * A2 + (a**3/3) * A3 - (a**4/4) * A4 + (a**5/5) * A5
+
+######################### A(t) #########################
+
+# Read the csv file into a Pandas DataFrame
+df = pd.read_csv(csv_file_path)
+
+# Convert the Datetime field to a datetime object
+df["Datetime"] = pd.to_datetime(df["Datetime"], format="%Y%m%d %H%M")
+
+def Adj(t):
+    '''
+    Returns the adjacency matrix of the network at a given time 't'. 
+    Sets elements to 1 if 't' belongs to the datetime conversation which nodes
+    are given in the .csv file by the fields 'From' and 'To'.
+
+            Parameters:
+                    t (float): time
+
+            Returns:
+                    A (arr): NxN adjacency matrix
+    '''
+    # Filter all datetimes in the interval actual time - max calltime duration
+    actual_time = t0_datetime + pd.Timedelta(seconds=t)
+    start_time = actual_time - pd.Timedelta(seconds=t_max)
+    
+    filtered = df[(df["Datetime"] >= start_time) & (df["Datetime"] <= actual_time)]
+
+    # Initialize the adjacency matrix with zeros
+    A = np.zeros((N, N))
+
+    # Set matrix entries to 1 if the time is inside a conversation
+    for index, row in filtered.iterrows():
+        from_cell = row["From"]
+        to_cell = row["To"]
+        start_call_time = row["Datetime"]
+        end_call_time = start_call_time + pd.Timedelta(seconds=row["Duration(seconds)"])
+        if end_call_time >= actual_time:
+            A[from_cell][to_cell] = 1
+            A[to_cell][from_cell] = 1
+
+    return A
+
+######################### ODE #########################
+    
+# Matrix ODE functions
+def f1(t, U):
+    
+    f1.num_calls += 1
+    
+    # Reshape U from vector to matrix
+    U = U.reshape((N, N))
+    
+    # Compute the matrix ODE
+    dUdt = -b * (U - I) - U @ logm_approx(Adj(t))
+    # Reshape dUdt from matrix to vector
+    dUdt = dUdt.flatten()
+    return dUdt
+
+def f2(t, r):
+    
+    f2.num_calls += 1
+    
+    # Compute the matrix ODE
+    drdt = -b * (r - r0) - (logm_approx(Adj(t)).T) @ r
+    return drdt
+
+###############################################################
+
+def method1(t0_datetime, tf_datetime):
+    
+    # Initial condition 
+    U0 = np.eye(N)
+    U0 = U0.flatten()
+
+    delta = tf_datetime - t0_datetime
+
+    # Time span
+    t0 = 0
+    tf = delta.total_seconds() 
+    t_span = (t0, tf) 
+    t_eval = np.linspace(t0, tf, num=100)
+
+    # Solve the matrix ODE numerically using solve_ivp
+    sol = solve_ivp(f1, t_span, U0, method='RK45', t_eval=t_eval, rtol=1e-4, atol=1e-4)
+    return sol
+
+
+def method2(t0_datetime, tf_datetime):
+    
+    # Initial condition 
+    r0 = np.ones(N)
+    
+    delta = tf_datetime - t0_datetime
+
+    # Time span
+    t0 = 0
+    tf = delta.total_seconds() 
+    t_span = (t0, tf) 
+    t_eval = np.linspace(t0, tf, num=100)
+
+    # Solve the matrix ODE numerically using solve_ivp
+    sol = solve_ivp(f2, t_span, r0, method='RK45', t_eval=t_eval, rtol=1e-4, atol=1e-4)
+    return sol
+
+######################### TIMES #########################
+
+# Time interval 
+t0_datetime = pd.Timestamp(2006, 6, 1)
+tf_datetime = pd.Timestamp(2006, 6, 1, 23, 59 ,59)
+
+# number of repetions
+rep = 100
+
+total_calls = 0
+total_time = 0
+
+for i in range(rep):
+    f1.num_calls = 0 
+    # Time taken by method 1
+    start_time = time.time()
+    sol_1 = method1(t0_datetime, tf_datetime)
+    end_time = time.time()
+    duration = end_time - start_time
+    total_calls += f1.num_calls
+    total_time += duration
+    
+print("total time =", total_time)
+print("function calls = ", total_calls)    
+r1 = round((total_time / total_calls) * 1000, 2)   
+print(f"Method 1 - Ratio ms/call ({rep} rep.): {r1}")  
+
+total_calls = 0
+total_time = 0
+
+for i in range(rep):
+    f2.num_calls = 0 
+    # Time taken by method 2
+    start_time = time.time()
+    sol_2 = method2(t0_datetime, tf_datetime)
+    end_time = time.time()
+    duration = end_time - start_time
+    total_calls += f2.num_calls
+    total_time += duration
+
+print("total time =", total_time)
+print("function calls = ", total_calls) 
+r2 = round((total_time / total_calls) * 1000, 2)
+print(f"Method 2 - Ratio ms/call ({rep} rep.): {r2}") 
+
+print("% improvement =", round(((r2 - r1) / r1) * 100, 2))
 \end{lstlisting}

@@ -10,7 +10,8 @@ This research describes and analyzes a novel approach, using a continuous-time f
   \item The continuous-time framework fits better and in a more natural way with human communication patterns, allowing for a more accurate and realistic representation of communication dynamics. This is because it eliminates the need to divide the network data into predetermined time intervals, which can result in inaccuracies if they are too large or if, on the contrary, they are too finely spaced, in redundant computational processes or a false impression of accuracy.
   \item By using ready-made, advanced numerical ODE solvers, network simulations can be carried out in a manner that time discretization is performed automatically "under the hood", ensuring high accuracy and efficiency. This approach enables us to effectively handle sudden and significant changes in network behavior in an adaptive manner.
   \item Real-time summaries of centrality rankings can be monitored through this new ODE-based framework due to its property of downweighting information over time without the need to store or take account of all previous node interaction history.
-  \item Computing the dynamic receive centrality, $\mathbf{r}(t)$, is a factor $N$ cheaper than dynamic broadcast centrality, $\mathbf{b}(t)$, in terms of storage and computational cost.
+  \item Computing the dynamic receive centrality, $\mathbf{r}(t)$, is a factor $N$ cheaper than dynamic broadcast centrality, $\mathbf{b}(t)$, in terms of storage and computational cost for sparse networks.
+  \item The continuous-time model is shown to be effective in real-time computation of dynamic centrality measures through the numerical experiments analyzed. These allowed us to illustrate that this type of measures can offer a better perspective of centrality than static or aggregate measures, as well as, once the most relevant nodes are known, to be able to detect changes in the network structure.
 \end{enumerate}
 
 
