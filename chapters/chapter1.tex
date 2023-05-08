@@ -66,7 +66,7 @@ Linear algebra will play a significant role in network analysis as graphs are re
 \label{sec:centra}
  Centrality measures are metrics that are used to quantify the relative importance/influence/position of a node in a network. Indicators of centrality assign numbers or rankings, usually the higher the more important, to nodes within a graph corresponding to their network position based on different criteria. This gives rise to several types of centrality measures \cite[Ch.\ 7]{newman2018networks}:
 
-\subsection*{Degree centrality} The Degree centrality measures the number of connections a node $i$ has to other nodes in the network. This is called the degree of a node ($k$). If we define $\mathbf{x}=(x_1,x_2,\dots,x_N)$ as the centrality vector of a graph with $N$ nodes, then 
+\subsection*{Degree centrality} The Degree centrality measures the number of connections a node $i$ has to other nodes in the network. This is called the degree of a node ($k$). Let $\mathbf{A}\in \mathbb{R}^{N\times N}$ be the adjacency matrix of a graph with $N$ nodes. If we define $\mathbf{x}=(x_1,x_2,\dots,x_N)$ as the centrality vector of the graph, then we can express the Degree centrality for each node as 
 
 \begin{equation}
     x_i^{(deg)}=k_i=\sum_{j=1}^{N}A_{ij}, ~~~i = 1,\dots, N.
@@ -91,7 +91,7 @@ of distances, $\sum_{j}^{}1/d(i,j)$. This avoids having a few nodes for which th
     x_i^{(bet)}= \sum_{j<k}^{}\frac{g_{jk}^i}{g_{jk}}.
 \end{equation}
 
-\subsection*{Eigenvector centrality} The Eigenvector centrality measures the influence of a node based on the influence of its neighbors. Unlike Degree centrality which assigns one point for each network connection, Eigenvector centrality assigns points based on the centrality scores of a node's neighbors, resulting in a more nuanced understanding of a node's centrality. If we denote the centrality of node $i$ by $x_i$ where $\mathbf{x}$ is the centrality vector, then making use of the adjacency matrix and making $x_i$ proportional to the average of the centralities of $i$’s network neighbours we have for simple networks
+\subsection*{Eigenvector centrality} The Eigenvector centrality measures the influence of a node based on the influence of its neighbors. Unlike Degree centrality which assigns one point for each network connection, Eigenvector centrality assigns points based on the centrality scores of a node's neighbors, resulting in a more nuanced understanding of a node's centrality. If we denote the centrality of node $i$ by $x_i$ where $\mathbf{x}$ is the centrality vector and $\mathbf{A}$ the adjacency matrix of the graph, then making use of the adjacency matrix and making $x_i$ proportional to the average of the centralities of $i$’s network neighbours we have
 
 \begin{equation}
 \label{eqn:eigc}
