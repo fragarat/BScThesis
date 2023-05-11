@@ -5,7 +5,7 @@
 \chapter[Introduction]{Introduction}
 \label{chap:intro}
 
-Networks are fundamental in many fields of science as they provide a powerful way to model complex systems and relationships between entities at different scales. By representing entities as nodes and connections between them as edges, networks can help researchers understand how information, energy, materials, and other resources flow through a system, identify patterns and structures within the data, and make predictions about system behavior. Many real life problems can be modeled as graphs or discretized as networks and that is why they are widely used in many fields such as physics, biology, sociology, statistics, or computer science amomg others. Network analysis in all these areas have led to significant advances in our understanding of the world around us \cite{albert2002statistical, katz1953new}, \cite[Part I]{newman2018networks}.
+Networks are fundamental in many fields of science as they provide a powerful way to model complex systems and relationships between entities at different scales. By representing entities as nodes and connections between them as edges, networks can help researchers understand how information, energy, materials, and other resources flow through a system, identify patterns and structures within the data, and make predictions about system behavior. Many real life problems can be modeled as graphs or discretized as networks and that is why they are widely used in many fields such as physics, biology, sociology, statistics, or computer science among others. Network analysis in all these areas have led to significant advances in our understanding of the world around us \cite{albert2002statistical, katz1953new}, \cite[Part I]{newman2018networks}.
 
 \section{Mathematical notation}
 \label{sec:graph}
@@ -20,14 +20,14 @@ A network in the mathematical literature is, in its simplest form, a collection 
 The following two definitions that are central for this work are the concept of \textit{walk} and the \textit{adjacency matrix} of a graph.  
 
 \begin{definition}
-    A walk of length $w$ is a sequence of $w$ edges $(e_1, e_2, \dots, e_w)$ such that the target of $e_\ell$ coincides with the source of $e_{\ell+1}$ for all $\ell=1, 2, ..., w−1$.
+    A walk of length $w$ is a sequence of $w$ edges $(e_1, e_2, \dots, e_w)$ such that the target of $e_\ell$ coincides with the source of $e_{\ell+1}$ for all $\ell=1, 2, ..., w−1$.
 \end{definition}
   
 \begin{definition}
 	Let $G =(V, E, \mathcal{W})$ be a weighted graph with $N$ nodes. Its adjacency matrix $\mathbf{A}\in\mathbb{R}^{N\times N}$ is entry-wise defined as
  
  \begin{equation}
-  A_{ij} =
+  \mathbf{A}_{ij} =
     \begin{cases}
       \sum_{e_{ij}}\omega_{ij} & \text{if there is an edge $e_{ij}$ between nodes $i$ and $j$ with cost $\omega_{ij}$},\\
       0 & \text{otherwise},
@@ -41,9 +41,9 @@ Unless otherwise stated, all graphs analyzed in this study will be considered \t
 \begin{definition}
     A simple network is a type of network where each edge connects only two distinct nodes, i.e., there are no self-loops or multiple edges between the same pair of nodes. 
 \end{definition}
-As a particular case, the adjacency matrix for simple unweighted graphs will have all their non-zero entries set to $A_{ij}=1$, indicating a link between nodes $i$ and $j$.
+As a particular case, the adjacency matrix for simple unweighted graphs will have all their non-zero entries set to $\mathbf{A}_{ij}=1$, indicating a link between nodes $i$ and $j$.
 
-Additionally, graphs are usually represented visually using a diagram (e.g., Fig. \ref{fig:graphsv}), where nodes are represented as points and edges are represented as lines connecting the points. The direction of the edges allows us to divide graphs into \textit{directed} and \textit{undirected}. As a consequence of this, undirected graphs are represented by symmetric adjacency matrices, i.e., $A_{ij}=A_{ji}$ and, on the contrary, directed graphs by asymmetric matrices, $A_{ij}\ne A_{ji}$. The presence of loops, i.e., edges connecting a node to itself can also be indicated in this visual representation, $A_{ii} = 1$, in terms of the adjacency matrix.
+Additionally, graphs are usually represented visually using a diagram (e.g., Fig. \ref{fig:graphsv}), where nodes are represented as points and edges are represented as lines connecting the points. The direction of the edges allows us to divide graphs into \textit{directed} and \textit{undirected}. As a consequence of this, undirected graphs are represented by symmetric adjacency matrices, i.e., $\mathbf{A}_{ij}=\mathbf{A}_{ji}$ and, on the contrary, directed graphs by asymmetric matrices, $\mathbf{A}_{ij}\ne \mathbf{A}_{ji}$. The presence of loops, i.e., edges connecting a node to itself can also be indicated in this visual representation, $\mathbf{A}_{ii} = 1$, in terms of the adjacency matrix.
 
 \begin{figure}[h]\centering
 	\includegraphics[width=0.75\textwidth]{graphsv}
@@ -69,11 +69,11 @@ Linear algebra will play a significant role in network analysis as graphs are re
 \subsection*{Degree centrality} The Degree centrality measures the number of connections a node $i$ has to other nodes in the network. This is called the degree of a node ($k$). Let $\mathbf{A}\in \mathbb{R}^{N\times N}$ be the adjacency matrix of a graph with $N$ nodes. If we define $\mathbf{x}=(x_1,x_2,\dots,x_N)$ as the centrality vector of the graph, then we can express the Degree centrality for each node as 
 
 \begin{equation}
-    x_i^{(deg)}=k_i=\sum_{j=1}^{N}A_{ij}, ~~~i = 1,\dots, N.
+    x_i^{(deg)}=k_i=\sum_{j=1}^{N}\mathbf{A}_{ij}, ~~~i = 1,\dots, N.
 \end{equation}
 This measure is usually normalized by the maximal possible degree, $N − 1$, to obtain a number between 0 and 1. For certain networks, Degree centrality can be very illuminating as it provides a straightforward and simple indication of a node's connectedness or level of popularity, but fails to consider other crucial elements of the network structure such as the importance of a node or its place within the network.
 
-\subsection*{Closeness centrality} In order to extend the basic measure of degree and take into account the position of the nodes in the network, \textit{closeness} and \textit{betweenness} measures are defined. For its part, Closeness centrality measures the average distance, $\sum_{j}^{}d(i,j)$, between a node and all other nodes in the network, where $d(i,j)$ denotes the Euclidean distance between nodes $i$ and $j$. In its normalized version it can be expressed as
+\subsection*{Closeness centrality} In order to extend the basic measure of degree and take into account the position of the nodes in the network, \textit{closeness} and \textit{betweenness} measures are defined. For its part, Closeness centrality measures the average distance, $\sum_{j}^{}d(i,j)$, between a node and all other nodes in the network, where $d(i,j)$ is defined as the shortest path between nodes $i$ and $j$, i.e, the minimum sum of the weights along the path between them. In its normalized version it can be expressed as
 
 \begin{equation}
     x_i^{(clos)}= \frac{N-1}{\sum_{j\ne i}^{}d(i,j)}.
@@ -85,7 +85,7 @@ of distances, $\sum_{j}^{}1/d(i,j)$. This avoids having a few nodes for which th
     x_i^{(har)}= \frac{1}{N-1}\sum_{j\ne i}^{}\frac{1}{d(i,j)}.
 \end{equation}
 
-\subsection*{Betweenness centrality} Measures the number of times a node acts as a bridge along the shortest path between two other nodes in the network. Formally, if we redefine $g_{jk}^i$ to be the number of shortest paths from $j$ to $k$ that pass through $i$ and we define $g_{jk}$ to be the total number of shortest paths from $j$ to $k$, then the Betweenness centrality of node $i$ on a general network is defined as
+\subsection*{Betweenness centrality} Betweenness centrality measures the number of times a node acts as a bridge along the shortest path between two other nodes in the network. Formally, if we redefine $g_{jk}^i$ to be the number of shortest paths from $j$ to $k$ that pass through $i$ and we define $g_{jk}$ to be the total number of shortest paths from $j$ to $k$, then the Betweenness centrality of node $i$ on a general network is defined as
 
 \begin{equation}
     x_i^{(bet)}= \sum_{j<k}^{}\frac{g_{jk}^i}{g_{jk}}.
@@ -95,7 +95,7 @@ of distances, $\sum_{j}^{}1/d(i,j)$. This avoids having a few nodes for which th
 
 \begin{equation}
 \label{eqn:eigc}
-    x_i= \kappa\sum_{j=1}^{N}A_{ij}x_j,
+    x_i= \kappa\sum_{j=1}^{N}\mathbf{A}_{ij}x_j,
 \end{equation}
 where $\kappa$ is a constant. We can rewrite this equation in matrix form considering $\kappa=1/\lambda$ as
 
@@ -120,7 +120,7 @@ Let $\mathbf{A}\in\mathbb{R}^{N\times N}$ be the adjacency matrix for a static n
 
 \begin{equation}
 \label{eqn:pr1}
-    x_i= \alpha\sum_{j=1}^{N}A_{ij}\frac{x_j}{k_j^{\text{out}}} + \beta,
+    x_i= \alpha\sum_{j=1}^{N}\mathbf{A}_{ij}\frac{x_j}{k_j^{\text{out}}} + \beta,
 \end{equation}
 where $\alpha$, $\beta$ are positive parameters and $k_j^{\text{out}}$ denotes the out-degree of node $j$, i.e., the number of out-going links from that node. The first term correspond to the Eigenvector centrality and the second term is the “free” part, the constant extra amount that all nodes receive. By including this additional component, we make sure that nodes with no incoming connections still receive centrality, and once they have a non-zero centrality score, they can distribute it to the other nodes they are linked to. This results in nodes that are connected to many others having a high centrality, regardless of whether they are part of a strongly connected component or an out-component.
 
@@ -128,7 +128,7 @@ The difference between PageRank and Katz centrality resides precisely in the way
 
 \begin{equation}
 \label{eqn:katz1}
-    x_i= \alpha\sum_{j=1}^{N}A_{ij}x_j + \beta.
+    x_i= \alpha\sum_{j=1}^{N}\mathbf{A}_{ij}x_j + \beta.
 \end{equation}
 
 If a node with a high Katz score has links to many other nodes, then all of those linked nodes will also receive a high centrality score. PageRank, instead, is a variant in which the centrality derived from network neighbors is proportional to their centrality divided by their out-degree. Therefore, nodes that point to many others pass only a small amount of centrality on to each of those others, even if their own centrality is high.
@@ -139,7 +139,7 @@ By convenience, we set $k_j^{\text{out}}=1$ in (\ref{eqn:pr1}) to avoid zero-div
 \label{eqn:pr2}
     \mathbf{x} = \alpha\mathbf{AD}^{-1}\mathbf{x} + \beta \mathbf{1},
 \end{equation}
-with $\mathbf{1}$ being the vector of ones $(1,\dots,1)$ and $\mathbf{D}$ being the diagonal matrix with elements $D_{ii} = max(k_i^{\text{out}},1)$. Rearranging for $\mathbf{x}$ and setting the conventional value of $\beta=1$, the PageRank centrality yields
+with $\mathbf{1}$ being the vector of ones $(1,\dots,1)$ and $\mathbf{D}$ being the diagonal matrix with elements $\mathbf{D}_{ii} = max(k_i^{\text{out}},1)$. Rearranging for $\mathbf{x}$ and setting the conventional value of $\beta=1$, the PageRank centrality yields
 
 \begin{equation}
 \label{eqn:pr3}
@@ -147,7 +147,7 @@ with $\mathbf{1}$ being the vector of ones $(1,\dots,1)$ and $\mathbf{D}$ being 
 \end{equation}
 Again, a similar expression for Katz centrality is obtained if we consider $\mathbf{D}^{-1}= \mathbf{I}$, for $\mathbf{I}$ denoting the identity matrix of order $N$.
 
-We seek $\alpha$ such that $\mathbf{I}-\alpha\mathbf{AD}^{-1}$ is non-singular, i.e. $\text{det}(\mathbf{I}-\alpha\mathbf{AD}^{-1})\neq 0$, or what is the same, $\text{det}(\mathbf{AD}^{-1}-\alpha^{-1}\mathbf{I})\neq 0$. This it is simply the characteristic equation of $\mathbf{AD}^{-1}$ whose roots are equal to the eigenvalues of the matrix $\mathbf{AD}^{-1}$, $\lambda=\alpha^{-1}$. This suggests a good value for $\alpha$ bounded by $0 < \alpha < 1/\rho(\mathbf{AD}^{-1})$, denoting $\rho(\cdot)$ the spectral radius (Google uses $\alpha = 0.85$). 
+We seek $\alpha$ such that $\mathbf{I}-\alpha\mathbf{AD}^{-1}$ is non-singular, i.e. $\text{det}(\mathbf{I}-\alpha\mathbf{AD}^{-1})\neq 0$, or what is the same, $\text{det}(\mathbf{AD}^{-1}-\alpha^{-1}\mathbf{I})\neq 0$. This it is simply the characteristic equation of $\mathbf{AD}^{-1}$ whose roots are equal to the eigenvalues of the matrix $\mathbf{AD}^{-1}$, $\lambda=\alpha^{-1}$. This suggests a good value for $\alpha$ bounded by $0 < \alpha < 1/\rho(\mathbf{AD}^{-1})$, denoting $\rho(\cdot)$ the spectral radius (e.g. Google uses $\alpha = 0.85$ \cite{brin1998anatomy}). 
 %Note that it makes more sense now to speak of spectral radius instead of leading eigenvalue since these two centralities are defined for more general networks, both directed (with asymmetric adjacency matrices) and undirected (symmetric matrices) networks.
 
 In the choice of $\alpha$ we must take into account that the closer we are to the spectral radius, the maximum amount of weight on the eigenvector term will be place and the smallest amount on the constant term. If we let instead $\alpha\to 0$, then only the constant term will survive in (\ref{eqn:katz1}) resulting in all nodes with equal centrality.

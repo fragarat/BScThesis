@@ -1,15 +1,13 @@
 \chapter{Numerical experiments}
 \label{chap:expe}
 
-From the point of view of computational cost, it is convenient to make a brief analysis of the relevant new continuous-time framework obtained in \eqref{eqn:u3.3}. The main problem that we can find when dealing with large networks (matrices) resides in the computation of the matrix logarithm, which can be computationally expensive.
+From the point of view of computational cost, it is convenient to make a brief analysis of the relevant new continuous-time framework obtained in \eqref{eqn:u3.3}. The main problem when dealing with large networks (matrices) resides in the computation of the matrix logarithm, which can be computationally expensive.
 
-The matrix logarithm can be approximated by its Taylor series expansion. It is known that the Taylor series expansion of the matrix logarithm of $I - \alpha A$ can be expressed as:
+The matrix logarithm can be approximated by its Taylor series expansion. The Taylor series expansion of the matrix logarithm of $\mathbf{I} - \alpha \mathbf{A}$ can be expressed as:
 
-$$\log(I - \alpha A) = \sum_{k=1}^{\infty} (-1)^{k+1}\frac{\alpha^k}{k}A^k$$
+$$\log(\mathbf{I} - \alpha \mathbf{A}) = \sum_{k=1}^{\infty} (-1)^{k+1}\frac{\alpha^k}{k}\mathbf{A}^k$$
 
-where $I$ is the identity matrix of size $N$.
-
-The accuracy of the approximation depends on the value of $k$, which determines how many terms in the series are included. The higher the value of $k$, the more accurate the approximation, but also the more computationally expensive it is to compute.
+where $\mathbf{I}$ is the identity matrix of size $N$. The accuracy of the approximation depends on the value of $k$, which determines how many terms in the series are included. The higher the value of $k$, the more accurate the approximation, but also the more computationally expensive it is to compute.
 
 It is worth noting that for certain matrices, the Taylor series expansion may not converge or may converge too slowly to be practical for approximating the matrix logarithm. In such cases, other approximation methods like the Padé approximation or Schur decomposition may be more effective \cite[Ch.\ 11]{higham2008functions}.
 
@@ -19,12 +17,12 @@ In this section, we consider first the two synthetic experiments from \cite{grin
 
 The new model is also tested in a third experiment based on real voice call data from the IEEE VAST 2008 Challenge \cite{grinstein2008vast}. Here, we try to find out if the new dynamic measures of centrality are able to identify hubs of influence in a large communication network and if they offer a better perspective of the network evolution than static or aggregate measures.
 
-In the first two experiments, where the number of nodes is relatively small, the Python function \texttt{scipy.linalg.logm} is used to compute the matrix logarithm based on Schur decomposition. However, in the voice call experiment case, which involves a larger number of nodes ($N=400$), a Taylor series approximation is considered a better method to improve computational efficiency.
+In the first two experiments, where the number of nodes is relatively small (respectively, $N=31$ and $N=17$), the Python function \texttt{scipy.linalg.logm} is used to compute the matrix logarithm based on Schur decomposition. However, in the voice call experiment case, which involves a larger number of nodes ($N=400$), a Taylor series approximation is considered a better method to improve computational efficiency.
 
 \section{First synthetic experiment}
 \label{sec:synexp1}
 
-The first synthetic experiment models a cascade of information through the directed binary tree structure with $N=31$ nodes illustrated in Fig. \ref{fig:exp1}. On a time interval $t = [0, 20]$, the adjacency matrix $\mathbf{A}(t)$ of such network switches ten times between two constant values $\mathbf{A}_{even}$ and $\mathbf{A}_{odd}$ on each sub-interval $[i, i + 1)$ for $i=0,1,2,\dots$, specifically
+The first synthetic experiment models a cascade of information through the directed binary tree structure with $N=31$ nodes illustrated in Fig. \ref{fig:exp1}. On a time interval $t \in [0,20]$, the adjacency matrix $\mathbf{A}(t)$ of such network switches ten times between two constant values $\mathbf{A}_{even}$ and $\mathbf{A}_{odd}$ on each sub-interval $[i, i + 1)$ for $i=0,1,2,\dots$, specifically
 
 \begin{equation*}
 \mathbf{A}(t)\coloneqq
@@ -34,25 +32,15 @@ The first synthetic experiment models a cascade of information through the direc
     \end{cases}
 \end{equation*}
 
-where $\lfloor t \rfloor$ denotes the floor function, $\mathbf{A}_{even}$ the adjacency matrix relative to the subgraph with solid edges in Fig. \ref{fig:exp1}, and $\mathbf{A}_{odd}$ the one relative to the subgraph with dashed edges. During the time an edge from node $i$ to node $j$ is active the respective entry of the adjacency matrix is set to one $A(t)_{ij}=1$, and zero otherwise. As we are dealing with directed links, $A(t)_{ij}\ne A(t)_{ji}$.This results in asymmetric matrices $A(t)\in \mathbb{R}^{31\times 31}$ where most of their elements are zero and only a few entries belonging to the active nodes are set to one. More specifically, the non-zero entries of each adjacency matrix yield
+where $\lfloor t \rfloor$ denotes the floor function, $\mathbf{A}_{even}$ the adjacency matrix relative to the subgraph with solid edges in Fig. \ref{fig:exp1}, and $\mathbf{A}_{odd}$ the one relative to the subgraph with dashed edges. During the time an edge from node $i$ to node $j$ is active the respective entry of the adjacency matrix is set to $\mathbf{A}(t)_{ij}=1$, and zero otherwise. As we are dealing with directed links, $\mathbf{A}(t)_{ij}\ne \mathbf{A}(t)_{ji}$. This results in asymmetric matrices $\mathbf{A}(t)\in \mathbb{R}^{31\times 31}$ where most of their elements are zero and only a few entries belonging to the active nodes are set to one. More specifically, the non-zero entries of each adjacency matrix are given by $\mathbf{A}_{i,2i} = \mathbf{A}_{i,2i+1} = 1$ for $i \in \mathbb{S}(t)$, where 
 
-\begin{equation*}
-\mathbf{A}_{even}\coloneqq
+\[
+\mathbb{S}(t) =
     \begin{cases}
-        A_{i,2i}=1, A_{i,2i+1}=1 & \text{for  } i=1,4,5,6,7\\
-        A_{i,j}=0, & \text{otherwise,} 
+        \{ 1,4,5,6,7 \} & \text{if } \mod(\lfloor t \rfloor, 2) = 0, \\
+        \{ 2,3,8,9,10,11,12,13,14,15 \} & \text{otherwise} 
     \end{cases}
-\end{equation*}
-
-and
-
-\begin{equation*}
-\mathbf{A}_{odd}\coloneqq
-    \begin{cases}
-        A_{i,2i}=1, A_{i,2i+1}=1 & \text{for  } i=2,3,8,9,10,11,12,13,14,15\\
-        A_{i,j}=0, & \text{otherwise.} 
-    \end{cases}
-\end{equation*}
+\]
 
 Some noise is added to this structure by including extra directed edges that are chosen uniformly at random for each subinterval, with an average of five edges added each time (see Appendix \ref{chap:appa} - Python code, l.28).
 
@@ -65,7 +53,7 @@ Some noise is added to this structure by including extra directed edges that are
 
 With this experiment, two main objectives are sought. First, to have a better understanding of what role $\alpha$ and $\beta$ parameters play. And second, to confirm that our model captures the cascade effect in the network along a hierarchy of influence that is hidden from a static or aggregate view.
 
-For that purpose, four experiments were run to compute the dynamic broadcast centrality at $t=20$ for each node through \eqref{eqn:u3.3}, varying only the values of both alpha and beta parameters as shown in Table \ref{table:parameters} for each run. Note that the last experimental run does not consider any parameter as it is based on the computation of aggregate measures, in this case, the aggregate out degree represented by row sums of the aggregate adjacency matrix for the whole interval $t=[0,20]$. By analyzing the eigenvalues of all generated $\mathbf{A}_{even}$ and $\mathbf{A}_{odd}$ it is seen that the maximum of the spectral radii of these matrices is 1, and therefore the solution to \eqref{eqn:u3.3} is well defined for $\alpha\in(0,1)$. The SciPy’s \texttt{solve\_ivp} method was used to numerically solve the matrix ODE, which discretizes the time interval in an efficient and transparent way under the hood using the explicit Runge-Kutta method of order 5(4). Relative and absolute tolerances were left to their default values, $atol= 10^{-6}$ and $rtol=10^{-3}$. 
+For that purpose, four experiments were run to compute the dynamic broadcast centrality at $t=20$ for each node through \eqref{eqn:u3.3}--\eqref{eqn:u3.4}, varying only the values of $\alpha$ and $\beta$ as shown in Table \ref{table:parameters}. Note that the last experimental run does not consider any parameter as it is based on the computation of aggregate measures, in this case, the aggregate out degree represented by row sums of the aggregate adjacency matrix for the whole interval $t\in[0,20]$. By analyzing the eigenvalues of all generated $\mathbf{A}_{even}$ and $\mathbf{A}_{odd}$ it is seen that the maximum of the spectral radii of these matrices is 1, and therefore the solution to \eqref{eqn:u3.3} is well defined for $\alpha\in(0,1)$. The SciPy’s \texttt{solve\_ivp} method was used to numerically solve the matrix ODE, which uses an explicit Runge-Kutta method of order 5(4). Relative and absolute tolerances were left to their default values, $atol= 10^{-6}$ and $rtol=10^{-3}$. 
 
 \begin{table}[ht]
             \bigskip
@@ -83,11 +71,13 @@ For that purpose, four experiments were run to compute the dynamic broadcast cen
        \label{table:parameters} 
 \end{table}
 
+\newpage
+
 Fig. \ref{fig:bt1} displays the dynamic broadcast centrality from \eqref{eqn:u3.4}, at time $t=20$ for each of the 31 nodes for  $\alpha=0.7$ and $\beta=0.1$. We observe that node 1 has a strong advantage in terms of centrality, and that centrality tends to decrease as the index increases. Nodes 2 and 5 are ranked higher than node 3, indicating that the additional noise has affected this part of the network.
 
 Fig. \ref{fig:bt2} depicts the same results with a lower $\beta=0.01$ value, which increases the contribution of older walks. As a reminder, if we consider a walk starting at time zero, then the  downweighting factor becomes $e^{−20 \times 0.01} \approx 0.8$ rather than $e^{−20 \times 0.1} \approx 0.1$. This change of the $\beta$ parameter has a negligible effect on the node rankings which makes sense considering that the network dynamics have an underlying periodic pattern, but it can be observed that it generates larger absolute values.
 
-In Fig. \ref{fig:bt3}, we return to the original $\beta=0.1$ value and set $\alpha$ to 0.1, resulting in less marked differences in the node rankings. Even though node 1 continues to be the most central, the differences are less pronounced as its capability to initiate numerous dynamic walks of length 4 to nodes at the bottom of the hierarchy has less influence or weight.
+In Fig. \ref{fig:bt3}, we return to the original $\beta=0.1$ value and set $\alpha=0.1$, resulting in less marked differences in the node rankings. Even though node 1 continues to be the most central, the differences are less pronounced as its capability to initiate numerous dynamic walks of length 4 to nodes at the bottom of the hierarchy has less influence or weight.
 
 Fig. \ref{fig:bt4} illustrates the aggregate out degree of each node, that is, the sum of out degrees over time for each node. For nodes 1 to 15 in the binary tree structure, this value is 20 (2 active edges $\times$ 10 cycles), which fluctuates due to the introduced noise. 
 
@@ -126,7 +116,6 @@ Overall, this experiment allows us to clearly visualize the dynamic effect arisi
         \label{fig:fourbt}
 \end{figure}
 
-\newpage
 \section{Second synthetic experiment}
 \label{sec:synexp2}
 We now consider the second synthetic experiment from \cite{grindrod2014dynamical}. The experiment simulates multiple rounds of voice calls that occur along an undirected binary tree structure. Each node in the tree has at most one active edge at any given time, meaning that there are no "conference" calls. Fig. \ref{fig:exp2} shows the network of $N=17$ nodes with labels assigned to the edges indicating when they are active. The adjacency matrix, $\mathbf{A}(t)$, for this experiment is defined based on the ordered and non-overlapping time intervals such that $t_i\coloneqq[(i − 1)\tau , (i − 1 + 0.9)\tau )$, for $i=0, 1, \dots , 7$, and $\tau =0.1$.
@@ -142,7 +131,7 @@ The dynamic network is constructed in a way that node A (node 1) is designed to 
 
 What we expect from this experiment, and makes it different from the previous one, is to verify that our continuous-time framework is capable of revealing the differences in terms of dynamic broadcast centrality between the node A that enjoys a cascade effect of information in the network and node B that does not. Even if these nodes have an apparent identical behaviour from an overall perspective, both contacting nodes C and D for the same length of time.
 
-As pointed out in the remark on the role of the $\alpha$ and $\beta$ parameters, in the scenario of undirected one-to-one communication, such as voice calls with no tele-conferences, all the symmetric adjacency matrices turn out to have unitary spectral radius for each time interval. A complete definition of these matrices can be seen in Appendix \ref{sec:fse} - Second synthetic experiment, l.22. Values of $\alpha=0.7$ and $\alpha=0.9$ were chosen to compare centrality results keeping fixed the value of $\beta=0.1$ which does not play an important role in this experiment due to the underlying periodic pattern in the network dynamics (similar results were obtained for different values of $\beta$). 
+As pointed out in the remark on the role of the $\alpha$ and $\beta$ parameters, in the scenario of undirected one-to-one communication, such as voice calls with no teleconferences, all the symmetric adjacency matrices turn out to have unitary spectral radius for each time interval. A complete definition of these matrices can be seen in Appendix \ref{sec:fse} - Second synthetic experiment, l.22. Values of $\alpha=0.7$ and $\alpha=0.9$ were chosen to compare centrality results keeping fixed the value of $\beta=0.1$ which does not play an important role in this experiment due to the underlying periodic pattern in the network dynamics (similar results were obtained for different values of $\beta$). 
 
 Implementing \eqref{eqn:u3.3}--\eqref{eqn:u3.4} in Python, $\mathbf{b}(t)$ was computed for the interval $t=[0,3.5]$ for nodes A and B, using the \texttt{solve\_ivp} function with default parameters: method="RK45", $atol=10^{-6}$ and $rtol=10^{-3}$.
 
@@ -171,8 +160,6 @@ The iterative way in which the dynamic communicability matrix \eqref{eqn:dyncomm
 
 As a curiosity, other nodes in this network, such as nodes 3, 4 and 5, offer greater centrality than nodes 1 (node A) and node 2 (node B). In fact, node 3 is the one with the highest centrality in the entire network. However, the main objective of this experiment was not to highlight this feature but to verify that our continuous-time ODE framework was capable of establishing a remarkable difference in the dynamic behavior between nodes A and B.
 
-\newpage
-
 \section{Voice call experiment}
 \label{sec:voicecall}
 The next experiment applies the new modelling framework \eqref{eqn:u3.3} to a set of voice call interactions, in order to analyze the dynamic behavior of a fictitious, controversial socio-political movement. The data used for the experiment, supplied as part of the IEEE VAST 2008 Challenge \cite{grinstein2008vast}, consists of a complete set of 9834 time-stamped calls across 400 cell phone users over a 10 day period, with information on IDs for the send and receive nodes, start time in hours/minutes, and duration in seconds.
@@ -181,7 +168,7 @@ The aim of the experiment is to show the usefulness of the new matrix ODE in dea
 
 The designers of the above mentioned competition provided additional information indicating that node 200 was the leader of an important community who controlled a closely connected subnetwork or inner circle consisting of nodes 1, 2, 3, and 5. However, starting from day 7, these individuals seem to have switched their phone IDs: node 200 became 300, and the others became 306, 309, 360, and 392.
 
-For this experiment, $\mathbf{A}(t)$ was assumed to be symmetric, meaning that $\mathbf{A}_{ij}(t) = \mathbf{A}_{ji}(t) = 1$ if nodes $i$ and $j$ were communicating at time $t$, which was measured in seconds. Parameters $\beta$ was chosen to be approximately $\beta = 1/(60\times 60 \times 24) \approx 1.2 \times 10^{-5}$, which corresponded to a time downweighting of $e^{-1}$ per day, and set the edge attenuation parameter $\alpha$ to a similar value of $10^{-4}$. The SciPy's \texttt{solve\_ivp} method was again used to numerically solve the ODE (\ref{eqn:u3.3}) (see Appendix \ref{chap:appa} - Voice call experiment, l.257). Additionally, absolute and relative error tolerances were both set to $10^{-4}$. To improve efficiency, the matrix logarithm was approximated in this occasion with its expansion to the fifth power:
+For this experiment, $\mathbf{A}(t)$ was assumed to be symmetric, meaning that $\mathbf{A}(t)_{ij} = \mathbf{A}(t)_{ji} = 1$ if nodes $i$ and $j$ were communicating at time $t$, which was measured in seconds. Parameters $\beta$ was chosen to be approximately $\beta = 1/(60\times 60 \times 24) \approx 1.2 \times 10^{-5}$, which corresponded to a time downweighting of $e^{-1}$ per day, and set the edge attenuation parameter $\alpha$ to a similar value of $10^{-4}$. The SciPy's \texttt{solve\_ivp} method was again used to numerically solve the ODE (\ref{eqn:u3.3}) (see Appendix \ref{chap:appa} - Voice call experiment, l.257). Additionally, absolute and relative error tolerances were both set to $10^{-4}$. To improve efficiency, the matrix logarithm was approximated in this occasion with its expansion to the fifth power:
 
 $$\log(\mathbf{I} - \alpha \mathbf{A}(t)) \approx \alpha \mathbf{A}(t) - \alpha^2 \mathbf{A}(t)^2/2 + \alpha^3 \mathbf{A}(t)^3/3 - \alpha^4 \mathbf{A}(t)^4/4 + \alpha^5 \mathbf{A}(t)^5/5$$ 
 
@@ -231,7 +218,9 @@ Dynamic receive centrality, $\mathbf{r}(t)$, was also computed using its own vec
        \label{table:btrt} 
 \end{table}
 
-We define the \textit{communicability between key nodes ($\mathcal{C}$)} at each discretized time point, as the average amount of messages, broadcast ($U_{ij}$) and received ($U_{ji}$), between each pair of key nodes, scaled by the average amount of communication between all pairs of nodes in the network, i.e.,
+\chcomment{Why are there so many more function calls when computing the receive centrality?}
+
+We define the \textit{communicability between key nodes} ($\mathcal{C}$) at each discretized time point, as the average amount of messages, broadcast ($\mathbf{U}_{ij}$) and received ($\mathbf{U}_{ji}$), between each pair of key nodes, scaled by the average amount of communication between all pairs of nodes in the network, i.e.,
 
 \begin{equation*}
     \mathcal{C}(t) = \frac{\overline{K}(t)}{\overline{T}(t)},
@@ -240,8 +229,8 @@ We define the \textit{communicability between key nodes ($\mathcal{C}$)} at each
 where
 
 \begin{align*}
-    \overline{K}(t) &=\frac{\sum_{i\ne j}U_{ij}(t) + U_{ji}(t)}{20} \text{~~~~~for~~} i=1,2,3,5,200 ,\\
-    \overline{T}(t) &=\frac{\sum_{i,j=1}^N U_{ij}(t) - \sum_{i=1}^N U_{ii}(t)}{N^2-N}.
+    \overline{K}(t) &=\frac{\sum_{i\ne j}\mathbf{U}(t)_{ij} + \mathbf{U}(t)_{ji}}{2\sum_{k=1}^4 k} \text{~~~~~for~~} i=1,2,3,5,200 ,\\
+    \overline{T}(t) &=\frac{\sum_{i,j=1}^N \mathbf{U}(t)_{ij} - \sum_{i=1}^N \mathbf{U}(t)_{ii}}{N^2-N}.
 \end{align*}
 
 The communicability between the original IDs of the five most important players (ID nodes: 200, 1, 2, 3, and 5) during the ten days period is presented in Figure \ref{fig:ve2} to support point (ii). By analyzing this measure, we can observe how the structure of the network changes over time, especially when the players start using different IDs after day 7.
