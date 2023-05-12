@@ -13,11 +13,11 @@ It is worth noting that for certain matrices, the Taylor series expansion may no
 
 In Python, the \texttt{scipy.linalg.logm} module from the SciPy library computes the logarithm of a matrix using a inverse scaling and squaring method together with a Schur decomposition with a computational cost of $\mathcal{O}(N^3)$ for an $N \times N$ matrix. However, the Schur decomposition is not always the most efficient way to compute the matrix logarithm, especially for large matrices with special properties such as sparsity or symmetry. In these cases, specialized algorithms, based on Krylov methods, rational approximations or iterative methods with preconditioning, may be used to approximate the matrix logarithm to reduce its computational cost. 
 
-In this section, we consider first the two synthetic experiments from \cite{grindrod2014dynamical} in order to demonstrate how our new matrix ODE approach works and provide a better understanding of the $\alpha,\beta$ parameters. The \textit{synthetic} concept in these two experiments refers to the fact that they are based on artificially created networks with a simple and well-known structure of nodes. By comparing expected results with the actual ones obtained in the experiments, we will be able to test, validate and refine the new dynamic framework. The relatively small size of these examples, 31 and 17 nodes respectively, will facilitate the process of visualizing, and it will also allow us to employ a highly precise Runge-Kutta iteration to solve the corresponding ODE systems (\ref{eqn:u3.3}) with accuracy.
+In this section, we consider first the two synthetic experiments from \cite{grindrod2014dynamical} in order to demonstrate how our new matrix ODE approach works and provide a better understanding of the $\alpha,\beta$ parameters. The \textit{synthetic} concept in these two experiments refers to the fact that they are based on artificially created networks with a simple and well-known structure of nodes. By comparing expected results with the actual ones obtained in the experiments, we will be able to test, validate and refine the new dynamic framework. The relatively small size of these examples, $N=31$ and $N=17$ nodes respectively, will facilitate the process of visualizing, and it will also allow us to employ a highly precise Runge-Kutta iteration to solve the corresponding ODE systems (\ref{eqn:u3.3}) with accuracy.
 
-The new model is also tested in a third experiment based on real voice call data from the IEEE VAST 2008 Challenge \cite{grinstein2008vast}. Here, we try to find out if the new dynamic measures of centrality are able to identify hubs of influence in a large communication network and if they offer a better perspective of the network evolution than static or aggregate measures.
+The new model is also examined in a third experiment based on real voice call data from the IEEE VAST 2008 Challenge \cite{grinstein2008vast}. Here, we try to find out if the new dynamic measures of centrality are able to identify hubs of influence in a large communication network ($N=400$), and if they offer a better perspective of the network evolution than static or aggregate measures.
 
-In the first two experiments, where the number of nodes is relatively small (respectively, $N=31$ and $N=17$), the Python function \texttt{scipy.linalg.logm} is used to compute the matrix logarithm based on Schur decomposition. However, in the voice call experiment case, which involves a larger number of nodes ($N=400$), a Taylor series approximation is considered a better method to improve computational efficiency.
+For the initial two experiments, where there are only a few nodes, the Schur decomposition-based \texttt{scipy.linalg.logm} Python function is used to compute the matrix logarithm. However, when dealing with a larger number of nodes, as in the voice call experiment, a Taylor series approximation is considered to be a more effective approach to enhance computational efficiency.
 
 \section{First synthetic experiment}
 \label{sec:synexp1}
@@ -133,9 +133,9 @@ What we expect from this experiment, and makes it different from the previous on
 
 As pointed out in the remark on the role of the $\alpha$ and $\beta$ parameters, in the scenario of undirected one-to-one communication, such as voice calls with no teleconferences, all the symmetric adjacency matrices turn out to have unitary spectral radius for each time interval. A complete definition of these matrices can be seen in Appendix \ref{sec:fse} - Second synthetic experiment, l.22. Values of $\alpha=0.7$ and $\alpha=0.9$ were chosen to compare centrality results keeping fixed the value of $\beta=0.1$ which does not play an important role in this experiment due to the underlying periodic pattern in the network dynamics (similar results were obtained for different values of $\beta$). 
 
-Implementing \eqref{eqn:u3.3}--\eqref{eqn:u3.4} in Python, $\mathbf{b}(t)$ was computed for the interval $t=[0,3.5]$ for nodes A and B, using the \texttt{solve\_ivp} function with default parameters: method="RK45", $atol=10^{-6}$ and $rtol=10^{-3}$.
+Implementing \eqref{eqn:u3.3}--\eqref{eqn:u3.4} in Python, $\mathbf{b}(t)$ was computed for the interval $t\in[0,3.5]$ for nodes A and B, using the \texttt{solve\_ivp} function with default parameters: $method="RK45"$, $atol=10^{-6}$ and $rtol=10^{-3}$.
 
-The results in Fig. \ref{fig:twobt} (for $\alpha = 0.7, \beta = 0.1$ and $\alpha = 0.9 , \beta = 0.1$ respectively) show that the dynamic broadcast centrality measure is able to capture the cascade effect enjoyed by node A (solid line) with respect to node B (dashed line). This difference in broadcast centrality is much more pronounced for values of $\alpha$ close to one (Fig. \ref{fig:bt6}), where longer walks are more strongly penalized. 
+The results in Fig. \ref{fig:twobt} (for $\alpha = 0.7, \beta = 0.1$ and $\alpha = 0.9 , \beta = 0.1$ respectively) show that the dynamic broadcast centrality measure is able to capture the cascade effect enjoyed by node A (solid line) with respect to node B (dashed line). This difference in broadcast centrality is much more pronounced for values of $\alpha$ close to one (see Fig. \ref{fig:bt6}), where longer walks are more strongly penalized. 
 
 \begin{figure}
      \centering
@@ -200,27 +200,45 @@ The results showed that the key nodes for days 1-6 were much more dominant in te
 
 The data from days 7 to 10 is displayed in Fig. \ref{fig:ve1b}. The plot shows how the new ID of the ringleader, that is indicated by a plus symbol, has a low overall bandwidth, but ranks seventh highest for broadcast centrality. Although the former IDs from the inner circle, marked with diamonds, still possess high bandwidth, their low dynamic broadcast scores suggest that they are no longer central players. This experiment confirms that the dynamic broadcast score is a more effective indicator of centrality than overall bandwidth in uncovering the inner circle.
 
-Dynamic receive centrality, $\mathbf{r}(t)$, was also computed using its own vector-valued ODE \eqref{eqn:u4.1} for data from days 1 to 7 obtaining similar results and a computation time reduction per function call of approximately $30\%$ (see Appendix \ref{chap:appa} - $\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ cost comparison). The execution times in the $\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ comparison have been measured over 100 repetitions for the computation of the respective matrix/vector ODE system. We determined the frequency (time per call ratio) at which the matrix function \eqref{eqn:u3.3} or vector function \eqref{eqn:u4.1} was evaluated by the \texttt{solve\_ivp} Python method with default parameters. Results are shown in Table \ref{table:btrt}.
+Dynamic receive centrality, $\mathbf{r}(t)$, was also computed using its own vector-valued ODE \eqref{eqn:u4.1} for data from days 1 to 7 obtaining similar results and a computation time reduction per function call of approximately $30\%$ (see Appendix \ref{chap:appa} - $\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ cost comparison). The execution times in the $\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ comparison have been measured over 100 repetitions for the computation of their respective matrix/vector ODE system. We determined the frequency (time per call ratio) at which the matrix function \eqref{eqn:u3.3} or vector function \eqref{eqn:u4.1} was evaluated by the \texttt{solve\_ivp} Python method with parameters $RK45, rtol=0.05, atol=0.01$, (Table \ref{table:btrt}) and for $RK45, rtol=atol=10^{-4}$ (Table \ref{table:btrt2}).
 
 \begin{table}[ht]
             \bigskip
 		\centering % used for centering table
-		\begin{tabular}{c c c c} % centered columns (4 columns)
+		\begin{tabular}{c c c c c} % centered columns (4 columns)
 			\hline\hline %inserts double horizontal lines
-			\textbf{Method ($\times 100$ rep.)} & \textbf{time (s)} & \textbf{function calls} & \textbf{ratio (ms/call)} \\ [0.1ex] % inserts table
+			\textbf{Method ($\mathbf{RK45\times 100~rep.}$)} & \textbf{rtol/atol} & \textbf{time (s)} & \textbf{function calls} & \textbf{ratio (ms/call)} \\ [0.1ex] % inserts table
 			%heading
 			\hline\hline 
-			$\mathbf{b}(t)$ & 984.47 & 32600 & 30.20 \\ % inserting body of the table
-			$\mathbf{r}(t)$ & 2627.48 & 122600 & 21.43 \\ [0.5ex] % [1ex] adds vertical space
+			$\mathbf{b}(t)$ & 0.05/0.01 & 241.24 & 9200 & 26.22 \\ % inserting body of the table
+			$\mathbf{r}(t)$ & 0.05/0.01 & 204.35 & 11600 & 17.62 \\ [0.5ex] % [1ex] adds vertical space
 			\hline %inserts single line
 		\end{tabular}
-		\caption{$\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ cost comparison.} 
+		\caption{$\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ cost comparison for $RK45, rtol=0.05, atol=0.01$.} 
        \label{table:btrt} 
 \end{table}
 
-\chcomment{Why are there so many more function calls when computing the receive centrality?}
+\newpage
 
-We define the \textit{communicability between key nodes} ($\mathcal{C}$) at each discretized time point, as the average amount of messages, broadcast ($\mathbf{U}_{ij}$) and received ($\mathbf{U}_{ji}$), between each pair of key nodes, scaled by the average amount of communication between all pairs of nodes in the network, i.e.,
+For small error tolerance values (Table \ref{table:btrt2}), the results reveal that the vector ODE for $\mathbf{r}(t)$ is invoked significantly more times than $\mathbf{b}(t)$. The underlying reasons for this observation would demand a comprehensive investigation of the internal workings of the Python \texttt{solve\_ivp} algorithm, which is beyond the scope of this thesis. Just mention here that for the tolerance scaling proposed in Table \ref{table:btrt} the improvements mentioned in this thesis for $\mathbf{r}(t)$ are appreciable both in absolute values of time and in the time per call ratio.
+
+\begin{table}[ht]
+            \bigskip
+		\centering % used for centering table
+		\begin{tabular}{c c c c c} % centered columns (4 columns)
+			\hline\hline %inserts double horizontal lines
+			\textbf{Method ($\mathbf{RK45\times 100~rep.}$)} & \textbf{rtol/atol} & \textbf{time (s)} & \textbf{function calls} & \textbf{ratio (ms/call)} \\ [0.1ex] % inserts table
+			%heading
+			\hline\hline 
+			$\mathbf{b}(t)$ & $10^{-4}/10^{-4}$ & 984.47 & 32600 & 30.20 \\ % inserting body of the table
+			$\mathbf{r}(t)$ & $10^{-4}/10^{-4}$ & 2627.48 & 122600 & 21.43 \\ [0.5ex] % [1ex] adds vertical space
+			\hline %inserts single line
+		\end{tabular}
+		\caption{$\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ cost comparison for $RK45, rtol=atol=10^{-4}$.} 
+       \label{table:btrt2} 
+\end{table}
+
+In order to analyze how the network evolves over time, we define the \textit{communicability between key nodes} ($\mathcal{C}$) at each discretized time point, as the average amount of messages, broadcast ($\mathbf{U}_{ij}$) and received ($\mathbf{U}_{ji}$), between each pair of key nodes, scaled by the average amount of communication between all pairs of nodes in the network, i.e.,
 
 \begin{equation*}
     \mathcal{C}(t) = \frac{\overline{K}(t)}{\overline{T}(t)},

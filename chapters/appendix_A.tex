@@ -973,6 +973,9 @@ b = 1.2E-5
 I = np.eye(N)
 # ones vector
 r0 = np.ones(N)
+# tolerances
+RTOL = 0.05
+ATOL = 0.01
 
 # Path to the csv file
 csv_file_path = "CellPhoneCallRecords.csv"
@@ -1083,7 +1086,8 @@ def method1(t0_datetime, tf_datetime):
     t_eval = np.linspace(t0, tf, num=100)
 
     # Solve the matrix ODE numerically using solve_ivp
-    sol = solve_ivp(f1, t_span, U0, method='RK45', t_eval=t_eval, rtol=1e-4, atol=1e-4)
+    sol = solve_ivp(f1, t_span, U0, method='RK45', t_eval=t_eval, atol = ATOL, rtol = RTOL)
+    
     return sol
 
 
@@ -1101,7 +1105,7 @@ def method2(t0_datetime, tf_datetime):
     t_eval = np.linspace(t0, tf, num=100)
 
     # Solve the matrix ODE numerically using solve_ivp
-    sol = solve_ivp(f2, t_span, r0, method='RK45', t_eval=t_eval, rtol=1e-4, atol=1e-4)
+    sol = solve_ivp(f2, t_span, r0, method='RK45', t_eval=t_eval, atol = ATOL, rtol = RTOL)
     return sol
 
 ######################### TIMES #########################
@@ -1125,11 +1129,12 @@ for i in range(rep):
     duration = end_time - start_time
     total_calls += f1.num_calls
     total_time += duration
-    
+ 
+print("###### Method 1: b(t)######")    
 print("total time =", total_time)
 print("function calls = ", total_calls)    
 r1 = round((total_time / total_calls) * 1000, 2)   
-print(f"Method 1 - Ratio ms/call ({rep} rep.): {r1}")  
+print(f"Ratio ms/call ({rep} rep.): {r1}\n")  
 
 total_calls = 0
 total_time = 0
@@ -1144,10 +1149,11 @@ for i in range(rep):
     total_calls += f2.num_calls
     total_time += duration
 
+print("###### Method 2: r(t) ######")  
 print("total time =", total_time)
 print("function calls = ", total_calls) 
 r2 = round((total_time / total_calls) * 1000, 2)
-print(f"Method 2 - Ratio ms/call ({rep} rep.): {r2}") 
+print(f"Ratio ms/call ({rep} rep.): {r2}") 
 
 print("% improvement =", round(((r2 - r1) / r1) * 100, 2))
 \end{lstlisting}
