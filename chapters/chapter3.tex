@@ -200,7 +200,7 @@ The results showed that the key nodes for days 1-6 were much more dominant in te
 
 The data from days 7 to 10 is displayed in Fig. \ref{fig:ve1b}. The plot shows how the new ID of the ringleader, that is indicated by a plus symbol, has a low overall bandwidth, but ranks seventh highest for broadcast centrality. Although the former IDs from the inner circle, marked with diamonds, still possess high bandwidth, their low dynamic broadcast scores suggest that they are no longer central players. This experiment confirms that the dynamic broadcast score is a more effective indicator of centrality than overall bandwidth in uncovering the inner circle.
 
-Dynamic receive centrality, $\mathbf{r}(t)$, was also computed using its own vector-valued ODE \eqref{eqn:u4.1} for data from days 1 to 7 obtaining similar results and a computation time reduction per function call of approximately $30\%$ (see Appendix \ref{chap:appa} - $\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ cost comparison). The execution times in the $\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ comparison have been measured over 100 repetitions for the computation of their respective matrix/vector ODE system. We determined the frequency (time per call ratio) at which the matrix function \eqref{eqn:u3.3} or vector function \eqref{eqn:u4.1} was evaluated by the \texttt{solve\_ivp} Python method with parameters $RK45, rtol=0.05, atol=0.01$, (Table \ref{table:btrt}) and for $RK45, rtol=atol=10^{-4}$ (Table \ref{table:btrt2}).
+Dynamic receive centrality, $\mathbf{r}(t)$, was also computed using its own vector-valued ODE \eqref{eqn:u4.1} for data from days 1 to 7 obtaining similar results and a computation time reduction per function call of approximately $30\%$ (see Appendix \ref{chap:appa} - $\mathbf{b}(t)$ vs. $\mathbf{r}(t)$ cost comparison). The execution times in this comparison have been measured over 100 repetitions for the computation of their respective matrix/vector ODE systems. We determined the frequency (time per call ratio) at which the matrix function \eqref{eqn:u3.3} or vector function \eqref{eqn:u4.1} was evaluated by the \texttt{solve\_ivp} Python method with parameters $RK45, rtol=0.05, atol=0.01$, (Table \ref{table:btrt}) and for $RK45, rtol=atol=10^{-4}$ (Table \ref{table:btrt2}).
 
 \begin{table}[ht]
             \bigskip
@@ -220,7 +220,7 @@ Dynamic receive centrality, $\mathbf{r}(t)$, was also computed using its own vec
 
 \newpage
 
-For small error tolerance values (Table \ref{table:btrt2}), the results reveal that the vector ODE for $\mathbf{r}(t)$ is invoked significantly more times than $\mathbf{b}(t)$. The underlying reasons for this observation would demand a comprehensive investigation of the internal workings of the Python \texttt{solve\_ivp} algorithm, which is beyond the scope of this thesis. Just mention here that for the tolerance scaling proposed in Table \ref{table:btrt} the improvements mentioned in this thesis for $\mathbf{r}(t)$ are appreciable both in absolute values of time and in the time per call ratio.
+For smaller error tolerance values (Table \ref{table:btrt2}), the results reveal that the vector ODE for $\mathbf{r}(t)$ is invoked significantly more times than the matrix ODE needed for $\mathbf{b}(t)$. The underlying reasons for this observation would demand a comprehensive investigation of the internal workings of the Python \texttt{solve\_ivp} algorithm, which is beyond the scope of this thesis. Just mention here that for the tolerance scale proposed in Table \ref{table:btrt} the improvements mentioned in this thesis for $\mathbf{r}(t)$ are remarkable both in terms of absolute time values and the time per call ratio.
 
 \begin{table}[ht]
             \bigskip
@@ -238,7 +238,7 @@ For small error tolerance values (Table \ref{table:btrt2}), the results reveal t
        \label{table:btrt2} 
 \end{table}
 
-In order to analyze how the network evolves over time, we define the \textit{communicability between key nodes} ($\mathcal{C}$) at each discretized time point, as the average amount of messages, broadcast ($\mathbf{U}_{ij}$) and received ($\mathbf{U}_{ji}$), between each pair of key nodes, scaled by the average amount of communication between all pairs of nodes in the network, i.e.,
+In order to support point (ii), we define the \textit{communicability between key nodes} ($\mathcal{C}$) at each discretized time point, as the average amount of messages, broadcast ($\mathbf{U}_{ij}$) and received ($\mathbf{U}_{ji}$), between each pair of key nodes, scaled by the average amount of communication between all pairs of nodes in the network, i.e.,
 
 \begin{equation*}
     \mathcal{C}(t) = \frac{\overline{K}(t)}{\overline{T}(t)},
@@ -251,7 +251,7 @@ where
     \overline{T}(t) &=\frac{\sum_{i,j=1}^N \mathbf{U}(t)_{ij} - \sum_{i=1}^N \mathbf{U}(t)_{ii}}{N^2-N}.
 \end{align*}
 
-The communicability between the original IDs of the five most important players (ID nodes: 200, 1, 2, 3, and 5) during the ten days period is presented in Figure \ref{fig:ve2} to support point (ii). By analyzing this measure, we can observe how the structure of the network changes over time, especially when the players start using different IDs after day 7.
+The communicability between the original IDs of the five most important players (ID nodes: 200, 1, 2, 3, and 5) during the ten days period is presented in Figure \ref{fig:ve2}. By analyzing this measure, we can observe how the structure of the network changes over time, especially when the players start using different IDs after day 7.
 
 \begin{figure}[h]\centering
     \includegraphics[width=.85\textwidth]{voicecall_exp_dyncomm}

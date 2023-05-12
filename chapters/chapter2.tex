@@ -138,7 +138,7 @@ The total dynamic broadcast centrality and the aggregate network centrality can 
 
 The \textit{total broadcast centrality} of the network, which is represented by $\sum_{i=1}^{N} \mathbf{b}(t)_i$, and the \textit{aggregate network centrality}, $\sum_{i=1}^{N}\sum_{j=1}^{N} \mathbf{U}(t)_{ij}$ can be computed using equation (\ref{eqn:u4.1}). This is because in any matrix, the sum of row sums is equal to the sum of column sums. In our case $\sum_{i=1}^{N} \mathbf{b}(t)_i = \sum_{i=1}^{N} \mathbf{r}(t)_i=\sum_{i=1}^{N}\sum_{j=1}^{N} \mathbf{U}(t)_{ij}$. Therefore, by running a simulation of an ODE system that is $N$ times smaller than the one needed for nodal broadcast information, we can keep track of the current broadcast capability of the entire network by computing $\mathbf{r}(t)^T\mathbf{1}$. The storage requirement for $\mathbf{r}(t)$ scales like the number of nodes in the system, $\mathcal{O}(N)$, and the primary computation involved in evaluating the right-hand side of (\ref{eqn:u4.1}) can be accomplished by performing only a few products of a sparse matrix with a full vector. This results in a cost of $\mathcal{O}(N)$ per unit time for a network with $\mathcal{O}(1)$ edges per node.
 
-While both total broadcast centrality or aggregate centrality are useful measures for gaining different perspectives on a network at a general level, this study will focus specifically on determining centrality at the node level.
+While total broadcast centrality or aggregate centrality are useful measures for gaining different perspectives on a network at a general level, this study will focus specifically on determining centrality at a node level.
 
 \begin{highlightedParagraphC}
  
