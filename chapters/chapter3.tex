@@ -220,7 +220,7 @@ Dynamic receive centrality, $\mathbf{r}(t)$, was also computed using its own vec
 
 \newpage
 
-For smaller error tolerance values (Table \ref{table:btrt2}), the results reveal that the vector ODE for $\mathbf{r}(t)$ is invoked significantly more times than the matrix ODE needed for $\mathbf{b}(t)$. The underlying reasons for this observation would demand a comprehensive investigation of the internal workings of the Python \texttt{solve\_ivp} algorithm, which is beyond the scope of this thesis. Just mention here that for the tolerance scale proposed in Table \ref{table:btrt} the improvements mentioned in this thesis for $\mathbf{r}(t)$ are remarkable both in terms of absolute time values and the time per call ratio.
+For smaller error tolerance values (Table \ref{table:btrt2}), the results reveal that the vector ODE for $\mathbf{r}(t)$ is invoked significantly more times than the matrix ODE needed for $\mathbf{b}(t)$. The underlying reasons for this observation would demand a comprehensive investigation of the internal workings of the Python \texttt{solve\_ivp} algorithm, which is beyond the scope of this thesis. Just mention here that for the tolerance scale proposed in Table \ref{table:btrt}, where the number of evaluations is similar, the improvements mentioned in this thesis for $\mathbf{r}(t)$ are remarkable both in terms of absolute time values and the time per call ratio.
 
 \begin{table}[ht]
             \bigskip
