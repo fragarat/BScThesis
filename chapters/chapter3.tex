@@ -247,8 +247,8 @@ In order to support point (ii), we define the \textit{communicability between ke
 where
 
 \begin{align*}
-    \overline{K}(t) &=\frac{\sum_{i\ne j}\mathbf{U}(t)_{ij} + \mathbf{U}(t)_{ji}}{2\sum_{k=1}^4 k} \text{~~~~~for~~} i=1,2,3,5,200 ,\\
-    \overline{T}(t) &=\frac{\sum_{i,j=1}^N \mathbf{U}(t)_{ij} - \sum_{i=1}^N \mathbf{U}(t)_{ii}}{N^2-N}.
+    \overline{K}(t) &=\frac{\sum_{i\ne j}\left(\mathbf{U}(t)_{ij} + \mathbf{U}(t)_{ji}\right)}{2\sum_{k=1}^4 k} \text{~~~~~for~~} i=1,2,3,5,200 ,\\
+    \overline{T}(t) &=\frac{\left(\sum_{i=1}^{N}\sum_{j=1}^{N} \mathbf{U}(t)_{ij}\right) - \sum_{i=1}^N \mathbf{U}(t)_{ii}}{N^2-N}.
 \end{align*}
 
 The communicability between the original IDs of the five most important players (ID nodes: 200, 1, 2, 3, and 5) during the ten days period is presented in Figure \ref{fig:ve2}. By analyzing this measure, we can observe how the structure of the network changes over time, especially when the players start using different IDs after day 7.
