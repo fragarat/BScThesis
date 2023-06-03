@@ -116,7 +116,7 @@ Drawbacks of this type of measure are that it does not scale well for directed n
 \subsection*{PageRank and Katz centrality}
 In the task of finding the most important nodes in a network, two of the most widely used methods are PageRank and Katz centrality. To solve Eigenvector centrality problems in networks that do not have strongly connected components of more than one node resulting in a zero centrality vector, the main idea of these two methods is to give each node a small amount of centrality for free. 
 
-Let $\mathbf{A}\in\mathbb{R}^{N\times N}$ be the adjacency matrix for a static network of $N$ nodes. Then, from (\ref{eqn:eigc}) PageRank centrality is defined as
+Let $\mathbf{A}\in\mathbb{R}^{N\times N}$ be the adjacency matrix for an unweighted ($\mathbf{A}_{ij}=1$), directed (with possible undirected links, $\mathbf{A}_{ij} = \mathbf{A}_{ji}$), static network of $N$ nodes. We need the networks to be unweighted since, as we will see later, the $(ij)^{th}$ entry of the matrix $\mathbf{A}^k$ gives us a combinatorial way of counting paths of length $k$ from $i$ to $j$ which will be essential to define the concept of centrality based on counting all possible paths from a node to all its neighbors in the network. For weighted graphs, this interpretation of the $(ij)^{th}$ entry of the matrix $\mathbf{A}^k$ has to be modified. Then, from (\ref{eqn:eigc}) PageRank centrality is defined as
 
 \begin{equation}
 \label{eqn:pr1}
@@ -176,19 +176,21 @@ Expression (\ref{eqn:pr3}) provides a way to compute Katz centrality based on th
     Given a square matrix $\mathbf{A}$ its resolvent is the matrix-valued function $R_A(\alpha) = (\mathbf{I} − \alpha \mathbf{A})^{−1}$, defined for all $\alpha^{-1} \in \mathbb{C}\setminus\sigma(\mathbf{A})$. 
 \end{definition}
 
-Thus, Katz centrality can be rewritten using Neumann series, as a generalization of geometric series, by
+Katz centrality can be elegantly reformulated using the Neumann series as an extension of the geometric series. It can be expressed as follows
 
 \begin{equation}
 \label{eqn:katz2}
-    \mathbf{x}=(\mathbf{I}-\alpha\mathbf{A})^{-1}\mathbf{1}=\left(\sum_{k=0}^{\infty}\alpha^k \mathbf{A}^k\right)\mathbf{1},
+    \mathbf{x}=(\mathbf{I}-\alpha\mathbf{A})^{-1}\mathbf{1}=\left(\sum_{k=0}^{\infty}\alpha^k \mathbf{A}^k\right)\mathbf{1}.
 \end{equation}
-giving a practical expansion to compute by approximation/truncation the resolvent of the adjacency matrix
+
+This formulation provides a practical approach for computing the resolvent of the adjacency matrix
 
 \begin{equation}
 \label{eqn:katz3}
-    (\mathbf{I}-\alpha\mathbf{A})^{-1} = \mathbf{I} + \alpha\mathbf{A} + \alpha^2\mathbf{A}^2 + \cdots + \alpha^k\mathbf{A}^k + \cdots
+    (\mathbf{I}-\alpha\mathbf{A})^{-1} = \mathbf{I} + \alpha\mathbf{A} + \alpha^2\mathbf{A}^2 + \cdots + \alpha^k\mathbf{A}^k + \cdots .
 \end{equation}
-which converges for $\alpha<1/\rho(\mathbf{A})$ where $\rho(\cdot)$ denotes the spectral radius. 
+
+The convergence of this expansion is ensured when $\alpha<1/\rho(\mathbf{A})$, where $\rho(\cdot)$ represents the spectral radius.
 
 This series is in fact the original form of centrality conceived by Leo Katz, who considered for each node $i$ the influence of all the nodes connected by a $k$-length walk to $i$ with no restriction in reuse of nodes and edges. Thus, $\alpha$ can be considered an attenuation parameter as the probability that an edge is successfully traversed, penalizing those nodes furthest away from $i$. 
 
@@ -208,7 +210,7 @@ Broadly speaking, a node with a high Katz broadcast centrality will be an effect
 
 In summary, Katz Centrality is a very useful centrality measure, for both directed and undirected networks, because it provides a nuanced and flexible way to assess the importance of nodes in a network based not only on their position but also on the indirect influence of a node's neighbors, which can be important in many real-world networks.
 
-
+\newpage
 
 \section{Motivation of the study}
 \label{sec:motiv}
