@@ -45,13 +45,9 @@ In search of a time-varying "running summary" of communicability between pairs o
     \mathbf{S}(t_{k}) = \left(\mathbf{I} + e^{-\beta\Delta t_k} \mathbf{S}(t_{k-1})\right)\left(\mathbf{I} -  \alpha \mathbf{A}(t_{k})\right)^{-1} - \mathbf{I}, ~~~k=0,1,2,\dots
 \end{equation}
 
- starting for convenience with $\mathbf{S}(t_{-1}) = \mathbf{0}$, where, $\alpha \in (0,1)$ and $\beta > 0$. Here, $\alpha$ is used to downweight walks of length $w$ by the factor $\alpha^w$ and $\beta$ is employed to reduce the weight of the activity, which is age-dependent by the factor $e^{-\beta t}$ if we consider the current age, $t$, of a dynamic walk as the time that has elapsed since the walk began. This factor $e^{-\beta\Delta t_k}$ in (\ref{eqn:rundyncommatdis}) may be interpreted as the probability that a message does not become "irrelevant" over a time length $\Delta t_k$. It is worth mentioning that by taking $\Delta t_k = 1$ for all $k$ and $\beta = 0$ (no down-scaling in time i.e. infinitely-long memory) the communicability matrix in (\ref{eqn:rundyncommatdis}) recovers the original iteration product form in (\ref{eqn:dyncommat}) with $\mathbf{S}(t_k) = \mathbf{Q}(t_k) - \mathbf{I}$. On the other hand, for $\Delta t_k = 1$ and $\beta \to \infty$, that is, $e^{-\beta\Delta t_k}\to 0$ (complete downscaling in time or zero memory), the communicability matrix yields $\mathbf{S}(t_k)=(\mathbf{I} - \alpha \mathbf{A}(t_k))^{-1}$ reducing to static Katz centrality.
+ starting for convenience with $\mathbf{S}(t_{-1}) = \mathbf{0}$, where, $\alpha \in (0,1)$ and $\beta > 0$. Here, $\alpha$ is used to downweight walks of length $w$ by the factor $\alpha^w$ and $\beta$ is employed to reduce the weight of the activity, which is age-dependent by the factor $e^{-\beta t}$ if we consider the current age, $t$, of a dynamic walk as the time that has elapsed since the walk began. This factor $e^{-\beta\Delta t_k}$ in (\ref{eqn:rundyncommatdis}) may be interpreted as the probability that a message does not become "irrelevant" over a time length $\Delta t_k$. It is worth mentioning that by taking $\Delta t_k = 1$ for all $k$ and $\beta = 0$ (no down-scaling in time i.e. infinitely-long memory) the communicability matrix in (\ref{eqn:rundyncommatdis}) recovers the original iteration product form in (\ref{eqn:dyncommatiter}) with $\mathbf{S}(t_k) = \mathbf{Q}(t_k) - \mathbf{I}$. On the other hand, for $\Delta t_k = 1$ and $\beta \to \infty$, that is, $e^{-\beta\Delta t_k}\to 0$ (complete downscaling in time or zero memory), the communicability matrix yields $\mathbf{S}(t_k)=(\mathbf{I} - \alpha \mathbf{A}(t_k))^{-1}$ reducing to static Katz centrality.
 
- So far, we have considered an environment where a fixed grid of time points are chosen but our aim, as previously stated, is to develop a new continuous-time framework. On that basis, $\mathbf{S}(t)$ is proposed to be updated over a small time interval $\delta t$, using the scaling $(\mathbf{I}-\alpha\mathbf{A}(k\delta t))^{-\delta t}$ \cite{grindrod2014dynamical}. Conceiving a $\delta t$-dependent power in the resolvent matrix products of (\ref{eqn:rundyncommatdis}) is a fundamental step for the derivation of this new framework. This is explained in the idea of considering a scenario where $\delta t \to 0$. So, over very short periods of time $[t,t+\delta t]$, where downscaling in time is meaningless, i.e. $\beta = 0$, we can always refine to the pair of intervals $[t, t + \delta t/2]$ and $[t + \delta t/2, t + \delta t]$ and assuming $\mathbf{A}(t)$ does not change over this period of time, the following identity 
-
-$$(\mathbf{I} - \alpha\mathbf{A}(t))^{-\frac{\delta t}{2}} (\mathbf{I} - \alpha\mathbf{A}(t))^{-\frac{\delta t}{2}} = (\mathbf{I} - \alpha\mathbf{A}(t))^{-\delta t}$$ show us that this scaling under the limit $\delta t \to 0$ is consistent and meaningful.
- 
-Then, (\ref{eqn:rundyncommatdis}) can be rewritten as
+ So far, we have considered an environment where a fixed grid of time points are chosen but our aim, as previously stated, is to develop a new continuous-time framework. On that basis, $\mathbf{S}(t)$ is proposed to be updated over a small time interval $\delta t$, using the scaling $(\mathbf{I}-\alpha\mathbf{A}(k\delta t))^{-\delta t}$ \cite{grindrod2014dynamical}. Then, (\ref{eqn:rundyncommatdis}) can be rewritten as
  
  \begin{equation}
 \label{eqn:rundyncommat}
@@ -59,10 +55,15 @@ Then, (\ref{eqn:rundyncommatdis}) can be rewritten as
 \end{equation} 
 
 with $\mathbf{S}(0)=\mathbf{0}$.
-
+ 
+To ensure the meaningfulness of the $\delta t\to 0$ limit, a crucial aspect of formulating this new iteration \eqref{eqn:rundyncommat} involved developing such an appropriate scaling approach. The key idea for employing a $\delta t$-dependent power in the matrix products becomes evident when examining the $\beta=0$ case within a short-time interval where downscaling in
+time is meaningless. By refining the original single interval $[t,t+\delta t]$ into a pair of intervals $[t, t + \delta t/2]$ and $[t + \delta t/2, t + \delta t]$, and assuming $\mathbf{A}(t)$ remains constant during this interval, we can observe the following straightforward relationship 
+ 
+ $$(\mathbf{I} - \alpha\mathbf{A}(t))^{-\frac{\delta t}{2}} (\mathbf{I} - \alpha\mathbf{A}(t))^{-\frac{\delta t}{2}} = (\mathbf{I} - \alpha\mathbf{A}(t))^{-\delta t}.$$ This identity serves to demonstrate the consistency of our chosen scaling approach, thereby producing reliable and coherent results with \eqref{eqn:dyncommat}.
+ 
 Now, for practical purposes we define the \textit{principal logarithm} of a matrix \cite[Ch.\ 11]{higham2008functions}.
 \begin{definition}
-    A logarithm of $\mathbf{A} \in \mathbb{C}^{N\times N}$ is any matrix $\mathbf{X}$ such that $e^{\mathbf{X}} = \mathbf{A}$ where $e^{\mathbf{X}} = \mathbf{I} + \mathbf{X} + \frac{\mathbf{X}^2}{2!} + \frac{\mathbf{X}^3}{3!} + \cdots$. The matrix logarithm is not unique, since $e^{\mathbf{X}+2k\pi i\mathbf{I}} = \mathbf{A}$ for any integer $k$. If $\mathbf{A}$ has no negative real eigenvalues, then we call this the principal logarithm of $\mathbf{A}$, which is the unique logarithm whose spectrum lies in the strip $\{ z : −\pi < Im(z) < \pi \}$.
+    A logarithm of $\mathbf{A} \in \mathbb{C}^{N\times N}$ is any matrix $\mathbf{X}\in \mathbb{C}^{N\times N}$ such that $e^{\mathbf{X}} = \mathbf{A}$ where $e^{\mathbf{X}} = \mathbf{I} + \mathbf{X} + \frac{\mathbf{X}^2}{2!} + \frac{\mathbf{X}^3}{3!} + \cdots$. The matrix logarithm is not unique, since $e^{\mathbf{X}+2k\pi i\mathbf{I}} = \mathbf{A}$ for any integer $k$. If $\mathbf{A}$ has no negative real eigenvalues, then we call this the principal logarithm of $\mathbf{A}$, which is the unique logarithm whose spectrum lies in the strip $\{ z : −\pi < Im(z) < \pi \}$.
 \end{definition}
 From this point on, we will assume the principal logarithm when referring to the logarithm of a matrix. 
 
@@ -77,13 +78,22 @@ we obtain the following identity from \eqref{eqn:rundyncommat}:
     \mathbf{U}(t + \delta t) = \left(\mathbf{I} + e^{-\beta\delta t}(\mathbf{U}(t) - \mathbf{I})\right) \exp\left(-\delta t \log (\mathbf{I} - \alpha \mathbf{A}(t + \delta t)) \right).
 \end{equation} 
 
-Expanding in Taylor series to the first order the right-hand
-side of (\ref{eqn:u3.1}) and rearranging the terms, this equation can be rewritten as
+Expanding in a Taylor series the right-hand side of (\ref{eqn:u3.1}) to the first order 
 
-\begin{equation*}
+\begin{align*}
 \label{eqn:u3.1b}
-    \frac{\mathbf{U}(t + \delta t) - \mathbf{U}(t)}{\delta t} = -\beta (\mathbf{U}(t) - \mathbf{I}) - \mathbf{U}(t)\log (\mathbf{I} - \alpha \mathbf{A}(t)) + \mathcal{O}(\delta t).
-\end{equation*}
+    f(\delta t) &= \left(\mathbf{I} + e^{-\beta\delta t}(\mathbf{U}(t) - \mathbf{I})\right) \exp\left(-\delta t \log (\mathbf{I} - \alpha \mathbf{A}(t + \delta t)) \right) \\ 
+    f(0) &= \mathbf{U}(t)\\ 
+    f'(\delta t) &= - \beta (\mathbf{U}(t) - \mathbf{I})e^{-\beta \delta t}\exp{(-\delta t \log (\mathbf{I}-\alpha \mathbf{A}(t+\delta t)))} +\\ &+ (\mathbf{I} + e^{-\beta \delta t}(\mathbf{U}(t) - \mathbf{I}))(-\log(\mathbf{I}-\alpha \mathbf{A}(t+\delta t)))\exp(-\delta t \log(\mathbf{I}-\alpha \mathbf{A}(t+\delta t)))\\
+    f'(0) &= -\beta (\mathbf{U}(t) - \mathbf{I}) - \mathbf{U}(t)\log(\mathbf{I}-\alpha \mathbf{A}(t)),
+\end{align*}
+
+and rearranging the terms, \eqref{eqn:u3.1} can be rewritten as
+
+\begin{align*}
+\mathbf{U}(t + \delta t) &= \mathbf{U}(t) - \left(\beta (\mathbf{U}(t) - \mathbf{I}) - \mathbf{U}(t)\log(\mathbf{I}-\alpha\mathbf{A}(t))\right) \delta t + \mathcal{O}(\delta t^2) \\
+\frac{\mathbf{U}(t + \delta t) - \mathbf{U}(t)}{\delta t} &= -\beta (\mathbf{U}(t) - \mathbf{I}) - \mathbf{U}(t)\log (\mathbf{I} - \alpha \mathbf{A}(t)) + \mathcal{O}(\delta t)
+\end{align*}
 
 By taking the limit $\delta t \to 0$, we finally arrive at the matrix ODE proposed by Grindrod and Higham \cite{grindrod2014dynamical}, 
 
@@ -129,8 +139,6 @@ On the other hand, we note that the receive centrality vector, $\mathbf{r}(t)$, 
 
 Unfortunately, it is not possible to derive a vector-valued ODE for the dynamic broadcast vector using the same method. This dissimilarity comes from the fact that the receive vector $\mathbf{r}(t)$ monitors the total amount of information that flows into each node, so this information can be carried forward in time as new links emerge. In contrast, the broadcast vector $\mathbf{b}(t)$ tracks the information that has left each node but it does not indicate the current location of the information because this has not been recorded, and therefore, we cannot update it based solely on $\mathbf{b}(t)$. 
 
-\newpage
-
 \begin{highlightedParagraphC}
  
 The total dynamic broadcast centrality and the aggregate network centrality can be computed via the dynamic receive vector $\mathbf{r}(t)$ for large, sparsely connected networks at a reasonable computational cost.
@@ -162,11 +170,11 @@ $$\begin{bmatrix}
 1 & 0 
 \end{bmatrix}$$ where $\lambda_1=1$.
 
-Consequently, the constraint on $\alpha$ is restricted to $\alpha<1$. This condition will be applied for the choice of $\alpha$ when dealing with the second and third numerical experiments of this thesis, both of which simulate this type of communication network.
+Consequently, the constraint on $\alpha$ is reduced to $\alpha<1$. This condition will be applied for the choice of the $\alpha$ parameter when dealing with the second and third numerical experiments of this thesis, both of which simulate this type of communication network.
 
 \begin{highlightedParagraphC}
 
-Alternative approaches can be considered by replacing the resolvent function with an opportune matrix function.
+Alternative approaches to resolvent based centrality measures arise by replacing the resolvent function with an opportune matrix function.
  
 %The choice of other matrix functions or different types of dynamic walks in the resolvent (\ref{eqn:katz3}), arises a slightly different system of equations.
 

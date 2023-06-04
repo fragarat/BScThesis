@@ -5,11 +5,11 @@ From the point of view of computational cost, it is convenient to make a brief a
 
 The matrix logarithm can be approximated by its Taylor series expansion. The Taylor series expansion of the matrix logarithm of $\mathbf{I} - \alpha \mathbf{A}$ can be expressed as:
 
-$$\log(\mathbf{I} - \alpha \mathbf{A}) = \sum_{k=1}^{\infty} (-1)^{k+1}\frac{\alpha^k}{k}\mathbf{A}^k$$
+$$\log(\mathbf{I} - \alpha \mathbf{A}) \approx \sum_{k=1}^{n} (-1)^{k+1}\frac{\alpha^k}{k}\mathbf{A}^k$$
 
 where $\mathbf{I}$ is the identity matrix of size $N$. The accuracy of the approximation depends on the value of $k$, which determines how many terms in the series are included. The higher the value of $k$, the more accurate the approximation, but also the more computationally expensive it is to compute.
 
-It is worth noting that for certain matrices, the Taylor series expansion may not converge or may converge too slowly to be practical for approximating the matrix logarithm. In such cases, other approximation methods like the Padé approximation or Schur decomposition may be more effective \cite[Ch.\ 11]{higham2008functions}.
+It is worth noting that for certain matrices, the Taylor series expansion does not converge or converges too slowly to be practical for approximating the matrix logarithm. In such cases, other approximation methods like the Padé approximation or Schur decomposition may be more effective \cite[Ch.\ 11]{higham2008functions}.
 
 In Python, the \texttt{scipy.linalg.logm} module from the SciPy library computes the logarithm of a matrix using a inverse scaling and squaring method together with a Schur decomposition with a computational cost of $\mathcal{O}(N^3)$ for an $N \times N$ matrix. However, the Schur decomposition is not always the most efficient way to compute the matrix logarithm, especially for large matrices with special properties such as sparsity or symmetry. In these cases, specialized algorithms, based on Krylov methods, rational approximations or iterative methods with preconditioning, may be used to approximate the matrix logarithm to reduce its computational cost. 
 
@@ -18,6 +18,8 @@ In this section, we consider first the two synthetic experiments from \cite{grin
 The new model is also examined in a third experiment based on real voice call data from the IEEE VAST 2008 Challenge \cite{grinstein2008vast}. Here, we try to find out if the new dynamic measures of centrality are able to identify hubs of influence in a large communication network ($N=400$), and if they offer a better perspective of the network evolution than static or aggregate measures.
 
 For the initial two experiments, where there are only a few nodes, the Schur decomposition-based \texttt{scipy.linalg.logm} Python function is used to compute the matrix logarithm. However, when dealing with a larger number of nodes, as in the voice call experiment, a Taylor series approximation is considered to be a more effective approach to enhance computational efficiency.
+
+The Python code used for the three experiments is provided in the appendix \ref{chap:appa} of this thesis. Each experiment involves the definition and analysis of the adjacency matrices generated for the different time intervals. Subsequently, the $\alpha$ and $\beta$ parameters are established to implement the matrix ODE function \eqref{eqn:u3.3}. Such a system of differential equations is then solved using the Scipy's function \texttt{solve\_ivp}, employing Runge-Kutta methods. Furthermore, the thesis includes a comparative analysis of the computational costs associated with the computation of $\mathbf{b}(t)$ and $\mathbf{r}(t)$.
 
 \section{First synthetic experiment}
 \label{sec:synexp1}
@@ -164,9 +166,9 @@ As a curiosity, other nodes in this network, such as nodes 3, 4 and 5, offer gre
 \label{sec:voicecall}
 The next experiment applies the new modelling framework \eqref{eqn:u3.3} to a set of voice call interactions, in order to analyze the dynamic behavior of a fictitious, controversial socio-political movement. The data used for the experiment, supplied as part of the IEEE VAST 2008 Challenge \cite{grinstein2008vast}, consists of a complete set of 9834 time-stamped calls across 400 cell phone users over a 10 day period, with information on IDs for the send and receive nodes, start time in hours/minutes, and duration in seconds.
 
-The aim of the experiment is to show the usefulness of the new matrix ODE in dealing with this type of dynamic network, comparing dynamical measures against aggregated. To that end, the bandwidth of a node is defined as the aggregate number of seconds for which the node ID is active as a sender or receiver. This will allow us to compare the effective activation time of a certain node with its relevance in terms of dynamic broadcast centrality.
-
 Additional information is provided by the designers of the above mentioned competition indicating that node 200 is the leader of an important community who controls a closely connected subnetwork or inner circle consisting of nodes 1, 2, 3, and 5. However, starting from day 7, these individuals seem to switch their phone IDs: node 200 becomes 300, and the others become 306, 309, 360, and 392.
+
+The aim of the experiment is to show the usefulness of the new matrix ODE in dealing with this type of dynamic network, comparing dynamical measures against aggregated. To that end, the bandwidth of a node is defined as the aggregate number of seconds for which the node ID is active as a sender or receiver. This will allow us to compare the effective activation time of a certain node with its relevance in terms of dynamic broadcast centrality.
 
 For this experiment, $\mathbf{A}(t)$ is assumed to be symmetric, meaning that $\mathbf{A}(t)_{ij} = \mathbf{A}(t)_{ji} = 1$ if nodes $i$ and $j$ are communicating at time $t$, which is measured in seconds. The $\beta$ parameter is chosen to be approximately $\beta = 1/(60\times 60 \times 24) \approx 1.2 \times 10^{-5}$, which corresponds to a time downweighting of $e^{-1}$ per day. We set the edge attenuation parameter $\alpha$ to a similar value of $10^{-4}$. The SciPy's \texttt{solve\_ivp} method is again used to numerically solve the ODE (\ref{eqn:u3.3}) (see Appendix \ref{chap:appa} - Voice call experiment, l.257). Additionally, absolute and relative error tolerances are both set to $10^{-4}$. To improve efficiency, the matrix logarithm is approximated in this occasion with its expansion to the fifth power:
 
