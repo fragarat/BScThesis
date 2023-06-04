@@ -155,7 +155,15 @@ The choice of downweighting parameters, $\alpha$ and $\beta$, plays an important
 
 \end{highlightedParagraphC}
 
-On one side, the value of the parameter $\beta$, which downweights temporal information, can be interpreted as the rate at which news or information becomes less relevant as time passes. This means that if a piece of information is $t$ units of time old, its relevance will be decreased by $e^{−\beta t}$. Therefore, by studying the typical half-life of a link, we can determine an appropriate value for this parameter and use it to quantify the rate at which information becomes outdated. According to Mason \cite{lifespan}, the lifespan of a link varies greatly depending on its nature. Links belonging to social networks such as YouTube, Facebook or Twitter can remain active between 2-8 hours and, on the contrary, news have a much shorter life with only a few minutes after which they are no longer relevant. To estimate the value of $\beta$, researchers often use statistical methods such as maximum likelihood estimation or least squares regression to fit the decay model to empirical data. This involves finding the value of $\beta$ that best fits the observed decay pattern, based on a set of observed edge weights over time.
+On one side, the value of the $\beta$ parameter, which downweights temporal information, can be interpreted as the rate at which information becomes less relevant over time. In our model, this means that walks starting $t$ time units ago are downweighted by $e^{-\beta t}$. The question that now arises is how we can calibrate this $\beta$ parameter.
+ 
+A recent study \cite{lifespan} by Bit.ly, the URL shortening service, reveals that the average lifespan of a link online is surprisingly short. The research found that most links, regardless of genre, experience a brief burst of attention followed by a rapid decline in engagement. The study measured a link's longevity by calculating its half life, i.e., the point at which it receives half of its total clicks.
+
+\newpage
+
+According to the study, links shared on various platforms have different lifespans. On Twitter, a link reaches its half life in an average of 2.8 hours, while on Facebook it lasts slightly longer at 3.2 hours. Links shared through email and messenger services have the longest lifespan of 3.4 hours. Notably, YouTube links have a significantly longer half life of 7.4 hours, indicating sustained interest from users.
+
+Therefore, by examining the typical half-life of network links, it becomes feasible to determine an appropriate value for $\beta$, representing the rate at which information becomes outdated.
 
 On the other hand, the value of the edge-attenuation parameter $\alpha$, which penalizes longer walks in the network, is determined in the discrete case as we saw in (\ref{eqn:dyncommat}) by the reciprocal of the largest spectral radius among the matrices $\{\mathbf{A}(t_k)\}$. Similarly, for the continuous-time ODE system (\ref{eqn:u3.3}), the principal matrix logarithm function $\log (\mathbf{I} - \alpha \mathbf{A}(t))$ is well-defined when \cite[Ch.\ 11]{higham2008functions} 
 
@@ -171,6 +179,8 @@ $$\begin{bmatrix}
 \end{bmatrix}$$ where $\lambda_1=1$.
 
 Consequently, the constraint on $\alpha$ is reduced to $\alpha<1$. This condition will be applied for the choice of the $\alpha$ parameter when dealing with the second and third numerical experiments of this thesis, both of which simulate this type of communication network.
+
+\newpage
 
 \begin{highlightedParagraphC}
 
