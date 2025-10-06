@@ -10,10 +10,8 @@ BScThesis/
 ├── figures/ # Images and figures used in the thesis
 ├── fonts/ # Fonts
 ├── logos/ # Custom LaTeX style files (e.g. thesis.cls)
-├── appendices/ # Appendices and supplementary materials
 ├── main.tex # Main LaTeX file that compiles the thesis
 ├── references.bib # Bibliography (BibTeX)
-├── data/ # Raw and processed data used for analysis
 └── README.md # This file
 ```
 
