@@ -1,4 +1,4 @@
-# Bachelor Degree Thesis
+# Bachelor's Degree Thesis
 
 This repository contains all the source files, data, and documentation for my Bachelor’s degree thesis.
 
