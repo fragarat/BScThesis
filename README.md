@@ -12,6 +12,7 @@ BScThesis/
 ├── logos/ # Custom LaTeX style files (e.g. thesis.cls)
 ├── bsc_thesis.tex # Main LaTeX file that compiles the thesis
 ├── preamble.tex # LaTex packages used in the thesis
+├── cross_references.tex # Cross references used in the thesis
 ├── luthesis.cls # LU style file
 ├── references.bib # Bibliography (BibTeX)
 └── README.md # This file
