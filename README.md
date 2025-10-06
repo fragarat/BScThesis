@@ -6,9 +6,10 @@ This repository contains all the source files, data, and documentation for my Ba
 ```text
 BScThesis/
 ├── chapters/ # Individual thesis chapters (e.g. introduction, methods)
+├── covers/ # Covers for LU
 ├── figures/ # Images and figures used in the thesis
 ├── fonts/ # Fonts
-├── style/ # Custom LaTeX style files (e.g. thesis.cls)
+├── logos/ # Custom LaTeX style files (e.g. thesis.cls)
 ├── appendices/ # Appendices and supplementary materials
 ├── main.tex # Main LaTeX file that compiles the thesis
 ├── references.bib # Bibliography (BibTeX)
